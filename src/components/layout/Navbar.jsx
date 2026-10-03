@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
-import { tools } from '../../data/tools';
+import { groups } from '../../data/tools';
 
 export default function Navbar() {
   return (
@@ -11,9 +11,16 @@ export default function Navbar() {
         <NavLink to="/" end>
           home
         </NavLink>
-        {tools.map((tool) => (
-          <NavLink key={tool.id} to={tool.path}>
-            {tool.name.split(' ')[0].toLowerCase()}
+        {groups.map((group) => (
+          <NavLink
+            key={group.id}
+            to={
+              group.tools.length === 1
+                ? group.tools[0].path
+                : `/tools/${group.id}`
+            }
+          >
+            {group.name.split(' ')[0].toLowerCase()}
           </NavLink>
         ))}
       </div>

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import SearchBar from '../components/ui/SearchBar';
 import CategoryPills from '../components/ui/CategoryPills';
 import EmptyState from '../components/ui/EmptyState';
 import { groups, categories } from '../data/tools';
@@ -9,43 +8,39 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 export default function Home() {
   useDocumentTitle('toolchest — free online tools');
 
-  const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return groups.filter((group) => {
-      const matchesCategory =
-        activeCategory === 'All' || group.category === activeCategory;
-      if (!matchesCategory) return false;
-      if (!q) return true;
-      return (
-        group.name.toLowerCase().includes(q) ||
-        group.description.toLowerCase().includes(q) ||
-        group.tags?.some((t) => t.toLowerCase().includes(q)) ||
-        group.tools.some(
-          (tool) =>
-            tool.name.toLowerCase().includes(q) ||
-            tool.description.toLowerCase().includes(q)
-        )
-      );
-    });
-  }, [query, activeCategory]);
+    return groups.filter(
+      (group) => activeCategory === 'All' || group.category === activeCategory
+    );
+  }, [activeCategory]);
 
   return (
     <div className="home">
       <header className="home-header">
         <h1>
-          your <span className="accent">toolchest</span>
+           <span className="accent">Toolchest</span>
         </h1>
-        <p>
-          A growing collection of fast, private, browser-based tools. No
-          signup, no tracking, no nonsense.
-        </p>
+        <button
+          className="home-search-trigger"
+          onClick={() => {
+            // Dispatch keyboard event to open global search
+            const ev = new KeyboardEvent('keydown', {
+              key: 'k',
+              ctrlKey: true,
+              bubbles: true,
+            });
+            document.dispatchEvent(ev);
+          }}
+        >
+          <span>🔍</span>
+          <span>Search all tools…</span>
+          <kbd>Ctrl K</kbd>
+        </button>
       </header>
 
       <div className="home-controls">
-        <SearchBar value={query} onChange={setQuery} />
         <CategoryPills
           categories={categories}
           active={activeCategory}
@@ -56,7 +51,7 @@ export default function Home() {
       {filtered.length === 0 ? (
         <EmptyState
           title="No tools found"
-          message={`Nothing matches "${query}" in ${activeCategory}.`}
+          message={`Nothing in ${activeCategory} category.`}
         />
       ) : (
         <div className="tools-grid">

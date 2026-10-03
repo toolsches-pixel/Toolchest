@@ -1,12 +1,11 @@
-import React from 'react'
+import ToolShell from '../../components/ui/ToolShell';
+import { getToolById } from '../../data/tools';
 
-function ImageResizer() {
+export default function ImageResizer() {
+  const tool = getToolById('image-resizer');
   return (
-    <div className="tool-placeholder">
-      <h1>🖼️ Image Resizer</h1>
-      <p>Coming soon — resize images to any dimension.</p>
-    </div>
-  )
+    <ToolShell tool={tool}>
+      <p style={{ color: 'var(--text-muted)' }}>Image resizer coming soon.</p>
+    </ToolShell>
+  );
 }
-
-export default ImageResizer

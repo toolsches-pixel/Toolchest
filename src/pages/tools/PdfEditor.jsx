@@ -1,12 +1,14 @@
-import React from 'react'
+import ToolShell from '../../components/ui/ToolShell';
+import { getToolById } from '../../data/tools';
 
-function PdfEditor() {
+export default function PdfEditor() {
+  const tool = getToolById('pdf-editor');
   return (
-    <div className="tool-placeholder">
-      <h1>📄 PDF Editor</h1>
-      <p>Coming soon — PDF editing tool.</p>
-    </div>
-  )
+    <ToolShell tool={tool}>
+      <p style={{ color: 'var(--text-muted)' }}>
+        PDF editor coming soon. This page uses <code>ToolShell</code> — breadcrumbs,
+        title, description and padding are already handled.
+      </p>
+    </ToolShell>
+  );
 }
-
-export default PdfEditor

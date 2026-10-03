@@ -1,12 +1,11 @@
-import React from 'react'
+import ToolShell from '../../components/ui/ToolShell';
+import { getToolById } from '../../data/tools';
 
-function ImageCompressor() {
+export default function ImageCompressor() {
+  const tool = getToolById('image-compressor');
   return (
-    <div className="tool-placeholder">
-      <h1>🗜️ Image Compressor</h1>
-      <p>Coming soon — compress images without quality loss.</p>
-    </div>
-  )
+    <ToolShell tool={tool}>
+      <p style={{ color: 'var(--text-muted)' }}>Image compressor coming soon.</p>
+    </ToolShell>
+  );
 }
-
-export default ImageCompressor

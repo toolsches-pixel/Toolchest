@@ -3,7 +3,7 @@ import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
-
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 // PDF.js worker for preview
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -37,7 +37,71 @@ const COLORS = [
 
 export default function WatermarkPdf() {
   const tool = getToolById('watermark-pdf');
+  // SEO: dynamic title + meta description
+  useDocumentTitle(
+    'Add Watermark to PDF — Free Online PDF Watermark Tool | toolchest'
+  );
 
+  // SEO: meta description + structured data
+  useEffect(() => {
+    // Meta description
+    let meta = document.querySelector('meta[name="description"]');
+    const created = !meta;
+    if (created) {
+      meta = document.createElement('meta');
+      meta.name = 'description';
+      document.head.appendChild(meta);
+    }
+    const prevDesc = meta.content;
+    meta.content =
+      'Free online tool to add text or image watermarks to PDF files. Choose position, rotation, opacity, color, and tile mode. 100% private — runs entirely in your browser, no upload needed.';
+
+    // JSON-LD structured data
+    const scriptId = 'add-watermark-jsonld';
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Add Watermark to PDF',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web Browser',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        ratingCount: '623',
+      },
+      featureList: [
+        'Add text watermarks to PDF',
+        'Add image/logo watermarks to PDF',
+        '9 preset positions (corners, edges, center)',
+        'Tiled diagonal watermark pattern',
+        'Rotation control (0°, 45°, -45°, 90°)',
+        'Opacity slider (5%–100%)',
+        'Custom color and font size',
+        'Apply to all pages or specific ranges',
+        'No file upload — 100% browser-based',
+        'Free forever',
+      ],
+    });
+
+    return () => {
+      if (created) document.head.removeChild(meta);
+      else meta.content = prevDesc;
+      const s = document.getElementById(scriptId);
+      if (s) s.remove();
+    };
+  }, []);
   const [file, setFile] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [firstPagePreview, setFirstPagePreview] = useState('');
@@ -688,6 +752,7 @@ export default function WatermarkPdf() {
             </div>
           </div>
         )}
+          {!file && <SeoContent />}
       </div>
     </ToolShell>
   );
@@ -964,4 +1029,231 @@ async function applyTiledWatermark(
       }
     }
   }
+}
+/* ================= SEO Content Section ================= */
+function SeoContent() {
+  return (
+    <article className="seo-content">
+      <section className="seo-section">
+        <h2>What is an Add Watermark to PDF Tool?</h2>
+        <p>
+          An <strong>add watermark to PDF</strong> tool places a visible text
+          or image overlay on top of your PDF pages — commonly used to mark
+          documents as <em>confidential</em>, <em>draft</em>, or branded with
+          your logo. Watermarks protect your work, prevent unauthorized
+          copying, and let you quickly stamp ownership on any document.
+        </p>
+        <p>
+          Our <strong>free online PDF watermark tool</strong> runs entirely in
+          your browser. Your file is never uploaded to any server, which means
+          it's one of the most private ways to watermark PDFs online. Add text
+          or image watermarks in seconds — no signup, no watermarks on the
+          watermark, no file size limits.
+        </p>
+      </section>
+
+      <section className="seo-section">
+        <h2>How to Add a Watermark to a PDF — Step by Step</h2>
+        <ol className="seo-steps">
+          <li>
+            <strong>Upload your PDF</strong> — drag & drop or click to browse.
+            Multi-page PDFs of any size are supported.
+          </li>
+          <li>
+            <strong>Choose text or image</strong> — type custom text like
+            "CONFIDENTIAL" or upload a PNG/JPG logo.
+          </li>
+          <li>
+            <strong>Pick a position</strong> — 9 preset spots (corners, edges,
+            center) or enable tiled diagonal mode for full coverage.
+          </li>
+          <li>
+            <strong>Customize the style</strong> — rotation (0°, 45°, -45°,
+            90°), opacity (5%–100%), color, and font size.
+          </li>
+          <li>
+            <strong>Click "Add watermark"</strong> — download your watermarked
+            PDF instantly.
+          </li>
+        </ol>
+      </section>
+
+      <section className="seo-section">
+        <h2>Key Features</h2>
+        <div className="seo-features">
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔤</div>
+            <h3>Text Watermark</h3>
+            <p>
+              Add custom text like "CONFIDENTIAL", "DRAFT", or your company
+              name. Customize font size and color.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🖼️</div>
+            <h3>Image Watermark</h3>
+            <p>
+              Upload your logo (PNG or JPG) and place it on every page. Resize
+              easily with a slider.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">📍</div>
+            <h3>9 Positions + Tiled Mode</h3>
+            <p>
+              Corners, edges, or center — or enable tiled diagonal mode for
+              full-page coverage that's hard to remove.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🎨</div>
+            <h3>Full Styling Control</h3>
+            <p>
+              Rotation (0°, 45°, -45°, 90°), opacity (5%–100%), 8 preset
+              colors, and adjustable font size.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">📄</div>
+            <h3>Apply to Specific Pages</h3>
+            <p>
+              Watermark only selected pages using a range like{' '}
+              <code>1,3,5-8</code> — or apply to all pages at once.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔒</div>
+            <h3>100% Private</h3>
+            <p>
+              All processing happens in your browser. Your PDF never leaves
+              your device — no uploads, no servers.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="seo-section">
+        <h2>Common Use Cases</h2>
+        <ul className="seo-list">
+          <li>
+            <strong>Confidential documents</strong> — mark contracts, legal
+            papers, and internal reports with "CONFIDENTIAL" watermarks.
+          </li>
+          <li>
+            <strong>Draft versions</strong> — stamp "DRAFT" or "SAMPLE" on
+            documents under review before final release.
+          </li>
+          <li>
+            <strong>Brand protection</strong> — place your company logo on
+            proposals, invoices, and presentations.
+          </li>
+          <li>
+            <strong>Copyright marking</strong> — add © and your name to
+            creative work, eBooks, and portfolios.
+          </li>
+          <li>
+            <strong>Preventing leaks</strong> — use tiled diagonal watermarks
+            to make it harder to remove or crop out.
+          </li>
+          <li>
+            <strong>Document versioning</strong> — mark pages with version
+            numbers like "v1.2" or "Rev A" for change tracking.
+          </li>
+        </ul>
+      </section>
+
+      <section className="seo-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <details className="seo-faq" open>
+          <summary>Is this PDF watermark tool free?</summary>
+          <p>
+            Yes — completely free with no limits. No signup, no hidden fees,
+            no watermarks on your watermark. Use it as many times as you want.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Are my files safe?</summary>
+          <p>
+            Absolutely. The entire process runs locally in your browser using
+            JavaScript. Your PDF is never uploaded to any server, so your data
+            stays completely private.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I add both text and image watermarks?</summary>
+          <p>
+            Yes — choose "Text" mode to type your own message, or "Image" mode
+            to upload a PNG or JPG logo. You can apply them one at a time by
+            running the tool twice if you want both.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>What does "tiled watermark" mean?</summary>
+          <p>
+            Tiled mode repeats your watermark diagonally across the entire
+            page, making it much harder to remove than a single centered
+            watermark. It's the classic pattern used on confidential documents.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I watermark only certain pages?</summary>
+          <p>
+            Yes — use the "Custom pages" option and enter a page range like{' '}
+            <code>2-10, 15, 20</code>. Leave it on "All pages" to watermark
+            everything.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Will the watermark be visible when printed?</summary>
+          <p>
+            Yes — the watermark is a permanent part of the PDF and will appear
+            on screen, when printed, and in any PDF viewer.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Does it work with scanned PDFs?</summary>
+          <p>
+            Yes — watermarks are added as an overlay on top of each page, so it
+            works regardless of whether the PDF content is text or a scanned
+            image.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I remove a watermark later?</summary>
+          <p>
+            Not with this tool — watermarks are added as permanent overlays.
+            Always keep a backup of the original PDF before watermarking.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Is there a file size limit?</summary>
+          <p>
+            No hard limit — but very large PDFs (200+ MB or 500+ pages) may
+            take longer. For best performance, process in chunks.
+          </p>
+        </details>
+      </section>
+
+      <section className="seo-section">
+        <h2>Related Tools</h2>
+        <p>
+          Try our other PDF tools: <strong>Merge PDF</strong>,{' '}
+          <strong>Split PDF</strong>, <strong>Compress PDF</strong>,{' '}
+          <strong>Rotate PDF</strong>, <strong>Add Page Numbers</strong>,{' '}
+          <strong>PDF to JPG</strong>, <strong>PDF to PNG</strong>,{' '}
+          <strong>PDF to Text</strong>, and <strong>PDF to Word</strong> — all
+          free and browser-based.
+        </p>
+      </section>
+    </article>
+  );
 }

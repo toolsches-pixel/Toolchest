@@ -50,7 +50,7 @@ export const groups = [
   },
   {
     id: "pdf",
-    name: "PDF Tools",
+    name: "Tools",
     description:
       "Edit, merge, split and annotate PDF files right in the browser.",
     icon: "📄",
@@ -161,19 +161,7 @@ export const groups = [
   icon: '📝',
   component: lazy(() => import('../pages/tools/PdfToWord')),
 },
-    ],
-  },
-  {
-    id: "image",
-    name: "Image Tools",
-    description:
-      "Resize, compress, and optimize your images without losing quality.",
-    icon: "🖼️",
-    color: "#4ecdc4",
-    category: "Images",
-    tags: ["image", "resize", "compress", "optimize"],
-    tools: [
-      {
+{
         id: "image-resizer",
         name: "Image Resizer",
         description: "Resize images to exact dimensions.",
@@ -181,14 +169,29 @@ export const groups = [
         icon: "📐",
         component: lazy(() => import("../pages/tools/ImageResizer")),
       },
+      
+
+    ],
+  },
+  {
+    id: "image",
+    name: "Others Tools",
+    description:
+      "Resize, compress, and optimize your images without losing quality.",
+    icon: "🖼️",
+    color: "#4ecdc4",
+    category: "Images",
+    tags: ["image", "resize", "compress", "optimize"],
+    tools: [
+      
       {
-        id: "image-compressor",
-        name: "Image Compressor",
-        description: "Shrink file size with smart compression.",
-        path: "/tools/image-compressor",
-        icon: "🗜️",
-        component: lazy(() => import("../pages/tools/ImageCompressor")),
-      },
+      id: 'image-to-qr',
+      name: 'Image to QR',
+      description: 'Generate QR codes with custom logo and colors.',
+      path: '/tools/image-to-qr',
+      icon: '📱',
+      component: lazy(() => import('../pages/tools/ImageToQr')),
+    },
     ],
   },
 ];

@@ -254,6 +254,15 @@ export const groups = [
       icon: '🔢',
       component: lazy(() => import('../pages/tools/WordCounter')),
     },
+      {
+        id: 'json-formatter',
+        name: 'JSON Formatter',
+        description:
+          'Format, validate, minify, and explore JSON with tree view.',
+        path: '/tools/json-formatter',
+        icon: '📋',
+        component: lazy(() => import('../pages/tools/JsonFormatter')),
+      },
   ],
 },
 ];

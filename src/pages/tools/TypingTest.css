@@ -374,27 +374,29 @@
   gap: 10px 14px;
   font-size: 1.65rem;
   line-height: 1.5;
-  padding: var(--sp-3) 0;
+  padding: 8px 0;
   letter-spacing: 0.01em;
   font-weight: 400;
 }
-
 .tt-word {
-  color: var(--tt-text-dim);
+  color: var(--tt-text);
+  opacity: 0.3;
   white-space: nowrap;
   position: relative;
-  transition: color 0.1s;
+  transition: opacity 0.15s ease;
   padding-bottom: 2px;
 }
 
+
 .tt-word.past.correct {
   color: var(--tt-text);
-  opacity: 0.75;
+  opacity: 1;
 }
+
 
 .tt-word.past.incorrect {
   color: var(--tt-error);
-  opacity: 0.7;
+  opacity: 1;
   text-decoration: underline;
   text-decoration-color: var(--tt-error);
   text-underline-offset: 4px;
@@ -403,24 +405,29 @@
 
 .tt-word.active {
   color: var(--tt-text);
+  opacity: 1;                    /* ← full, so chars can have their own opacity */
   position: relative;
 }
+
 
 .tt-word.active .char {
   position: relative;
-  transition: color 0.05s;
+  transition: color 0.05s ease, opacity 0.05s ease;
 }
 
 .tt-word.active .char.pending {
-  color: var(--tt-text-dim);
+  color: var(--tt-text);
+  opacity: 0.3;                  /* ← dim */
 }
 
 .tt-word.active .char.correct {
   color: var(--tt-text);
+  opacity: 1;                    /* ← bright */
 }
-
+/* Typed wrong — red, full */
 .tt-word.active .char.incorrect {
   color: var(--tt-error);
+  opacity: 1;
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-thickness: 2px;
@@ -428,6 +435,7 @@
 
 .tt-word.active .char.extra {
   color: var(--tt-error-extra);
+  opacity: 1;
 }
 
 /* ============================================================
@@ -656,4 +664,40 @@
    .tt-root {
     padding: 14px 20px 20px;        
   }
+}
+/* ============================================================
+   REFRESH BUTTON
+   ============================================================ */
+.tt-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  border-radius: var(--r-sm);
+  color: var(--tt-text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.tt-refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--tt-accent);
+}
+
+.tt-refresh-btn:active {
+  transform: rotate(180deg);
+  transition: transform 0.3s;
+}
+
+.tt-refresh-btn svg {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tt-refresh-btn:hover svg {
+  transform: rotate(180deg);
 }

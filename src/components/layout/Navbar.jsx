@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { groups } from '../../data/tools';
 import GlobalSearch from '../ui/GlobalSearch';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   // Global keyboard shortcut: Ctrl+K / Cmd+K / "/"
   useEffect(() => {
@@ -15,14 +17,12 @@ export default function Navbar() {
           document.activeElement.tagName === 'TEXTAREA' ||
           document.activeElement.isContentEditable);
 
-      // Ctrl+K or Cmd+K → open search (works everywhere)
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setSearchOpen(true);
         return;
       }
 
-      // "/" → open search only if not typing in an input
       if (e.key === '/' && !isInput) {
         e.preventDefault();
         setSearchOpen(true);
@@ -67,6 +67,18 @@ export default function Navbar() {
             <span className="navbar-search-icon">🔍</span>
             <span className="navbar-search-text">search</span>
             <kbd className="navbar-search-kbd">⌘K</kbd>
+          </button>
+
+          {/* Theme toggle */}
+          <button
+            className="navbar-theme-btn"
+            onClick={toggleTheme}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            aria-label="Toggle theme"
+          >
+            <span className="navbar-theme-icon">
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </span>
           </button>
         </div>
       </nav>

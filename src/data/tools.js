@@ -23,6 +23,7 @@ export const groups = [
     category: "Productivity",
     tags: ["typing", "practice", "wpm", "keyboard"],
     tools: [
+      
       {
         id: "typing-countries",
         name: "Countries",
@@ -42,6 +43,15 @@ export const groups = [
         component: lazy(() => import("../pages/tools/TypingBihar")),
         fullBleed: true,
       },
+       {
+      id: 'typing-test',
+      name: 'Typing Test',
+      description: 'Monkeytype-style test. Time, words, quote modes.',
+      path: '/tools/typing-test',
+      icon: '⚡',
+      component: lazy(() => import('../pages/tools/TypingTest')),
+      fullBleed: true,
+    },
     ],
   },
 

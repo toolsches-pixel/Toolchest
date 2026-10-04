@@ -1,7 +1,11 @@
 /* ============================================================
    DESIGN TOKENS
    ============================================================ */
-:root {
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root,
+[data-theme="dark"] {
   --bg: #0f1012;
   --bg-elev: #16181c;
   --bg-card: #1a1c21;
@@ -49,6 +53,36 @@
 
   --t-fast: 0.15s ease;
   --t-base: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] {
+  /* Background — soft warm cream, NOT harsh white */
+  --bg: #faf8f5;
+  --bg-elev: #ffffff;
+  --bg-card: #ffffff;
+  --bg-hover: #f2efea;
+
+  /* Borders — subtle warm grey */
+  --border: #e8e4dd;
+  --border-strong: #d4cfc5;
+
+  /* Text — warm near-black, softer than #000 */
+  --text: #2a2724;
+  --text-muted: #6b6660;
+  --text-dim: #9a948c;
+
+  /* Accent — keep iLovePDF red */
+  --accent: #e5322d;
+  --accent-soft: rgba(229, 50, 45, 0.08);
+  --accent-hover: #c92220;
+
+  --danger: #dc2626;
+  --success: #16a34a;
+
+  /* Soft shadows for light bg */
+  --shadow-sm: 0 1px 2px rgba(60, 50, 40, 0.06);
+  --shadow-md: 0 4px 16px rgba(60, 50, 40, 0.08);
+  --shadow-lg: 0 12px 40px rgba(60, 50, 40, 0.12);
 }
 
 /* ============================================================
@@ -6376,5 +6410,50 @@ button {
   }
   .json-stats {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+/* ============================================================
+  /* ============================================================
+   NAVBAR THEME TOGGLE BUTTON
+   ============================================================ */
+.navbar-theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: var(--sp-2);
+  padding: 0;
+}
+
+.navbar-theme-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.navbar-theme-icon {
+  font-size: 1rem;
+  line-height: 1;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.navbar-theme-btn:hover .navbar-theme-icon {
+  transform: rotate(20deg);
+}
+
+@media (max-width: 768px) {
+  .navbar-theme-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .navbar-theme-icon {
+    font-size: 0.9rem;
   }
 }

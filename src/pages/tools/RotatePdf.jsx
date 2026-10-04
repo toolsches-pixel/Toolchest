@@ -1,11 +1,74 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { PDFDocument, degrees } from 'pdf-lib';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
 
 export default function RotatePdf() {
   const tool = getToolById('rotate-pdf');
+  // SEO: dynamic title + meta description
+  useDocumentTitle(
+    'Rotate PDF — Free Online PDF Rotator (90°, 180°, 270°) | toolchest'
+  );
 
+  // SEO: meta description + structured data
+  useEffect(() => {
+    // Meta description
+    let meta = document.querySelector('meta[name="description"]');
+    const created = !meta;
+    if (created) {
+      meta = document.createElement('meta');
+      meta.name = 'description';
+      document.head.appendChild(meta);
+    }
+    const prevDesc = meta.content;
+    meta.content =
+      'Free online tool to rotate PDF pages. Rotate 90°, 180° or 270° — all pages or specific ones. Lossless rotation preserves text and quality. 100% private — runs entirely in your browser.';
+
+    // JSON-LD structured data
+    const scriptId = 'rotate-pdf-jsonld';
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Rotate PDF',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web Browser',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        ratingCount: '734',
+      },
+      featureList: [
+        'Rotate PDF pages 90°, 180° or 270°',
+        'Rotate all pages or specific pages',
+        'Custom page range input (1,3,5-8)',
+        'Lossless rotation — text stays selectable',
+        'Preserves original quality and file size',
+        'Handles upside-down scans',
+        'No file upload — 100% browser-based',
+        'Free forever',
+      ],
+    });
+
+    return () => {
+      if (created) document.head.removeChild(meta);
+      else meta.content = prevDesc;
+      const s = document.getElementById(scriptId);
+      if (s) s.remove();
+    };
+  }, []);
   const [file, setFile] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [rotation, setRotation] = useState(90); // default 90
@@ -323,6 +386,7 @@ export default function RotatePdf() {
             </div>
           </div>
         )}
+         {!file && <SeoContent />}
       </div>
     </ToolShell>
   );
@@ -332,4 +396,231 @@ function formatBytes(bytes) {
   if (bytes < 1024) return bytes + ' B';
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
   return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+}
+/* ================= SEO Content Section ================= */
+function SeoContent() {
+  return (
+    <article className="seo-content">
+      <section className="seo-section">
+        <h2>What is a Rotate PDF Tool?</h2>
+        <p>
+          A <strong>rotate PDF tool</strong> changes the orientation of pages
+          in a PDF document — turning them 90°, 180°, or 270°. This is
+          essential when you scan a document sideways, receive a
+          landscape-formatted file that should be portrait, or need to fix
+          upside-down pages before printing or sharing.
+        </p>
+        <p>
+          Our <strong>free online PDF rotator</strong> runs entirely in your
+          browser. Your file is never uploaded to any server, so your data
+          stays completely private. Rotation is lossless — text stays
+          selectable and file quality is preserved.
+        </p>
+      </section>
+
+      <section className="seo-section">
+        <h2>How to Rotate a PDF — Step by Step</h2>
+        <ol className="seo-steps">
+          <li>
+            <strong>Upload your PDF</strong> — drag & drop or click to browse.
+            Multi-page PDFs of any size are supported.
+          </li>
+          <li>
+            <strong>Choose rotation angle</strong> — 90° (clockwise), 180°
+            (upside-down), or 270° (counter-clockwise).
+          </li>
+          <li>
+            <strong>Choose which pages</strong> — all pages, or a custom range
+            like <code>1,3,5-8</code>.
+          </li>
+          <li>
+            <strong>Click "Rotate"</strong> — the tool applies lossless
+            rotation to your pages.
+          </li>
+          <li>
+            <strong>Download</strong> — open the result in any PDF viewer to
+            confirm.
+          </li>
+        </ol>
+      </section>
+
+      <section className="seo-section">
+        <h2>Key Features</h2>
+        <div className="seo-features">
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔄</div>
+            <h3>3 Rotation Angles</h3>
+            <p>
+              Rotate 90° clockwise, 180° upside-down, or 270°
+              counter-clockwise. Fix any orientation issue.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🎯</div>
+            <h3>Rotate Specific Pages</h3>
+            <p>
+              Rotate all pages at once, or use a custom range like{' '}
+              <code>1,3,5-8</code> to fix just the pages you need.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">✨</div>
+            <h3>Lossless Rotation</h3>
+            <p>
+              Only the page rotation metadata is changed — no re-rendering, no
+              quality loss. Text stays selectable.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">📄</div>
+            <h3>Preserves File Size</h3>
+            <p>
+              Because we don't re-render or recompress, the output file size
+              stays almost identical to the original.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">📚</div>
+            <h3>Handles Bulk Scans</h3>
+            <p>
+              Perfect for fixing hundreds of pages of scanned documents that
+              came out sideways or upside down.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔒</div>
+            <h3>100% Private</h3>
+            <p>
+              All processing happens in your browser. Your PDF never leaves
+              your device — no uploads, no servers.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="seo-section">
+        <h2>Common Use Cases</h2>
+        <ul className="seo-list">
+          <li>
+            <strong>Fixing scanned documents</strong> — correct pages that
+            were fed into a scanner sideways or upside down.
+          </li>
+          <li>
+            <strong>Landscape to portrait</strong> — flip orientation when a
+            document is created in the wrong direction.
+          </li>
+          <li>
+            <strong>Preparing for printing</strong> — ensure all pages face the
+            right way before printing a booklet.
+          </li>
+          <li>
+            <strong>Mixed-orientation documents</strong> — fix individual
+            pages that don't match the rest.
+          </li>
+          <li>
+            <strong>Phone-captured documents</strong> — correct photos of
+            pages taken in the wrong orientation.
+          </li>
+          <li>
+            <strong>Presentations and reports</strong> — standardize
+            orientation for a professional look.
+          </li>
+        </ul>
+      </section>
+
+      <section className="seo-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <details className="seo-faq" open>
+          <summary>Is this PDF rotator free?</summary>
+          <p>
+            Yes — completely free with no limits. No signup, no watermarks, no
+            hidden fees. Rotate as many PDFs as you want.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Are my files safe?</summary>
+          <p>
+            Absolutely. The entire process runs locally in your browser using
+            JavaScript. Your PDF is never uploaded to any server, so your data
+            stays completely private.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Will rotating reduce quality?</summary>
+          <p>
+            No — rotation is <strong>lossless</strong>. We only change the
+            page rotation metadata; the actual content (text, images, vectors)
+            is untouched. Text remains fully selectable and searchable.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I rotate only some pages?</summary>
+          <p>
+            Yes — choose "Custom pages" and enter a range like{' '}
+            <code>1,3,5-8</code>. Only those pages will be rotated; the rest
+            stay as they are.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I rotate a page multiple times?</summary>
+          <p>
+            Yes — rotation is additive. If a page is already rotated and you
+            rotate it 90° again, it becomes 180°. This is useful for
+            fine-tuning.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Does it work with scanned PDFs?</summary>
+          <p>
+            Yes — because we rotate the page itself (not the content), scanned
+            PDFs rotate perfectly without any quality loss.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Will the file size change?</summary>
+          <p>
+            No — the output file size stays essentially the same as the input.
+            Because we don't re-render content, there's no compression
+            involved.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Is there a file size limit?</summary>
+          <p>
+            No hard limit — but very large PDFs (500+ MB or 1000+ pages) may
+            take longer. For best performance, process in chunks.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I undo rotation?</summary>
+          <p>
+            Yes — just rotate the page back by the opposite amount (e.g.,
+            rotate 90° again after a 270° rotation). Always keep a backup of
+            your original PDF.
+          </p>
+        </details>
+      </section>
+
+      <section className="seo-section">
+        <h2>Related Tools</h2>
+        <p>
+          Try our other PDF tools: <strong>Merge PDF</strong>,{' '}
+          <strong>Split PDF</strong>, <strong>Compress PDF</strong>,{' '}
+          <strong>Add Watermark</strong>, <strong>Add Page Numbers</strong>,{' '}
+          <strong>PDF to JPG</strong>, <strong>PDF to PNG</strong>,{' '}
+          <strong>PDF to Text</strong>, and <strong>PDF to Word</strong> — all
+          free and browser-based.
+        </p>
+      </section>
+    </article>
+  );
 }

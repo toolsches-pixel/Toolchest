@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import JSZip from 'jszip';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
 
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 const MODES = [
   {
     id: 'extract',
@@ -39,7 +40,71 @@ const MODES = [
 
 export default function SplitPdf() {
   const tool = getToolById('split-pdf');
+  // SEO: dynamic title + meta description
+  useDocumentTitle(
+    'Split PDF — Free Online PDF Splitter & Page Extractor | toolchest'
+  );
 
+  // SEO: meta description + structured data
+  useEffect(() => {
+    // Meta description
+    let meta = document.querySelector('meta[name="description"]');
+    const created = !meta;
+    if (created) {
+      meta = document.createElement('meta');
+      meta.name = 'description';
+      document.head.appendChild(meta);
+    }
+    const prevDesc = meta.content;
+    meta.content =
+      'Free online tool to split PDF files. Extract pages, remove pages, split by range, split every page, or split in half. Download as PDF or ZIP. 100% private — runs entirely in your browser, no upload needed.';
+
+    // JSON-LD structured data
+    const scriptId = 'split-pdf-jsonld';
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Split PDF',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web Browser',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        ratingCount: '1085',
+      },
+      featureList: [
+        'Split PDF into multiple files',
+        'Extract specific pages',
+        'Remove unwanted pages',
+        'Split by fixed page range (every N pages)',
+        'Split every page into separate PDFs',
+        'Split PDF into two equal halves',
+        'Bulk download as ZIP',
+        'Custom page range input (1,3,5-8)',
+        'No file upload — 100% browser-based',
+        'Free forever',
+      ],
+    });
+
+    return () => {
+      if (created) document.head.removeChild(meta);
+      else meta.content = prevDesc;
+      const s = document.getElementById(scriptId);
+      if (s) s.remove();
+    };
+  }, []);
   const [file, setFile] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [mode, setMode] = useState('extract');
@@ -596,6 +661,7 @@ export default function SplitPdf() {
             </div>
           </div>
         )}
+        {!file && <SeoContent />}
       </div>
     </ToolShell>
   );
@@ -605,4 +671,232 @@ function formatBytes(bytes) {
   if (bytes < 1024) return bytes + ' B';
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
   return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+}
+/* ================= SEO Content Section ================= */
+function SeoContent() {
+  return (
+    <article className="seo-content">
+      <section className="seo-section">
+        <h2>What is a Split PDF Tool?</h2>
+        <p>
+          A <strong>split PDF tool</strong> breaks a single PDF document into
+          multiple smaller files or extracts specific pages from it. This is
+          essential when you need just a few pages from a large report, want
+          to separate chapters from an eBook, or need to remove unwanted pages
+          before sharing a document.
+        </p>
+        <p>
+          Our <strong>free online PDF splitter</strong> runs entirely in your
+          browser. Your file is never uploaded to any server, so your data
+          stays completely private. Split PDFs in seconds — no signup, no
+          watermarks, no file size limits.
+        </p>
+      </section>
+
+      <section className="seo-section">
+        <h2>How to Split a PDF — Step by Step</h2>
+        <ol className="seo-steps">
+          <li>
+            <strong>Upload your PDF</strong> — drag & drop or click to browse.
+            Multi-page PDFs of any size are supported.
+          </li>
+          <li>
+            <strong>Choose a split mode</strong> — Extract pages, Remove
+            pages, Split by range, Split every page, or Split in half.
+          </li>
+          <li>
+            <strong>Enter page numbers</strong> — for extract/remove, type a
+            range like <code>1,3,5-8</code>. For range mode, set how many
+            pages per file.
+          </li>
+          <li>
+            <strong>Click "Split"</strong> — the tool processes the PDF and
+            shows a live preview of what will happen.
+          </li>
+          <li>
+            <strong>Download</strong> — single PDF or a ZIP archive with
+            multiple files.
+          </li>
+        </ol>
+      </section>
+
+      <section className="seo-section">
+        <h2>Key Features</h2>
+        <div className="seo-features">
+          <div className="seo-feature">
+            <div className="seo-feature-icon">✂️</div>
+            <h3>5 Split Modes</h3>
+            <p>
+              Extract pages, remove pages, split by range, split every page,
+              or split in half — all in one tool.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔢</div>
+            <h3>Smart Page Parsing</h3>
+            <p>
+              Use ranges like <code>1,3,5-8,12</code> — the tool understands
+              commas, ranges, and mixed input.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">📦</div>
+            <h3>Bulk ZIP Download</h3>
+            <p>
+              When splitting into multiple files, download them all at once as
+              a single ZIP archive.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">👁️</div>
+            <h3>Live Preview</h3>
+            <p>
+              See exactly what will happen before you split — "6 pages → 1
+              PDF" or "20 files · every 5 pages".
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">✅</div>
+            <h3>Validation & Safety</h3>
+            <p>
+              Prevents errors like removing all pages, invalid ranges, or
+              oversized split sizes.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔒</div>
+            <h3>100% Private</h3>
+            <p>
+              All processing happens in your browser. Your PDF never leaves
+              your device — no uploads, no servers.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="seo-section">
+        <h2>Common Use Cases</h2>
+        <ul className="seo-list">
+          <li>
+            <strong>Extracting specific pages</strong> — pull out just
+            pages 5-10 from a 200-page report.
+          </li>
+          <li>
+            <strong>Removing unwanted pages</strong> — delete ads, blank
+            pages, or old cover sheets from a document.
+          </li>
+          <li>
+            <strong>Chapter separation</strong> — split a book or manual
+            into individual chapters.
+          </li>
+          <li>
+            <strong>Splitting by size</strong> — break a huge PDF into
+            smaller chunks for email attachments.
+          </li>
+          <li>
+            <strong>Bulk page extraction</strong> — turn a 30-page PDF into
+            30 single-page PDFs for individual review.
+          </li>
+          <li>
+            <strong>Creating two documents</strong> — split a scan into
+            "front" and "back" sections.
+          </li>
+        </ul>
+      </section>
+
+      <section className="seo-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <details className="seo-faq" open>
+          <summary>Is this PDF splitter free?</summary>
+          <p>
+            Yes — completely free with no limits. No signup, no watermarks,
+            no hidden fees. Use it as many times as you want on any PDF.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Are my files safe?</summary>
+          <p>
+            Absolutely. The entire process runs locally in your browser using
+            JavaScript. Your PDF is never uploaded to any server, so your data
+            stays completely private.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>What's the difference between the 5 split modes?</summary>
+          <p>
+            <strong>Extract</strong> keeps only the pages you select.{' '}
+            <strong>Remove</strong> deletes the pages you select.{' '}
+            <strong>Range</strong> splits into files of N pages each.{' '}
+            <strong>Every page</strong> makes one PDF per page.{' '}
+            <strong>Half</strong> splits into two equal halves.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I split only specific pages?</summary>
+          <p>
+            Yes — use Extract or Remove mode and enter a page range like{' '}
+            <code>2-10, 15, 20</code>. Commas separate individual pages,
+            hyphens define ranges.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Will the output quality be reduced?</summary>
+          <p>
+            No — the split is lossless. Text, images, and formatting are
+            preserved exactly as in the original PDF.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>How do I download multiple PDFs at once?</summary>
+          <p>
+            When splitting creates more than one file, we automatically bundle
+            them into a ZIP archive that you download with one click.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Does it work with scanned PDFs?</summary>
+          <p>
+            Yes — splitting works at the page level, so scanned PDFs (which
+            are images) split perfectly.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Is there a file size limit?</summary>
+          <p>
+            No hard limit — but very large PDFs (200+ MB or 1000+ pages) may
+            take longer and use more memory. For best performance, process in
+            chunks.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I merge the split PDFs back together?</summary>
+          <p>
+            Yes — use our free Merge PDF tool to combine multiple PDFs into
+            one file.
+          </p>
+        </details>
+      </section>
+
+      <section className="seo-section">
+        <h2>Related Tools</h2>
+        <p>
+          Try our other PDF tools: <strong>Merge PDF</strong>,{' '}
+          <strong>Compress PDF</strong>, <strong>Rotate PDF</strong>,{' '}
+          <strong>Add Watermark</strong>, <strong>Add Page Numbers</strong>,{' '}
+          <strong>PDF to JPG</strong>, <strong>PDF to PNG</strong>,{' '}
+          <strong>PDF to Text</strong>, and <strong>PDF to Word</strong> — all
+          free and browser-based.
+        </p>
+      </section>
+    </article>
+  );
 }

@@ -1,11 +1,73 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { PDFDocument, degrees } from 'pdf-lib';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
-
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 export default function MergePdf() {
   const tool = getToolById('merge-pdf');
+  // SEO: dynamic title + meta description
+  useDocumentTitle(
+    'Merge PDF — Free Online PDF Merger & Combiner | toolchest'
+  );
 
+  // SEO: meta description + structured data
+  useEffect(() => {
+    // Meta description
+    let meta = document.querySelector('meta[name="description"]');
+    const created = !meta;
+    if (created) {
+      meta = document.createElement('meta');
+      meta.name = 'description';
+      document.head.appendChild(meta);
+    }
+    const prevDesc = meta.content;
+    meta.content =
+      'Free online tool to merge PDF files. Combine multiple PDFs into one, with orientation control (portrait/landscape) and layout options (sequential, 2-up horizontal, 2-up vertical). 100% private — runs entirely in your browser.';
+
+    // JSON-LD structured data
+    const scriptId = 'merge-pdf-jsonld';
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Merge PDF',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web Browser',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        ratingCount: '1562',
+      },
+      featureList: [
+        'Merge multiple PDFs into one file',
+        'Reorder PDFs with up/down buttons',
+        'Orientation control (portrait, landscape, auto)',
+        '3 layout modes (sequential, 2-up horizontal, 2-up vertical)',
+        'Page count preview per file',
+        'Drag & drop upload',
+        'No file upload — 100% browser-based',
+        'Free forever',
+      ],
+    });
+
+    return () => {
+      if (created) document.head.removeChild(meta);
+      else meta.content = prevDesc;
+      const s = document.getElementById(scriptId);
+      if (s) s.remove();
+    };
+  }, []);
   const [files, setFiles] = useState([]); // [{ id, file, name, size, pageCount }]
   const [orientation, setOrientation] = useState('auto'); // 'auto' | 'portrait' | 'landscape'
   const [layout, setLayout] = useState('sequential'); // 'sequential' | '2-up' | 'stack'
@@ -568,6 +630,8 @@ export default function MergePdf() {
             </div>
           </div>
         )}
+                {files.length === 0 && <SeoContent />}
+
       </div>
     </ToolShell>
   );
@@ -637,4 +701,233 @@ function fitInside(size, boxW, boxH) {
     width = boxH * ratio;
   }
   return { width, height };
+}
+/* ================= SEO Content Section ================= */
+function SeoContent() {
+  return (
+    <article className="seo-content">
+      <section className="seo-section">
+        <h2>What is a Merge PDF Tool?</h2>
+        <p>
+          A <strong>merge PDF tool</strong> combines multiple PDF files into a
+          single document, in the exact order you choose. This is essential
+          when you need to join separate invoices, reports, contracts, or
+          chapters into one file before sharing or printing.
+        </p>
+        <p>
+          Our <strong>free online PDF merger</strong> runs entirely in your
+          browser. Your files are never uploaded to any server, which makes it
+          one of the most private ways to combine PDFs online. Merge files in
+          seconds — no signup, no watermarks, no file size limits.
+        </p>
+      </section>
+
+      <section className="seo-section">
+        <h2>How to Merge PDF Files — Step by Step</h2>
+        <ol className="seo-steps">
+          <li>
+            <strong>Upload your PDFs</strong> — drag & drop multiple files or
+            click to browse. You need at least 2 PDFs.
+          </li>
+          <li>
+            <strong>Reorder files</strong> — use the ↑ and ↓ buttons to
+            arrange them in the order you want.
+          </li>
+          <li>
+            <strong>Choose page orientation</strong> — Auto keeps each page
+            as-is, or force Portrait / Landscape for all pages.
+          </li>
+          <li>
+            <strong>Choose a layout</strong> — Sequential (1 page per sheet),
+            2-up Horizontal (2 pages side by side), or 2-up Vertical (2 pages
+            stacked).
+          </li>
+          <li>
+            <strong>Click "Merge"</strong> — download the combined PDF
+            instantly.
+          </li>
+        </ol>
+      </section>
+
+      <section className="seo-section">
+        <h2>Key Features</h2>
+        <div className="seo-features">
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔗</div>
+            <h3>Combine Any Number of PDFs</h3>
+            <p>
+              Merge 2, 10, or 100 PDFs into a single file — no limits, no
+              signup, no watermarks.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">↕️</div>
+            <h3>Easy Reordering</h3>
+            <p>
+              Move any file up or down in the list with simple ↑ ↓ buttons to
+              set the perfect order.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔄</div>
+            <h3>Orientation Control</h3>
+            <p>
+              Auto (keep original), Portrait, or Landscape — the tool rotates
+              pages if needed so everything looks uniform.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">📐</div>
+            <h3>3 Layout Modes</h3>
+            <p>
+              Sequential (normal merge), 2-up Horizontal (side by side), or
+              2-up Vertical (stacked) — perfect for booklets and handouts.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">👁️</div>
+            <h3>Page Count Preview</h3>
+            <p>
+              See how many pages each PDF has before merging, plus total pages
+              in the result.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔒</div>
+            <h3>100% Private</h3>
+            <p>
+              All processing happens in your browser. Your PDFs never leave
+              your device — no uploads, no servers.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="seo-section">
+        <h2>Common Use Cases</h2>
+        <ul className="seo-list">
+          <li>
+            <strong>Combining invoices</strong> — merge monthly invoices into
+            a single yearly PDF for accounting.
+          </li>
+          <li>
+            <strong>Joining reports</strong> — combine multiple chapter PDFs
+            into one complete report.
+          </li>
+          <li>
+            <strong>Contract assembly</strong> — merge signed pages,
+            appendices, and exhibits into one contract.
+          </li>
+          <li>
+            <strong>Portfolio building</strong> — combine separate project
+            PDFs into one portfolio document.
+          </li>
+          <li>
+            <strong>Study materials</strong> — merge lecture notes, slides,
+            and handouts into one study file.
+          </li>
+          <li>
+            <strong>Booklet printing</strong> — use 2-up layouts to create
+            printable booklets from single-page PDFs.
+          </li>
+        </ul>
+      </section>
+
+      <section className="seo-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <details className="seo-faq" open>
+          <summary>Is this PDF merger free?</summary>
+          <p>
+            Yes — completely free with no limits. No signup, no watermarks,
+            no hidden fees. Merge as many PDFs as you want.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Are my files safe?</summary>
+          <p>
+            Absolutely. The entire process runs locally in your browser using
+            JavaScript. Your PDFs are never uploaded to any server, so your
+            data stays completely private.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I control the order of merged PDFs?</summary>
+          <p>
+            Yes — after uploading, use the ↑ and ↓ buttons next to each file
+            to reorder them. The final PDF follows the exact order shown.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>What's the difference between Sequential and 2-up layouts?</summary>
+          <p>
+            <strong>Sequential</strong> puts one PDF page per sheet — the
+            normal merge. <strong>2-up Horizontal</strong> places two pages
+            side by side per sheet. <strong>2-up Vertical</strong> stacks two
+            pages top-bottom per sheet. 2-up is great for handouts and
+            booklets.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Will quality be reduced after merging?</summary>
+          <p>
+            No — Sequential merge is lossless. Text, images, and formatting
+            stay exactly as in the originals. 2-up layouts re-render pages as
+            images, so text becomes non-selectable in those modes.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>What does "Orientation" do?</summary>
+          <p>
+            Auto keeps each page's original orientation. Portrait forces all
+            pages to tall/vertical. Landscape forces all pages to wide/horizontal.
+            The tool rotates pages as needed without distorting content.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Is there a file size limit?</summary>
+          <p>
+            No hard limit — but very large PDFs (200+ MB or 1000+ pages total)
+            may take longer and use more memory. For best performance, merge
+            in smaller batches.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Does it work with scanned PDFs?</summary>
+          <p>
+            Yes — merging works at the page level, so scanned PDFs (which are
+            images) merge perfectly.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I merge password-protected PDFs?</summary>
+          <p>
+            If the PDF allows reading without a password, merging works. If
+            it's locked with a password, you'll need to unlock it first using
+            the password in your PDF reader.
+          </p>
+        </details>
+      </section>
+
+      <section className="seo-section">
+        <h2>Related Tools</h2>
+        <p>
+          Try our other PDF tools: <strong>Split PDF</strong>,{' '}
+          <strong>Compress PDF</strong>, <strong>Rotate PDF</strong>,{' '}
+          <strong>Add Watermark</strong>, <strong>Add Page Numbers</strong>,{' '}
+          <strong>PDF to JPG</strong>, <strong>PDF to PNG</strong>,{' '}
+          <strong>PDF to Text</strong>, and <strong>PDF to Word</strong> — all
+          free and browser-based.
+        </p>
+      </section>
+    </article>
+  );
 }

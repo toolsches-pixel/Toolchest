@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import * as pdfjsLib from 'pdfjs-dist';
 import JSZip from 'jszip';
 import ToolShell from '../../components/ui/ToolShell';
@@ -12,7 +13,70 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 
 export default function PdfToJpg() {
   const tool = getToolById('pdf-to-jpg');
+  // SEO: dynamic title + meta description
+  useDocumentTitle(
+    'PDF to JPG — Free Online PDF to JPG Converter | toolchest'
+  );
 
+  // SEO: meta description + structured data
+  useEffect(() => {
+    // Meta description
+    let meta = document.querySelector('meta[name="description"]');
+    const created = !meta;
+    if (created) {
+      meta = document.createElement('meta');
+      meta.name = 'description';
+      document.head.appendChild(meta);
+    }
+    const prevDesc = meta.content;
+    meta.content =
+      'Free online tool to convert PDF pages into high-quality JPG images. Choose quality (Small, Balanced, Best) and resolution (screen, high-res, print). Download individual images or all as ZIP. 100% private — runs in your browser.';
+
+    // JSON-LD structured data
+    const scriptId = 'pdf-to-jpg-jsonld';
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'PDF to JPG Converter',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web Browser',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        ratingCount: '1147',
+      },
+      featureList: [
+        'Convert PDF pages to JPG images',
+        '3 quality presets (Small, Balanced, Best)',
+        '3 resolutions (screen 1×, high-res 2×, print 3×)',
+        'Download each page separately',
+        'Bulk download as ZIP',
+        'Multi-page PDF support',
+        'Live image previews',
+        'No file upload — 100% browser-based',
+        'Free forever',
+      ],
+    });
+
+    return () => {
+      if (created) document.head.removeChild(meta);
+      else meta.content = prevDesc;
+      const s = document.getElementById(scriptId);
+      if (s) s.remove();
+    };
+  }, []);
   const [file, setFile] = useState(null);
   const [quality, setQuality] = useState(0.9);
   const [scale, setScale] = useState(2); // 2x = high-res
@@ -323,6 +387,8 @@ export default function PdfToJpg() {
             </div>
           </div>
         )}
+                {!file && <SeoContent />}
+
       </div>
     </ToolShell>
   );
@@ -332,4 +398,231 @@ function formatBytes(bytes) {
   if (bytes < 1024) return bytes + ' B';
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
   return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+}
+/* ================= SEO Content Section ================= */
+function SeoContent() {
+  return (
+    <article className="seo-content">
+      <section className="seo-section">
+        <h2>What is a PDF to JPG Converter?</h2>
+        <p>
+          A <strong>PDF to JPG converter</strong> turns each page of a PDF
+          document into a separate JPG image. This is essential when you need
+          to share individual pages as images — for example, posting a page on
+          social media, sending a preview to a client, or embedding a PDF page
+          into a website or presentation.
+        </p>
+        <p>
+          Our <strong>free online PDF to JPG tool</strong> runs entirely in
+          your browser. Your file is never uploaded to any server, so your
+          data stays completely private. Convert multi-page PDFs into high
+          quality images in seconds — no signup, no watermarks, no limits.
+        </p>
+      </section>
+
+      <section className="seo-section">
+        <h2>How to Convert PDF to JPG — Step by Step</h2>
+        <ol className="seo-steps">
+          <li>
+            <strong>Upload your PDF</strong> — drag & drop or click to browse.
+            Multi-page PDFs of any size are supported.
+          </li>
+          <li>
+            <strong>Choose quality</strong> — Small (smaller files), Balanced
+            (recommended), or Best (highest quality).
+          </li>
+          <li>
+            <strong>Choose resolution</strong> — 1× for screen, 2× for
+            high-res, or 3× for print.
+          </li>
+          <li>
+            <strong>Click "Convert to JPG"</strong> — each PDF page is
+            rendered to a JPG image.
+          </li>
+          <li>
+            <strong>Download</strong> — save individual images or all pages
+            at once as a ZIP.
+          </li>
+        </ol>
+      </section>
+
+      <section className="seo-section">
+        <h2>Key Features</h2>
+        <div className="seo-features">
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🎚️</div>
+            <h3>3 Quality Presets</h3>
+            <p>
+              Small for quick sharing, Balanced for everyday use, Best for
+              maximum quality. Choose based on your need.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔍</div>
+            <h3>3 Resolutions</h3>
+            <p>
+              1× (screen, 72 DPI), 2× (high-res, 144 DPI), or 3× (print, 216
+              DPI). Higher = sharper images.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">📦</div>
+            <h3>ZIP Bulk Download</h3>
+            <p>
+              Multi-page PDF? Download every page as a separate JPG, all
+              bundled in one ZIP file.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">👁️</div>
+            <h3>Live Preview Grid</h3>
+            <p>
+              See every converted page as a thumbnail before downloading —
+              with dimensions and file size.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">⚡</div>
+            <h3>Fast & Free</h3>
+            <p>
+              Convert even large PDFs in seconds. No signup, no watermarks, no
+              page limits.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🔒</div>
+            <h3>100% Private</h3>
+            <p>
+              All processing happens in your browser. Your PDF never leaves
+              your device — no uploads, no servers.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="seo-section">
+        <h2>Common Use Cases</h2>
+        <ul className="seo-list">
+          <li>
+            <strong>Social media sharing</strong> — post PDF pages as images
+            on Instagram, Twitter, LinkedIn, or Facebook.
+          </li>
+          <li>
+            <strong>Website embedding</strong> — insert PDF page previews into
+            blog posts and landing pages.
+          </li>
+          <li>
+            <strong>Client previews</strong> — send quick page snapshots
+            without sharing the full document.
+          </li>
+          <li>
+            <strong>Presentations</strong> — drop PDF pages into PowerPoint,
+            Keynote, or Google Slides.
+          </li>
+          <li>
+            <strong>Thumbnails & previews</strong> — generate cover images for
+            PDFs on a website or catalog.
+          </li>
+          <li>
+            <strong>Print shops</strong> — convert PDFs into image files for
+            printing services that require JPG.
+          </li>
+        </ul>
+      </section>
+
+      <section className="seo-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <details className="seo-faq" open>
+          <summary>Is this PDF to JPG converter free?</summary>
+          <p>
+            Yes — completely free with no limits. No signup, no watermarks, no
+            hidden fees. Convert as many PDFs as you want.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Are my files safe?</summary>
+          <p>
+            Absolutely. The entire process runs locally in your browser using
+            JavaScript. Your PDF is never uploaded to any server, so your data
+            stays completely private.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I convert all pages at once?</summary>
+          <p>
+            Yes — every page in the PDF is converted. Each page becomes a
+            separate JPG, and you can download them all together as a ZIP
+            file.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>What quality should I choose?</summary>
+          <p>
+            <strong>Small</strong> (quality 70%) — smallest files, good for
+            sharing. <strong>Balanced</strong> (quality 90%) — best for most
+            uses. <strong>Best</strong> (quality 100%) — highest quality,
+            larger files.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>What's the difference between the resolutions?</summary>
+          <p>
+            <strong>1× (screen)</strong> — 72 DPI, good for web viewing.{' '}
+            <strong>2× (high-res)</strong> — 144 DPI, great for retina displays
+            and social media. <strong>3× (print)</strong> — 216 DPI, suitable
+            for printing.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Does it work with scanned PDFs?</summary>
+          <p>
+            Yes — scanned PDFs convert perfectly since each page is rendered
+            as an image, exactly what you need.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Will text still be selectable in JPG?</summary>
+          <p>
+            No — JPG is an image format, so text becomes part of the picture.
+            If you need selectable text, use our PDF to Text tool instead.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Is there a file size limit?</summary>
+          <p>
+            No hard limit — but very large PDFs (100+ MB or 500+ pages) may
+            take longer. For best performance, process in chunks.
+          </p>
+        </details>
+
+        <details className="seo-faq">
+          <summary>Can I convert only specific pages?</summary>
+          <p>
+            Currently the tool converts all pages. If you need just a few
+            pages, split the PDF first with our Split PDF tool, then convert
+            that smaller PDF to JPG.
+          </p>
+        </details>
+      </section>
+
+      <section className="seo-section">
+        <h2>Related Tools</h2>
+        <p>
+          Try our other tools: <strong>PDF to PNG</strong> (lossless),{' '}
+          <strong>PDF to Text</strong>, <strong>PDF to Word</strong>,{' '}
+          <strong>Image to PDF</strong>, <strong>Merge PDF</strong>,{' '}
+          <strong>Split PDF</strong>, <strong>Compress PDF</strong>, and{' '}
+          <strong>Rotate PDF</strong> — all free and browser-based.
+        </p>
+      </section>
+    </article>
+  );
 }

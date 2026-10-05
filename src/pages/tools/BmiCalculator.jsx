@@ -477,14 +477,7 @@ export default function BmiCalculator() {
           </button>
         </div>
 
-        {/* Disclaimer */}
-        <div className="bmi-disclaimer">
-          <strong>⚠️ Disclaimer:</strong> This calculator provides estimates
-          for general information only. BMI doesn't distinguish between muscle
-          and fat, and may not be accurate for athletes, pregnant women,
-          children, or the elderly. Always consult a healthcare professional
-          for medical advice.
-        </div>
+       
 
         {/* SEO Content */}
         <SeoContent />
@@ -655,7 +648,7 @@ function SeoContent() {
       <section className="seo-section">
         <h2>Frequently Asked Questions</h2>
 
-        <details className="seo-faq" open>
+        <details className="seo-faq" >
           <summary>What is a healthy BMI?</summary>
           <p>
             For most adults, a BMI between <strong>18.5 and 24.9</strong> is
@@ -716,9 +709,17 @@ function SeoContent() {
           </p>
         </details>
       </section>
+ {/* Disclaimer */}
+        <div className="bmi-disclaimer">
+          <strong>⚠️ Disclaimer:</strong> This calculator provides estimates
+          for general information only. BMI doesn't distinguish between muscle
+          and fat, and may not be accurate for athletes, pregnant women,
+          children, or the elderly. Always consult a healthcare professional
+          for medical advice.
+        </div>
 
       <section className="seo-section">
-        <h2>Related Tools</h2>
+        <h2 >Related Tools</h2>
         <p>
           Try our other tools: <strong>Age Calculator</strong>,{' '}
           <strong>Unit Converter</strong>, <strong>Percentage Calculator</strong>,{' '}

@@ -371,7 +371,7 @@
 .tt-words {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 14px;
+  gap: 15px 20px;
   font-size: 1.65rem;
   line-height: 1.5;
   padding: 8px 0;

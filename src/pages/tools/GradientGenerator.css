@@ -1,0 +1,517 @@
+/* ============================================================
+   GRADIENT GENERATOR
+   ============================================================ */
+
+.gg-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ---------- Preview ---------- */
+.gg-preview {
+  position: relative;
+  border-radius: 16px;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  transition: background 0.2s;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.gg-preview-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.gg-preview-btn {
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  backdrop-filter: blur(6px);
+}
+
+.gg-preview-btn:hover {
+  background: rgba(0, 0, 0, 0.6);
+  transform: translateY(-1px);
+}
+
+.gg-preview-label {
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  backdrop-filter: blur(6px);
+  word-break: break-all;
+  line-height: 1.5;
+  max-width: 100%;
+  align-self: flex-start;
+}
+
+/* ---------- Sections ---------- */
+.gg-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gg-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.gg-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.gg-add-btn,
+.gg-clear-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.gg-add-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(78, 205, 196, 0.06);
+}
+
+.gg-clear-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* ---------- Type tabs ---------- */
+.gg-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.gg-tab {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.gg-tab:hover {
+  color: var(--text);
+}
+
+.gg-tab.active {
+  background: var(--bg-hover);
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- Angle slider ---------- */
+.gg-slider-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gg-slider-header .gg-label {
+  flex: 1;
+}
+
+.gg-angle-input {
+  width: 60px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 8px;
+  outline: none;
+  text-align: center;
+}
+
+.gg-angle-input:focus {
+  border-color: var(--accent);
+}
+
+.gg-angle-unit {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.gg-slider {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-card);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.gg-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.gg-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+
+/* ---------- Position grid ---------- */
+.gg-position-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 40px);
+  gap: 6px;
+  padding: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  align-self: flex-start;
+}
+
+.gg-position-btn {
+  width: 40px;
+  height: 32px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+}
+
+.gg-position-btn:hover {
+  border-color: var(--border-strong);
+}
+
+.gg-position-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+}
+
+/* ---------- Stops ---------- */
+.gg-stops {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.gg-stop {
+  display: grid;
+  grid-template-columns: 28px 44px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.gg-stop:hover {
+  background: var(--bg-hover);
+}
+
+.gg-stop-index {
+  width: 24px;
+  height: 24px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gg-stop-color {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.gg-stop-color::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.gg-stop-color::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+.gg-stop-hex {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  outline: none;
+  text-transform: uppercase;
+  min-width: 0;
+  width: 100%;
+}
+
+.gg-stop-hex:focus {
+  border-color: var(--accent);
+}
+
+.gg-stop-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.gg-stop-btn {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.gg-stop-btn:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+.gg-stop-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.gg-stop-remove:hover:not(:disabled) {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+}
+
+/* ---------- Code ---------- */
+.gg-code-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.gg-code {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text);
+  word-break: break-all;
+  line-height: 1.5;
+  min-width: 0;
+}
+
+.gg-copy-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  min-width: 36px;
+}
+
+.gg-copy-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(78, 205, 196, 0.06);
+}
+
+/* ---------- Save button ---------- */
+.gg-save-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+}
+
+.gg-save-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(78, 205, 196, 0.06);
+}
+
+/* ---------- Recent ---------- */
+.gg-recent-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.gg-recent-swatch {
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.gg-recent-swatch:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- Presets ---------- */
+.gg-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.gg-preset {
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.gg-preset:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.gg-preset-label {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .gg-preview {
+    min-height: 180px;
+    padding: 14px;
+  }
+  .gg-preview-btn {
+    font-size: 0.68rem;
+    padding: 6px 10px;
+  }
+  .gg-preview-label {
+    font-size: 0.65rem;
+    padding: 6px 10px;
+  }
+  .gg-stop {
+    grid-template-columns: 24px 40px 1fr auto;
+    gap: 6px;
+  }
+  .gg-recent-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .gg-presets {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+  .gg-tab {
+    font-size: 0.75rem;
+    padding: 8px 6px;
+  }
+}

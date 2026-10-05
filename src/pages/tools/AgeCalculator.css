@@ -1,0 +1,524 @@
+/* ============================================================
+   AGE CALCULATOR
+   ============================================================ */
+
+.ac-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ---------- Input card ---------- */
+.ac-input-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ac-input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.ac-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ac-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ac-check-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  text-transform: lowercase;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.ac-check-inline input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 3px;
+  background: var(--bg-elev);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.ac-check-inline input[type='checkbox']:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.ac-check-inline input[type='checkbox']:checked::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.ac-date-input {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  color-scheme: dark;
+}
+
+.ac-date-input:focus {
+  border-color: var(--accent);
+}
+
+.ac-date-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ac-reset-btn {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ac-reset-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---------- Empty ---------- */
+.ac-empty {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.ac-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.ac-empty-title {
+  font-size: 1.05rem;
+  color: var(--text);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.ac-empty-sub {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 380px;
+  margin: 0 auto;
+  line-height: 1.55;
+}
+
+/* ---------- Hero (big age) ---------- */
+.ac-hero {
+  background: linear-gradient(135deg, rgba(78, 205, 196, 0.08), rgba(168, 85, 247, 0.08));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ac-hero-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.ac-hero-value {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin: 8px 0 6px;
+}
+
+.ac-hero-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 80px;
+}
+
+.ac-hero-num {
+  font-size: 3.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ac-hero-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
+
+.ac-hero-sub {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ac-hero-sub strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+
+
+/* ---------- Live counter ---------- */
+.ac-live {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.ac-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: ac-pulse 1.5s infinite;
+}
+
+@keyframes ac-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.ac-live-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+.ac-live-value {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ac-live-unit {
+  color: var(--text-dim);
+}
+
+/* ---------- Next birthday ---------- */
+.ac-birthday {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  flex-wrap: wrap;
+  transition: border-color 0.2s;
+}
+
+.ac-birthday.today {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.06);
+}
+
+.ac-birthday-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ac-birthday-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ac-birthday-title {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.ac-birthday-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ac-birthday-countdown {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.ac-cd-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 44px;
+}
+
+.ac-cd-num {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.ac-cd-label {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ---------- Sections ---------- */
+.ac-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ac-section-title {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ac-section-note {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.7;
+  font-weight: 400;
+}
+
+/* ---------- Units grid ---------- */
+.ac-units-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.ac-unit {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 14px;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.ac-unit:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.ac-unit-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.ac-unit-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  word-break: break-all;
+}
+
+.ac-unit-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ac-unit-fun {
+  background: linear-gradient(135deg, rgba(78, 205, 196, 0.06), rgba(168, 85, 247, 0.06));
+}
+
+.ac-unit-fun .ac-unit-value {
+  color: var(--accent);
+}
+
+
+
+
+
+/* ---------- Actions ---------- */
+.ac-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 8px;
+}
+
+.ac-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+
+.ac-btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.ac-btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.ac-btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+.ac-btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .ac-input-row {
+    grid-template-columns: 1fr;
+  }
+  .ac-hero-num {
+    font-size: 2.6rem;
+  }
+  .ac-hero-value {
+    gap: 20px;
+  }
+  .ac-hero-unit {
+    min-width: 60px;
+  }
+  .ac-units-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ac-birthday {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  .ac-birthday-icon {
+    align-self: center;
+  }
+  .ac-birthday-content {
+    text-align: center;
+  }
+  .ac-birthday-countdown {
+    justify-content: center;
+  }
+  .ac-cd-num {
+    font-size: 1.15rem;
+  }
+}

@@ -1,0 +1,448 @@
+/* ============================================================
+   HASH GENERATOR
+   ============================================================ */
+
+.hg-root {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ---------- Tabs ---------- */
+.hg-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.hg-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.hg-tab:hover {
+  color: var(--text);
+}
+
+.hg-tab.active {
+  background: var(--bg-hover);
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.hg-tab span {
+  font-size: 1rem;
+}
+
+/* ---------- Input section ---------- */
+.hg-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hg-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.hg-input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.hg-input-meta {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.hg-textarea {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  padding: 14px 16px;
+  outline: none;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.15s;
+  line-height: 1.55;
+}
+
+.hg-textarea:focus {
+  border-color: var(--accent);
+}
+
+.hg-textarea::placeholder {
+  color: var(--text-dim);
+}
+
+/* ---------- File dropzone ---------- */
+.hg-dropzone {
+  border: 2px dashed var(--border-strong);
+  border-radius: 12px;
+  padding: 36px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg-card);
+}
+
+.hg-dropzone:hover,
+.hg-dropzone.dragging {
+  border-color: var(--accent);
+  background: rgba(78, 205, 196, 0.06);
+}
+
+.hg-dropzone-icon {
+  font-size: 2.4rem;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.hg-dropzone-text {
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.hg-dropzone-sub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.hg-file-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.hg-file-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.hg-file-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.hg-file-name {
+  font-size: 0.9rem;
+  color: var(--text);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 2px;
+}
+
+.hg-file-size {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.hg-file-remove {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.hg-file-remove:hover {
+  background: var(--bg-hover);
+  color: #ef4444;
+}
+
+/* ---------- Options ---------- */
+.hg-options {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.hg-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  user-select: none;
+}
+
+.hg-checkbox input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--bg-card);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.hg-checkbox input[type='checkbox']:hover {
+  border-color: var(--accent);
+}
+
+.hg-checkbox input[type='checkbox']:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.hg-checkbox input[type='checkbox']:checked::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ---------- Hash list ---------- */
+.hg-results {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hg-hash-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hg-hash-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.15s;
+}
+
+.hg-hash-row:hover {
+  border-color: var(--border-strong);
+}
+
+.hg-hash-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hg-hash-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.hg-hash-bits {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+}
+
+.hg-copy-btn {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 36px;
+  flex-shrink: 0;
+}
+
+.hg-copy-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(78, 205, 196, 0.06);
+}
+
+.hg-copy-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.hg-hash-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text);
+  word-break: break-all;
+  line-height: 1.55;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  min-height: 40px;
+  letter-spacing: 0.01em;
+}
+
+.hg-hash-placeholder {
+  color: var(--text-dim);
+}
+
+.hg-hash-note {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-style: italic;
+}
+
+/* ---------- Compare ---------- */
+.hg-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hg-compare-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.hg-compare-input {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 0;
+}
+
+.hg-compare-input:focus {
+  border-color: var(--accent);
+}
+
+.hg-compare-input::placeholder {
+  color: var(--text-dim);
+}
+
+.hg-compare-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.hg-compare-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.hg-compare-result {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid;
+}
+
+.hg-compare-result.match {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.hg-compare-result.no-match {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.hg-compare-result strong {
+  color: inherit;
+  font-weight: 700;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .hg-hash-value {
+    font-size: 0.7rem;
+    padding: 8px 10px;
+  }
+  .hg-compare-row {
+    flex-direction: column;
+  }
+  .hg-compare-btn {
+    width: 100%;
+  }
+  .hg-textarea {
+    min-height: 80px;
+  }
+}

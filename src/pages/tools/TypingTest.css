@@ -2,7 +2,7 @@
    TYPING TEST — theme-based, monkeytype-style
    ============================================================ */
 
-/* ---------- THEME VARIABLES (same as TypingCountries) ---------- */
+/* ---------- THEME VARIABLES ---------- */
 .tt-root {
   --bg: #323437;
   --text: #d1d0c5;
@@ -30,8 +30,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 50px 20px 60px;
-  gap: 16px;
+  padding: 60px 20px 60px;
+  gap: 20px;
   position: relative;
   overflow: hidden;
   font-family: 'JetBrains Mono', monospace;
@@ -160,8 +160,8 @@
   gap: 16px;
   flex-wrap: wrap;
   width: 100%;
-  max-width: 1000px;
-  padding-right: 40px;
+  max-width: 1300px;
+  padding-right: 50px;
 }
 
 .tt-config {
@@ -171,7 +171,7 @@
   flex-wrap: wrap;
   background: var(--tt-card);
   border-radius: var(--r-md);
-  padding: 8px 12px;
+  padding: 8px 14px;
   flex: 1;
   min-width: 0;
   justify-content: center;
@@ -250,7 +250,7 @@
    ============================================================ */
 .tt-live-stats {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   flex-shrink: 0;
 }
 
@@ -279,7 +279,7 @@
    ============================================================ */
 .tt-big-counter {
   text-align: center;
-  font-size: 3rem;
+  font-size: 3.2rem;
   font-weight: 700;
   color: var(--tt-text-muted);
   opacity: 0.25;
@@ -290,7 +290,7 @@
   pointer-events: none;
   user-select: none;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1300px;
 }
 
 .tt-big-counter .urgent {
@@ -303,7 +303,7 @@
    ============================================================ */
 .tt-progress-bar {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1300px;
   height: 3px;
   background: var(--tt-card);
   border-radius: 999px;
@@ -323,12 +323,12 @@
 .tt-words-wrapper {
   position: relative;
   width: 100%;
-  max-width: 1000px;
-  height: 260px;
+  max-width: 1300px;
+  height: 200px;
   overflow: hidden;
   cursor: text;
   transition: filter 0.2s;
-  padding: 0 40px;
+  padding: 0 30px;
   mask-image: linear-gradient(
     to bottom,
     transparent 0%,
@@ -374,15 +374,15 @@
 .tt-words {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px 20px;
-  font-size: 1.65rem;
-  line-height: 1.7;
-  padding: 8px 0;
+  gap: 12px 22px;
+  font-size: 1.9rem;
+  line-height: 1.5;
+  padding: 10px 0;
   letter-spacing: 0.02em;
   font-weight: 400;
 }
 
-/* Un-typed words (future) — dim but readable */
+/* Un-typed words */
 .tt-word {
   color: var(--tt-text);
   opacity: 0.45;
@@ -392,12 +392,13 @@
   padding-bottom: 2px;
 }
 
-/* Past (completed) words */
+/* Completed correctly */
 .tt-word.past.correct {
   color: var(--tt-text);
   opacity: 1;
 }
 
+/* Completed with errors */
 .tt-word.past.incorrect {
   color: var(--tt-error);
   opacity: 1;
@@ -407,7 +408,7 @@
   text-decoration-thickness: 2px;
 }
 
-/* Active word — full opacity so chars control their own */
+/* Active word */
 .tt-word.active {
   color: var(--tt-text);
   opacity: 1;
@@ -487,10 +488,12 @@
   color: var(--tt-text-dim);
   gap: 16px;
   flex-wrap: wrap;
-  padding-top: 8px;
+  padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   width: 100%;
-  max-width: 1000px;
+  max-width: 1300px;
+  margin-top: auto;               /* ← ye add karo */
+  margin-bottom: 20px;            /* ← thoda neeche se gap */
 }
 
 .tt-hints kbd {
@@ -678,26 +681,54 @@
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+@media (max-width: 1024px) {
+  .tt-words {
+    font-size: 1.6rem;
+  }
+  .tt-words-wrapper {
+    height: 160px;
+    padding: 0 24px;
+  }
+}
+
 @media (max-width: 768px) {
   .tt-root {
-    padding: 20px 16px 30px;
+    padding: 30px 12px 40px;
+    gap: 16px;
   }
   .tt-topbar {
-    padding-right: 30px;
+    padding-right: 34px;
+    gap: 12px;
+  }
+  .tt-config {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+  .tt-pill {
+    padding: 5px 8px;
+    font-size: 0.7rem;
   }
   .tt-live-stats {
     justify-content: center;
+    gap: 16px;
+  }
+  .tt-live-value {
+    font-size: 1.2rem;
   }
   .tt-big-counter {
-    font-size: 2.2rem;
-  }
-  .tt-words {
-    font-size: 1.25rem;
-    gap: 10px 14px;
+    font-size: 2.4rem;
   }
   .tt-words-wrapper {
-    height: 200px;
-    padding: 0 16px;
+    height: 220px;
+    padding: 0 14px;
+  }
+  .tt-words {
+    font-size: 1.3rem;
+    gap: 12px 16px;
+    line-height: 1.6;
+  }
+  .tt-word {
+    opacity: 0.5;
   }
   .tt-result-card {
     padding: 24px 20px;
@@ -720,6 +751,7 @@
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
+    font-size: 0.7rem;
   }
   .tt-theme-toggle {
     padding: 10px 6px;

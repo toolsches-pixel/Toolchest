@@ -23,15 +23,14 @@
   --tt-card: var(--sub-alt);
   --tt-border: var(--sub-alt);
 
-  background: var(--tt-bg);
+ background: var(--tt-bg);
   color: var(--tt-text);
-  min-height: 100vh;                 /* ← full viewport */
+  min-height: 100vh;
   width: 100%;
   display: flex;
-  justify-content: center;      /* ← content vertically center */
-  align-items: center;           
   flex-direction: column;
-  padding: 20px 40px 28px;           /* ← same as TypingCountries */
+  align-items: center;
+  padding: 50px 20px 60px;
   gap: 16px;
   position: relative;
   overflow: hidden;
@@ -368,16 +367,19 @@
   will-change: transform;
 }
 
+/* ---------- Words ---------- */
 .tt-words {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px 20px;
+  gap: 10px 14px;
   font-size: 1.65rem;
-  line-height: 1.5;
+  line-height: 1.7;
   padding: 8px 0;
   letter-spacing: 0.01em;
   font-weight: 400;
 }
+
+/* Un-typed words (future) — very dim */
 .tt-word {
   color: var(--tt-text);
   opacity: 0.3;
@@ -387,12 +389,11 @@
   padding-bottom: 2px;
 }
 
-
+/* Past (already completed) words */
 .tt-word.past.correct {
   color: var(--tt-text);
   opacity: 1;
 }
-
 
 .tt-word.past.incorrect {
   color: var(--tt-error);
@@ -403,27 +404,31 @@
   text-decoration-thickness: 2px;
 }
 
+/* Active word — full opacity so individual chars control their own visibility */
 .tt-word.active {
   color: var(--tt-text);
-  opacity: 1;                    /* ← full, so chars can have their own opacity */
+  opacity: 1;
   position: relative;
 }
 
-
+/* ---------- Characters inside active word ---------- */
 .tt-word.active .char {
   position: relative;
   transition: color 0.05s ease, opacity 0.05s ease;
 }
 
+/* Not-yet-typed chars — DIM */
 .tt-word.active .char.pending {
   color: var(--tt-text);
-  opacity: 0.3;                  /* ← dim */
+  opacity: 0.3;
 }
 
+/* Typed correctly — FULL BRIGHT */
 .tt-word.active .char.correct {
   color: var(--tt-text);
-  opacity: 1;                    /* ← bright */
+  opacity: 1;
 }
+
 /* Typed wrong — red, full */
 .tt-word.active .char.incorrect {
   color: var(--tt-error);
@@ -433,11 +438,11 @@
   text-decoration-thickness: 2px;
 }
 
+/* Extra chars (typed beyond target) — dark red */
 .tt-word.active .char.extra {
   color: var(--tt-error-extra);
   opacity: 1;
 }
-
 /* ============================================================
    CARET — px measured, no mismatch
    ============================================================ */

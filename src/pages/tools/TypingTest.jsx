@@ -941,7 +941,8 @@ export default function TypingTest() {
       {/* Result */}
       {result && (
         <div className="tt-result">
-          <div className="tt-result-header">
+        <div className="tt-result-card">
+           <div className="tt-result-header">
             <div className="tt-result-title">
               {result.wpm} <span>wpm</span>
             </div>
@@ -991,6 +992,7 @@ export default function TypingTest() {
             <button className="tt-btn-primary" onClick={buildTest}>
               ⟳ Next test
             </button>
+          </div>
           </div>
         </div>
       )}

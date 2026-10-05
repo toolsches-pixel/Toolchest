@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
+import './DiceRoller.css';
 
 const DICE_TYPES = [
   { sides: 4, icon: '🔺', label: 'D4' },
@@ -583,7 +584,7 @@ function SeoContent() {
       <section className="seo-section">
         <h2>Frequently Asked Questions</h2>
 
-        <details className="seo-faq" open>
+        <details className="seo-faq" >
           <summary>Is this dice roller really free?</summary>
           <p>
             Yes — completely free with no signup, no watermarks, no ads. Roll

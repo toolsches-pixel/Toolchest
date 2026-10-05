@@ -3,7 +3,7 @@ import QRCode from 'qrcode';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
-
+import './ImageToQr.css';
 const ERROR_LEVELS = [
   { id: 'L', label: 'Low (7%)', desc: 'Smallest QR' },
   { id: 'M', label: 'Medium (15%)', desc: 'Balanced' },

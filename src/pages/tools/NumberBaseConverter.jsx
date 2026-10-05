@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
+import './NumberBaseConverter.css';
 
 const BASES = [
   { id: 'bin', label: 'Binary', short: 'BIN', base: 2, prefix: '0b', placeholder: '1010', icon: '01' },

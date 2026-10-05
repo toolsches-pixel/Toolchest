@@ -1,13 +1,6 @@
 import { lazy } from "react";
 
-/**
- * Tool registry — grouped structure.
- *
- * 3 groups:
- *   - typing  → Typing Practice
- *   - pdf     → PDF Tools
- *   - others  → Others Tools (image, QR, etc.)
- */
+
 
 export const groups = [
   // ============================================================

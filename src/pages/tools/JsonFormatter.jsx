@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
-
+import './JsonFormatter.css';
 const SAMPLE_JSON = `{"name":"toolchest","version":"1.0.0","description":"Free online tools","author":{"name":"Team","email":"hello@toolchest.app"},"tools":[{"id":"json-formatter","name":"JSON Formatter","category":"Developer","tags":["json","format","validate"]},{"id":"password-generator","name":"Password Generator","category":"Security","tags":["password","security"]}],"features":{"free":true,"noSignup":true,"private":true},"created":"2026-01-15T10:30:00Z","stars":12847,"rating":4.9}`;
 
 const INDENT_OPTIONS = [

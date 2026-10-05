@@ -3,6 +3,7 @@ import { PDFDocument } from '@cantoo/pdf-lib';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
+import './LockPdf.css';
 
 export default function LockPdf() {
   const tool = getToolById('lock-pdf');

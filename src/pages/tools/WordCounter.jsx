@@ -2,6 +2,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
+import './WordCounter.css';
 
 const STOP_WORDS = new Set([
   'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',

@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import ToolShell from '../../components/ui/ToolShell';
 import { getToolById } from '../../data/tools';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
+import './ImageResizer.css';
 
 const PRESETS = [
   { id: 'instagram-square', label: 'Instagram Post', w: 1080, h: 1080 },

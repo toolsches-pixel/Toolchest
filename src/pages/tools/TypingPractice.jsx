@@ -34,21 +34,12 @@ function formatTimeShort(ms) {
   return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
-/**
- * Generic typing practice component.
- * Props:
- *   - wordListKey: 'countries' | 'bihar' | any key in WORD_LISTS
- *   - title: display name (e.g. "apna word")
- *   - subtitle: e.g. "195 countries"
- *   - storageKey: unique localStorage key for theme (optional)
- */
 export default function TypingPractice({
   wordListKey = 'countries',
   title = '⌨️ apna word',
   subtitle = '',
   storageKey = 'apnaWordTheme',
 }) {
-  // Build word list from the key
   const WORD_LIST = useMemo(() => {
     const raw = WORD_LISTS[wordListKey];
     if (!raw) {
@@ -68,6 +59,9 @@ export default function TypingPractice({
   const [messageVisible, setMessageVisible] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [voiceAvailable, setVoiceAvailable] = useState(true);
+
+  // ✅ NEW: scroll offset state
+  const [scrollOffset, setScrollOffset] = useState(0);
 
   const [result, setResult] = useState({
     show: false,
@@ -102,6 +96,7 @@ export default function TypingPractice({
   const selectedVoiceRef = useRef(null);
   const typingValueRef = useRef('');
   const voiceEnabledRef = useRef(true);
+  const scrollOffsetRef = useRef(0);
 
   const wordStreamPanelRef = useRef(null);
   const wordStreamRef = useRef(null);
@@ -110,6 +105,7 @@ export default function TypingPractice({
 
   useEffect(() => { typingValueRef.current = typingValue; }, [typingValue]);
   useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
+  useEffect(() => { scrollOffsetRef.current = scrollOffset; }, [scrollOffset]);
 
   // ---------- SPEECH ----------
   useEffect(() => {
@@ -193,30 +189,43 @@ export default function TypingPractice({
     updateTimerDisplay();
   }, [updateTimerDisplay]);
 
-  // ---------- SCROLL ----------
-  const scrollToActiveWord = useCallback(() => {
+  // ============================================================
+  // ✅ FIXED SCROLL — 3-line window with transform translateY
+  // ============================================================
+  const updateScroll = useCallback(() => {
     const panel = wordStreamPanelRef.current;
     const stream = wordStreamRef.current;
     if (!panel || !stream) return;
+
     const activeEl = stream.querySelector('.word.active');
     if (!activeEl) return;
-    const containerRect = panel.getBoundingClientRect();
+
+    const panelRect = panel.getBoundingClientRect();
     const activeRect = activeEl.getBoundingClientRect();
-    const activeTopInContainer = activeRect.top - containerRect.top;
-    const activeBottomInContainer = activeRect.bottom - containerRect.top;
-    const containerHeight = panel.clientHeight;
-    const scrollTop = panel.scrollTop;
-    const margin = 40;
-    const isAbove = activeTopInContainer < margin;
-    const isBelow = activeBottomInContainer > containerHeight - margin;
-    if (isAbove || isBelow) {
-      const activeCenterInContainer = (activeTopInContainer + activeBottomInContainer) / 2;
-      const targetScroll = scrollTop + activeCenterInContainer - containerHeight / 2;
-      panel.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
+    const activeRelTop = activeRect.top - panelRect.top;
+    const panelHeight = panel.clientHeight;
+
+    // Trigger when active word goes past 55% (bottom 3rd line)
+    const threshold = panelHeight * 0.55;
+
+    if (activeRelTop > threshold) {
+      const currentOffset = scrollOffsetRef.current;
+      const activeTopInContent = activeRect.top - panelRect.top + currentOffset;
+      const activeHeight = activeRect.height;
+      // Scroll so active word lands on middle line
+      const targetOffset = activeTopInContent - panelHeight / 2 + activeHeight / 2;
+      setScrollOffset(Math.max(0, targetOffset));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => { scrollToActiveWord(); }, [typingValue, scrollToActiveWord]);
+  // Trigger scroll when current index changes
+  useEffect(() => {
+    // Small timeout to allow DOM render
+    const t = setTimeout(updateScroll, 20);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [typingValue]);
 
   // ---------- PROGRESS ----------
   const updateProgressBadge = useCallback(() => {
@@ -307,6 +316,7 @@ export default function TypingPractice({
     testEndTimeRef.current = null;
 
     setTimerText('00:00.0');
+    setScrollOffset(0);             // ✅ reset scroll
 
     allWordsRef.current = shuffleArray(WORD_LIST);
     wordStatusRef.current = new Array(allWordsRef.current.length).fill('pending');
@@ -318,7 +328,6 @@ export default function TypingPractice({
     setTypingValue('');
     updateProgressBadge();
     forceRender();
-    if (wordStreamPanelRef.current) wordStreamPanelRef.current.scrollTop = 0;
     speakWord(currentWordRef.current);
     setTimeout(() => typingInputRef.current?.focus(), 0);
   }, [forceRender, speakWord, updateProgressBadge, WORD_LIST]);
@@ -503,6 +512,7 @@ export default function TypingPractice({
     wordStatusRef.current[0] = 'active';
 
     setTypingValue('');
+    setScrollOffset(0);             // ✅ reset scroll
     isInputDisabledRef.current = false;
 
     updateProgressBadge();
@@ -637,8 +647,14 @@ export default function TypingPractice({
 
       <div className="typing-area">
         <div className="word-stream-wrapper" ref={wordStreamPanelRef}>
-          <div className="word-stream" ref={wordStreamRef}>
-            {renderWordStream()}
+          <div
+            className="word-stream-inner"
+            ref={wordStreamRef}
+            style={{ transform: `translateY(-${scrollOffset}px)` }}
+          >
+            <div className="word-stream">
+              {renderWordStream()}
+            </div>
           </div>
         </div>
         <input

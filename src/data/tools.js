@@ -217,6 +217,14 @@ export const groups = [
         icon: "📱",
         component: lazy(() => import("../pages/tools/ImageToQr")),
       },
+      {
+  id: 'image-watermark',
+  name: 'Image Watermark',
+  description: 'Add text or logo watermark to images. Custom position, opacity, color.',
+  path: '/tools/image-watermark',
+  icon: '💧',
+  component: lazy(() => import('../pages/tools/ImageWatermark')),
+},
      
     ],
     
@@ -304,6 +312,14 @@ export const groups = [
   path: '/tools/bmi-calculator',
   icon: '⚖️',
   component: lazy(() => import('../pages/tools/BmiCalculator')),
+},
+{
+  id: 'unit-converter',
+  name: 'Unit Converter',
+  description: 'Convert 150+ units across 14 categories — length, weight, temperature, area, volume, and more.',
+  path: '/tools/unit-converter',
+  icon: '🔀',
+  component: lazy(() => import('../pages/tools/UnitConverter')),
 },
   ],
 },

@@ -1,7 +1,5 @@
 import { lazy } from "react";
 
-
-
 export const groups = [
   // ============================================================
   // 1. TYPING
@@ -16,7 +14,6 @@ export const groups = [
     category: "Productivity",
     tags: ["typing", "practice", "wpm", "keyboard"],
     tools: [
-      
       {
         id: "typing-countries",
         name: "Countries",
@@ -36,15 +33,15 @@ export const groups = [
         component: lazy(() => import("../pages/tools/TypingBihar")),
         fullBleed: true,
       },
-       {
-      id: 'typing-test',
-      name: 'Typing Test',
-      description: 'Monkeytype-style test. Time, words, quote modes.',
-      path: '/tools/typing-test',
-      icon: '⚡',
-      component: lazy(() => import('../pages/tools/TypingTest')),
-      fullBleed: true,
-    },
+      {
+        id: "typing-test",
+        name: "Typing Test",
+        description: "Monkeytype-style test. Time, words, quote modes.",
+        path: "/tools/typing-test",
+        icon: "⚡",
+        component: lazy(() => import("../pages/tools/TypingTest")),
+        fullBleed: true,
+      },
     ],
   },
 
@@ -59,15 +56,7 @@ export const groups = [
     icon: "📄",
     color: "#ff6b6b",
     category: "Documents",
-    tags: [
-      "pdf",
-      "merge",
-      "split",
-      "compress",
-      "rotate",
-      "lock",
-      "watermark",
-    ],
+    tags: ["pdf", "merge", "split", "compress", "rotate", "lock", "watermark"],
     tools: [
       {
         id: "merge-pdf",
@@ -193,13 +182,12 @@ export const groups = [
       {
         id: "image-resizer",
         name: "Image Resizer",
-        description:
-          "Resize JPG, PNG, WEBP to exact sizes or social presets.",
+        description: "Resize JPG, PNG, WEBP to exact sizes or social presets.",
         path: "/tools/image-resizer",
         icon: "📐",
         component: lazy(() => import("../pages/tools/ImageResizer")),
       },
-      
+
       {
         id: "image-to-pdf",
         name: "Image to PDF",
@@ -211,116 +199,162 @@ export const groups = [
       {
         id: "image-to-qr",
         name: "QR Code Generator",
-        description:
-          "Generate QR codes with custom logo and colors.",
+        description: "Generate QR codes with custom logo and colors.",
         path: "/tools/image-to-qr",
         icon: "📱",
         component: lazy(() => import("../pages/tools/ImageToQr")),
       },
       {
-  id: 'image-watermark',
-  name: 'Image Watermark',
-  description: 'Add text or logo watermark to images. Custom position, opacity, color.',
-  path: '/tools/image-watermark',
-  icon: '💧',
-  component: lazy(() => import('../pages/tools/ImageWatermark')),
-},
-     
+        id: "image-watermark",
+        name: "Image Watermark",
+        description:
+          "Add text or logo watermark to images. Custom position, opacity, color.",
+        path: "/tools/image-watermark",
+        icon: "💧",
+        component: lazy(() => import("../pages/tools/ImageWatermark")),
+      },
     ],
-    
   },
   {
-  id: "developer",
-  name: "Developer Tools",
-  description:
-    "Number converters, encoders, generators and utilities for developers.",
-  icon: "🔧",
-  color: "#a78bfa",
-  category: "Developer",
-  tags: ["developer", "code", "convert", "encode", "generate"],
-  tools: [
-    {
-      id: "number-base-converter",
-      name: "Number Base Converter",
-      description:
-        "Convert between binary, decimal, octal, hex, and 30+ other bases — live.",
-      path: "/tools/number-base-converter",
-      icon: "🔢",
-      component: lazy(() => import("../pages/tools/NumberBaseConverter")),
-    },
-    {
-      id: 'dice-roller',
-      name: 'Dice Roller',
-      description:
-        'Roll virtual D4, D6, D8, D10, D12, D20, D100 dice. Multiple dice + modifiers.',
-      path: '/tools/dice-roller',
-      icon: '🎲',
-      component: lazy(() => import('../pages/tools/DiceRoller')),
-    },
-     {
-      id: 'word-counter',
-      name: 'Word Counter',
-      description: 'Count words, characters, sentences, paragraphs with reading time & keyword density.',
-      path: '/tools/word-counter',
-      icon: '🔢',
-      component: lazy(() => import('../pages/tools/WordCounter')),
-    },
+    id: "developer",
+    name: "Developer Tools",
+    description:
+      "Number converters, encoders, generators and utilities for developers.",
+    icon: "🔧",
+    color: "#a78bfa",
+    category: "Developer",
+    tags: ["developer", "code", "convert", "encode", "generate"],
+    tools: [
       {
-        id: 'json-formatter',
-        name: 'JSON Formatter',
+        id: "number-base-converter",
+        name: "Number Base Converter",
         description:
-          'Format, validate, minify, and explore JSON with tree view.',
-        path: '/tools/json-formatter',
-        icon: '📋',
-        component: lazy(() => import('../pages/tools/JsonFormatter')),
+          "Convert between binary, decimal, octal, hex, and 30+ other bases — live.",
+        path: "/tools/number-base-converter",
+        icon: "🔢",
+        component: lazy(() => import("../pages/tools/NumberBaseConverter")),
       },
       {
-  id: 'color-picker',
-  name: 'Color Picker',
-  description: 'Pick colors, convert between HEX/RGB/HSL/HSV/CMYK, generate palettes & check contrast.',
-  path: '/tools/color-picker',
-  icon: '🎨',
-  component: lazy(() => import('../pages/tools/ColorPicker')),
-},
-{
-  id: 'gradient-generator',
-  name: 'Gradient Generator',
-  description: 'Create CSS linear, radial, and conic gradients with live preview. Copy CSS or Tailwind.',
-  path: '/tools/gradient-generator',
-  icon: '🌈',
-  component: lazy(() => import('../pages/tools/GradientGenerator')),
-},
-{
-  id: 'hash-generator',
-  name: 'Hash Generator',
-  description: 'Generate MD5, SHA-1, SHA-256, SHA-384, SHA-512 hashes from text or files.',
-  path: '/tools/hash-generator',
-  icon: '🔐',
-  component: lazy(() => import('../pages/tools/HashGenerator')),
-},
-{
-  id: 'age-calculator',
-  name: 'Age Calculator',
-  description: 'Calculate exact age in years, months, days — plus zodiac, next birthday countdown & life stats.',
-  path: '/tools/age-calculator',
-  icon: '🎂',
-  component: lazy(() => import('../pages/tools/AgeCalculator')),
-},{
-  id: 'bmi-calculator',
-  name: 'BMI Calculator',
-  description: 'Calculate your BMI, healthy weight range, BMR, TDEE and body fat estimate.',
-  path: '/tools/bmi-calculator',
-  icon: '⚖️',
-  component: lazy(() => import('../pages/tools/BmiCalculator')),
-},
-{
-  id: 'unit-converter',
-  name: 'Unit Converter',
-  description: 'Convert 150+ units across 14 categories — length, weight, temperature, area, volume, and more.',
-  path: '/tools/unit-converter',
-  icon: '🔀',
-  component: lazy(() => import('../pages/tools/UnitConverter')),
-},
+        id: "dice-roller",
+        name: "Dice Roller",
+        description:
+          "Roll virtual D4, D6, D8, D10, D12, D20, D100 dice. Multiple dice + modifiers.",
+        path: "/tools/dice-roller",
+        icon: "🎲",
+        component: lazy(() => import("../pages/tools/DiceRoller")),
+      },
+      {
+        id: "word-counter",
+        name: "Word Counter",
+        description:
+          "Count words, characters, sentences, paragraphs with reading time & keyword density.",
+        path: "/tools/word-counter",
+        icon: "🔢",
+        component: lazy(() => import("../pages/tools/WordCounter")),
+      },
+      {
+        id: "json-formatter",
+        name: "JSON Formatter",
+        description:
+          "Format, validate, minify, and explore JSON with tree view.",
+        path: "/tools/json-formatter",
+        icon: "📋",
+        component: lazy(() => import("../pages/tools/JsonFormatter")),
+      },
+      {
+        id: "color-picker",
+        name: "Color Picker",
+        description:
+          "Pick colors, convert between HEX/RGB/HSL/HSV/CMYK, generate palettes & check contrast.",
+        path: "/tools/color-picker",
+        icon: "🎨",
+        component: lazy(() => import("../pages/tools/ColorPicker")),
+      },
+      {
+        id: "gradient-generator",
+        name: "Gradient Generator",
+        description:
+          "Create CSS linear, radial, and conic gradients with live preview. Copy CSS or Tailwind.",
+        path: "/tools/gradient-generator",
+        icon: "🌈",
+        component: lazy(() => import("../pages/tools/GradientGenerator")),
+      },
+      {
+        id: "hash-generator",
+        name: "Hash Generator",
+        description:
+          "Generate MD5, SHA-1, SHA-256, SHA-384, SHA-512 hashes from text or files.",
+        path: "/tools/hash-generator",
+        icon: "🔐",
+        component: lazy(() => import("../pages/tools/HashGenerator")),
+      },
+      {
+        id: "age-calculator",
+        name: "Age Calculator",
+        description:
+          "Calculate exact age in years, months, days — plus zodiac, next birthday countdown & life stats.",
+        path: "/tools/age-calculator",
+        icon: "🎂",
+        component: lazy(() => import("../pages/tools/AgeCalculator")),
+      },
+      {
+        id: "bmi-calculator",
+        name: "BMI Calculator",
+        description:
+          "Calculate your BMI, healthy weight range, BMR, TDEE and body fat estimate.",
+        path: "/tools/bmi-calculator",
+        icon: "⚖️",
+        component: lazy(() => import("../pages/tools/BmiCalculator")),
+      },
+      {
+        id: "unit-converter",
+        name: "Unit Converter",
+        description:
+          "Convert 150+ units across 14 categories — length, weight, temperature, area, volume, and more.",
+        path: "/tools/unit-converter",
+        icon: "🔀",
+        component: lazy(() => import("../pages/tools/UnitConverter")),
+      },
+      {
+        id: "name-to-emoji",
+        name: "Name to Stylish Text",
+        description:
+          "Turn your name into 100+ stylish fonts and emoji decorations. Copy to WhatsApp, Instagram.",
+        path: "/tools/name-to-emoji",
+        icon: "✨",
+        component: lazy(() => import("../pages/tools/NameToEmoji")),
+      },
+      
+    ],
+  },
+  {
+  id: 'fun',
+  name: 'Fun & Games',
+  description: 'Fun mini-games and utilities — Snake, Dice, Coin Flip, and more.',
+  icon: '🎮',
+  color: '#a855f7',
+  category: 'Games',
+  tags: ['game', 'fun', 'snake', 'arcade', 'play'],
+  tools: [
+    {
+      id: 'snake-game',
+      name: 'Snake Game',
+      description: 'Play the classic Snake game. Arrow keys or WASD to control.',
+      path: '/tools/snake-game',
+      icon: '🐍',
+      component: lazy(() => import('../pages/tools/SnakeGame')),
+    },
+    {
+        id: "pong",
+        name: "Pong",
+        description:
+          "Classic Pong — 1P vs CPU or 2P on same keyboard. Arrow keys + W/S.",
+        path: "/tools/pong",
+        icon: "🏓",
+        component: lazy(() => import("../pages/tools/Pong")),
+      },
+      
+   
   ],
 },
 ];
@@ -335,14 +369,11 @@ export const tools = groups.flatMap((g) =>
     groupName: g.name,
     category: g.category,
     color: t.color || g.color,
-  }))
+  })),
 );
 
 // Unique categories for home filter pills
-export const categories = [
-  "All",
-  ...new Set(groups.map((g) => g.category)),
-];
+export const categories = ["All", ...new Set(groups.map((g) => g.category))];
 
 // Lookup helpers
 export const getToolById = (id) => tools.find((t) => t.id === id);

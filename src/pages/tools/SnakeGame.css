@@ -346,10 +346,32 @@
   transform: scale(0.95);
 }
 
-.sn-mobile-pause {
-  background: var(--bg-elev);
-  border-color: var(--accent);
+/* ============================================================
+   MOBILE PAUSE BUTTON (separate, below D-pad)
+   ============================================================ */
+.sn-mobile-pause-btn {
+  display: none;
+  width: 100%;
+  max-width: 240px;
+  padding: 12px 20px;
+  margin-top: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
   color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sn-mobile-pause-btn:active {
+  background: var(--accent);
+  color: var(--bg);
+  transform: scale(0.97);
 }
 
 /* ============================================================
@@ -398,6 +420,9 @@
   .sn-mobile-controls {
     display: flex;
   }
+  .sn-mobile-pause-btn {
+    display: block;
+  }
   .sn-hints {
     font-size: 0.65rem;
   }
@@ -405,6 +430,9 @@
 
 @media (min-width: 641px) {
   .sn-mobile-controls {
+    display: none !important;
+  }
+  .sn-mobile-pause-btn {
     display: none !important;
   }
 }

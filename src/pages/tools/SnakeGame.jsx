@@ -26,6 +26,42 @@ const DIRECTIONS = {
 };
 
 // ============================================================
+// FOOD COLORS
+// ============================================================
+const FOOD_COLORS = [
+  { name: 'red',     body: '#ef4444', glow: '#ef4444', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'blue',    body: '#3b82f6', glow: '#3b82f6', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'green',   body: '#22c55e', glow: '#22c55e', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'purple',  body: '#a855f7', glow: '#a855f7', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'orange',  body: '#f97316', glow: '#f97316', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'pink',    body: '#ec4899', glow: '#ec4899', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'cyan',    body: '#06b6d4', glow: '#06b6d4', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'lime',    body: '#84cc16', glow: '#84cc16', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'yellow',     body: '#eab308', glow: '#eab308', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'teal',       body: '#14b8a6', glow: '#14b8a6', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'indigo',     body: '#6366f1', glow: '#6366f1', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'rose',       body: '#f43f5e', glow: '#f43f5e', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'emerald',    body: '#10b981', glow: '#10b981', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'violet',     body: '#8b5cf6', glow: '#8b5cf6', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'sky',        body: '#0ea5e9', glow: '#0ea5e9', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'fuchsia',    body: '#d946ef', glow: '#d946ef', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'amber',      body: '#f59e0b', glow: '#f59e0b', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'mint',       body: '#6ee7b7', glow: '#6ee7b7', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'coral',      body: '#fb7185', glow: '#fb7185', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'lavender',   body: '#c4b5fd', glow: '#c4b5fd', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'peach',      body: '#fdba74', glow: '#fdba74', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'turquoise',  body: '#2dd4bf', glow: '#2dd4bf', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'magenta',    body: '#e879f9', glow: '#e879f9', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'crimson',    body: '#dc2626', glow: '#dc2626', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'sapphire',   body: '#2563eb', glow: '#2563eb', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'jade',       body: '#059669', glow: '#059669', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'plum',       body: '#9333ea', glow: '#9333ea', highlight: 'rgba(255,255,255,0.4)' },
+  { name: 'salmon',     body: '#f87171', glow: '#f87171', highlight: 'rgba(255,255,255,0.4)' },
+];
+
+const GOLDEN_COLOR = { name: 'golden', body: '#fde047', glow: '#fbbf24', highlight: 'rgba(255,255,255,0.5)' };
+
+// ============================================================
 // SOUND EFFECTS
 // ============================================================
 function playBeep(ctx, frequency = 600, duration = 0.08, type = 'sine') {
@@ -110,12 +146,15 @@ export default function SnakeGame() {
   const snakeRef = useRef([]);
   const directionRef = useRef('right');
   const pendingDirectionRef = useRef('right');
-  const foodRef = useRef({ x: 0, y: 0, type: 'normal' });
+  const foodRef = useRef({ x: 0, y: 0, type: 'normal', color: FOOD_COLORS[0] });
   const gameLoopRef = useRef(null);
   const scoreRef = useRef(0);
   const statusRef = useRef('idle');
   const audioCtxRef = useRef(null);
   const speedRef = useRef(120);
+
+  // NEW: snake color ref (current body color)
+  const snakeColorRef = useRef(FOOD_COLORS[0]);
 
   // Sync
   useEffect(() => { statusRef.current = status; }, [status]);
@@ -150,12 +189,15 @@ export default function SnakeGame() {
       const collides = snake.some((s) => s.x === x && s.y === y);
       if (!collides) {
         // 15% chance of golden food
-        const type = Math.random() < 0.15 ? 'golden' : 'normal';
-        return { x, y, type };
+        const isGolden = Math.random() < 0.15;
+        const color = isGolden
+          ? GOLDEN_COLOR
+          : FOOD_COLORS[Math.floor(Math.random() * FOOD_COLORS.length)];
+        return { x, y, type: isGolden ? 'golden' : 'normal', color };
       }
       attempts++;
     }
-    return { x: 0, y: 0, type: 'normal' };
+    return { x: 0, y: 0, type: 'normal', color: FOOD_COLORS[0] };
   }, []);
 
   const resetGame = useCallback(() => {
@@ -167,7 +209,8 @@ export default function SnakeGame() {
     ];
     directionRef.current = 'right';
     pendingDirectionRef.current = 'right';
-    foodRef.current = { x: 10, y: 5, type: 'normal' };
+    foodRef.current = { x: 10, y: 5, type: 'normal', color: FOOD_COLORS[0] };
+    snakeColorRef.current = FOOD_COLORS[0];
     setScore(0);
     scoreRef.current = 0;
   }, []);
@@ -233,6 +276,8 @@ export default function SnakeGame() {
 
     // Food
     const pulse = 1 + Math.sin(Date.now() / 200) * 0.1;
+    const fc = food.color || FOOD_COLORS[0];
+
     if (food.type === 'golden') {
       // Golden food with glow
       const grad = ctx.createRadialGradient(
@@ -259,9 +304,9 @@ export default function SnakeGame() {
       ctx.fill();
       ctx.shadowBlur = 0;
     } else {
-      // Normal food (apple)
-      ctx.fillStyle = '#ef4444';
-      ctx.shadowColor = '#ef4444';
+      // Colored food ball
+      ctx.fillStyle = fc.body;
+      ctx.shadowColor = fc.glow;
       ctx.shadowBlur = 8;
       ctx.beginPath();
       ctx.arc(
@@ -275,7 +320,7 @@ export default function SnakeGame() {
       ctx.shadowBlur = 0;
 
       // Highlight
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.fillStyle = fc.highlight;
       ctx.beginPath();
       ctx.arc(
         food.x * CELL_SIZE + CELL_SIZE / 2 - 3,
@@ -287,21 +332,30 @@ export default function SnakeGame() {
       ctx.fill();
     }
 
-    // Snake
+    // Snake — uses the current snake color
+    const sc = snakeColorRef.current;
+
     snake.forEach((seg, i) => {
       const x = seg.x * CELL_SIZE;
       const y = seg.y * CELL_SIZE;
       const isHead = i === 0;
       const t = i / Math.max(1, snake.length - 1);
 
-      // Gradient from head to tail
-      const r = Math.round(78 + (168 - 78) * t);
-      const g = Math.round(205 + (85 - 205) * t);
-      const b = Math.round(196 + (247 - 196) * t);
+      // Gradient from head (bright) to tail (darker)
+      const baseR = parseInt(sc.body.slice(1, 3), 16);
+      const baseG = parseInt(sc.body.slice(3, 5), 16);
+      const baseB = parseInt(sc.body.slice(5, 7), 16);
+
+      // Head = full color, tail = darker (60%)
+      const factor = 1 - t * 0.4;
+      const r = Math.round(baseR * factor);
+      const g = Math.round(baseG * factor);
+      const b = Math.round(baseB * factor);
+
       ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
 
       if (isHead) {
-        ctx.shadowColor = '#4ecdc4';
+        ctx.shadowColor = sc.glow;
         ctx.shadowBlur = 12;
       } else {
         ctx.shadowBlur = 0;
@@ -400,6 +454,11 @@ export default function SnakeGame() {
       const newScore = scoreRef.current + points;
       setScore(newScore);
       scoreRef.current = newScore;
+
+      // NEW: snake changes color to match the food it ate (skip golden)
+      if (food.type !== 'golden' && food.color) {
+        snakeColorRef.current = food.color;
+      }
 
       playBeep(
         audioCtxRef.current,
@@ -636,7 +695,7 @@ export default function SnakeGame() {
           )}
         </div>
 
-        {/* Mobile controls */}
+        {/* Mobile controls — pause button REMOVED from between arrows */}
         <div className="sn-mobile-controls">
           <button
             className="sn-mobile-btn sn-mobile-up"
@@ -662,27 +721,6 @@ export default function SnakeGame() {
               ←
             </button>
             <button
-              className="sn-mobile-btn sn-mobile-pause"
-              onTouchStart={(e) => {
-                e.preventDefault();
-                if (statusRef.current === 'idle' || statusRef.current === 'over') {
-                  startGame();
-                } else {
-                  togglePause();
-                }
-              }}
-              onMouseDown={() => {
-                if (statusRef.current === 'idle' || statusRef.current === 'over') {
-                  startGame();
-                } else {
-                  togglePause();
-                }
-              }}
-              aria-label="Pause"
-            >
-              {status === 'playing' ? '⏸' : '▶'}
-            </button>
-            <button
               className="sn-mobile-btn"
               onTouchStart={(e) => {
                 e.preventDefault();
@@ -706,6 +744,29 @@ export default function SnakeGame() {
             ↓
           </button>
         </div>
+
+        {/* Pause / Play button — now SEPARATE, below mobile controls */}
+        <button
+          className="sn-mobile-pause-btn"
+          onTouchStart={(e) => {
+            e.preventDefault();
+            if (statusRef.current === 'idle' || statusRef.current === 'over') {
+              startGame();
+            } else {
+              togglePause();
+            }
+          }}
+          onMouseDown={() => {
+            if (statusRef.current === 'idle' || statusRef.current === 'over') {
+              startGame();
+            } else {
+              togglePause();
+            }
+          }}
+          aria-label={status === 'playing' ? 'Pause' : 'Play'}
+        >
+          {status === 'playing' ? '⏸ Pause' : '▶ Play'}
+        </button>
 
         {/* Keyboard hints */}
         <div className="sn-hints">
@@ -761,8 +822,8 @@ function SeoContent() {
             <strong>W A S D</strong> to control the snake's direction.
           </li>
           <li>
-            <strong>Eat the red apples</strong> to grow — each apple gives 1
-            point.
+            <strong>Eat the colored balls</strong> to grow — each ball gives 1
+            point and changes your snake's color to match.
           </li>
           <li>
             <strong>Golden food</strong> appears rarely — worth 5 points!
@@ -793,7 +854,7 @@ function SeoContent() {
               with your thumb.
             </p>
           </div>
-          <div class="seo-feature">
+          <div className="seo-feature">
             <div className="seo-feature-icon">🏆</div>
             <h3>High Score Saved</h3>
             <p>
@@ -807,6 +868,14 @@ function SeoContent() {
             <p>
               Choose Slow, Normal, Fast, or Insane — from relaxing to
               challenging.
+            </p>
+          </div>
+          <div className="seo-feature">
+            <div className="seo-feature-icon">🎨</div>
+            <h3>Color-Changing Snake</h3>
+            <p>
+              Your snake changes color to match the food it eats — each ball
+              has a unique color.
             </p>
           </div>
           <div className="seo-feature">
@@ -894,11 +963,20 @@ function SeoContent() {
         </details>
 
         <details className="seo-faq">
+          <summary>Why does the snake change color?</summary>
+          <p>
+            The snake changes color to match the food it eats. Each colored
+            ball gives the snake a new look — a fun visual way to track your
+            progress.
+          </p>
+        </details>
+
+        <details className="seo-faq">
           <summary>What is the golden food?</summary>
           <p>
-            Occasionally a golden apple appears instead of a normal red one. It
-            gives you <strong>5 points</strong> instead of 1 — great for
-            boosting your score quickly.
+            Occasionally a golden apple appears instead of a normal colored
+            one. It gives you <strong>5 points</strong> instead of 1 — great
+            for boosting your score quickly.
           </p>
         </details>
 

@@ -213,6 +213,15 @@ export const groups = [
         icon: "💧",
         component: lazy(() => import("../pages/tools/ImageWatermark")),
       },
+      {
+        id: "image-converter",
+        name: "Image Converter",
+        description:
+          "Convert JPG, PNG, WEBP, AVIF — quality control, live preview.",
+        path: "/tools/image-converter",
+        icon: "🔄",
+        component: lazy(() => import("../pages/tools/ImageConverter")),
+      },
     ],
   },
   {
@@ -324,27 +333,36 @@ export const groups = [
         icon: "✨",
         component: lazy(() => import("../pages/tools/NameToEmoji")),
       },
-      
+      {
+  id: 'timer',
+  name: 'Timer',
+  description: 'Stopwatch, Countdown, Pomodoro & Interval timer with sound alerts.',
+  path: '/tools/timer',
+  icon: '⏱',
+  component: lazy(() => import('../pages/tools/Timer')),
+},
     ],
   },
   {
-  id: 'fun',
-  name: 'Fun & Games',
-  description: 'Fun mini-games and utilities — Snake, Dice, Coin Flip, and more.',
-  icon: '🎮',
-  color: '#a855f7',
-  category: 'Games',
-  tags: ['game', 'fun', 'snake', 'arcade', 'play'],
-  tools: [
-    {
-      id: 'snake-game',
-      name: 'Snake Game',
-      description: 'Play the classic Snake game. Arrow keys or WASD to control.',
-      path: '/tools/snake-game',
-      icon: '🐍',
-      component: lazy(() => import('../pages/tools/SnakeGame')),
-    },
-    {
+    id: "fun",
+    name: "Fun & Games",
+    description:
+      "Fun mini-games and utilities — Snake, Dice, Coin Flip, and more.",
+    icon: "🎮",
+    color: "#a855f7",
+    category: "Games",
+    tags: ["game", "fun", "snake", "arcade", "play"],
+    tools: [
+      {
+        id: "snake-game",
+        name: "Snake Game",
+        description:
+          "Play the classic Snake game. Arrow keys or WASD to control.",
+        path: "/tools/snake-game",
+        icon: "🐍",
+        component: lazy(() => import("../pages/tools/SnakeGame")),
+      },
+      {
         id: "pong",
         name: "Pong",
         description:
@@ -353,10 +371,8 @@ export const groups = [
         icon: "🏓",
         component: lazy(() => import("../pages/tools/Pong")),
       },
-      
-   
-  ],
-},
+    ],
+  },
 ];
 
 // ============================================================

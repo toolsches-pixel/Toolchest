@@ -334,13 +334,14 @@ export const groups = [
         component: lazy(() => import("../pages/tools/NameToEmoji")),
       },
       {
-  id: 'timer',
-  name: 'Timer',
-  description: 'Stopwatch, Countdown, Pomodoro & Interval timer with sound alerts.',
-  path: '/tools/timer',
-  icon: '⏱',
-  component: lazy(() => import('../pages/tools/Timer')),
-},
+        id: "timer",
+        name: "Timer",
+        description:
+          "Stopwatch, Countdown, Pomodoro & Interval timer with sound alerts.",
+        path: "/tools/timer",
+        icon: "⏱",
+        component: lazy(() => import("../pages/tools/Timer")),
+      },
     ],
   },
   {
@@ -370,6 +371,15 @@ export const groups = [
         path: "/tools/pong",
         icon: "🏓",
         component: lazy(() => import("../pages/tools/Pong")),
+      },
+      {
+        id: "decision-wheel",
+        name: "Decision Wheel",
+        description:
+          "Spin the wheel to pick a random winner. Custom options, presets, confetti.",
+        path: "/tools/decision-wheel",
+        icon: "🎡",
+        component: lazy(() => import("../pages/tools/DecisionWheel")),
       },
     ],
   },

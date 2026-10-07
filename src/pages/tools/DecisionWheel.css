@@ -1,0 +1,563 @@
+/* ============================================================
+   DECISION WHEEL — CSS
+   Prefix: dw-
+   ============================================================ */
+
+.dw-root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.dw-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dw-topbar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.dw-topbar-icon {
+  font-size: 1.3rem;
+}
+
+.dw-sound-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dw-sound-btn:hover {
+  border-color: var(--border-strong);
+}
+
+.dw-sound-btn.active {
+  border-color: var(--accent);
+  background: rgba(78, 205, 196, 0.08);
+}
+
+/* ============================================================
+   MAIN LAYOUT
+   ============================================================ */
+.dw-main {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ============================================================
+   WHEEL AREA
+   ============================================================ */
+.dw-wheel-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 80px;
+}
+
+.dw-wheel-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1;
+}
+
+.dw-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  transition: transform 0.2s;
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.3));
+}
+
+.dw-canvas:hover:not(.spinning) {
+  transform: scale(1.02);
+}
+
+.dw-canvas.spinning {
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   RESULT OVERLAY
+   ============================================================ */
+.dw-result-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 17, 23, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 50%;
+  z-index: 10;
+  cursor: pointer;
+  animation: dw-fade 0.3s ease;
+}
+
+@keyframes dw-fade {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.dw-result-card {
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  border-radius: 16px;
+  padding: 24px 28px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(78, 205, 196, 0.4);
+  animation: dw-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 90%;
+}
+
+@keyframes dw-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.dw-result-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.dw-result-text {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  word-break: break-word;
+  text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+  margin-bottom: 8px;
+}
+
+.dw-result-hint {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  opacity: 0.6;
+}
+
+/* Confetti */
+.dw-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 50%;
+  z-index: 11;
+}
+
+.dw-confetti-piece {
+  position: absolute;
+  top: -20px;
+  opacity: 0;
+  animation: dw-confetti-fall linear forwards;
+  animation-fill-mode: forwards;
+}
+
+.dw-confetti-piece.square {
+  border-radius: 1px;
+}
+
+.dw-confetti-piece.circle {
+  border-radius: 50%;
+}
+
+@keyframes dw-confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(600px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Spin button */
+.dw-spin-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 16px 32px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 240px;
+  justify-content: center;
+  letter-spacing: 0.01em;
+}
+
+.dw-spin-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(78, 205, 196, 0.4);
+}
+
+.dw-spin-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.dw-spin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dw-spin-icon {
+  font-size: 1.15rem;
+  display: inline-block;
+}
+
+.dw-spin-icon.spinning {
+  animation: dw-spin 0.6s linear infinite;
+}
+
+@keyframes dw-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   OPTIONS PANEL
+   ============================================================ */
+.dw-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.dw-panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dw-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+}
+
+/* Add option */
+.dw-add-row {
+  display: flex;
+  gap: 6px;
+}
+
+.dw-input {
+  flex: 1;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 0;
+}
+
+.dw-input:focus {
+  border-color: var(--accent);
+}
+
+.dw-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dw-add-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dw-add-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.dw-add-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Options list */
+.dw-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-right: -4px;
+}
+
+.dw-options-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dw-options-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dw-options-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.dw-option-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  transition: border-color 0.15s;
+}
+
+.dw-option-item:hover {
+  border-color: var(--border-strong);
+}
+
+.dw-option-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.dw-option-text {
+  flex: 1;
+  font-size: 0.82rem;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.dw-option-remove {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.dw-option-remove:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.dw-option-remove:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Actions */
+.dw-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.dw-action-btn {
+  flex: 1;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dw-action-btn:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.dw-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Presets */
+.dw-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.dw-preset-btn {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dw-preset-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(78, 205, 196, 0.06);
+}
+
+.dw-preset-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* History */
+.dw-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dw-clear-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.dw-clear-btn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.dw-history {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dw-history-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dw-history-item.latest {
+  color: var(--accent);
+  border-color: rgba(78, 205, 196, 0.3);
+  background: rgba(78, 205, 196, 0.06);
+}
+
+.dw-history-star {
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .dw-main {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .dw-wheel-area {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .dw-spin-btn {
+    font-size: 0.9rem;
+    padding: 14px 24px;
+    min-width: 200px;
+  }
+  .dw-result-text {
+    font-size: 1.4rem;
+  }
+  .dw-options-list {
+    max-height: 220px;
+  }
+}

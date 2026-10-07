@@ -235,6 +235,14 @@ export const groups = [
     tags: ["developer", "code", "convert", "encode", "generate"],
     tools: [
       {
+  id: 'password-generator',
+  name: 'Password Generator',
+  description: 'Create strong, secure passwords with custom length, symbols, and your own word.',
+  path: '/tools/password-generator',
+  icon: '🔐',
+  component: lazy(() => import('../pages/tools/PasswordGenerator')),
+},
+      {
         id: "number-base-converter",
         name: "Number Base Converter",
         description:
@@ -342,6 +350,14 @@ export const groups = [
         icon: "⏱",
         component: lazy(() => import("../pages/tools/Timer")),
       },
+      {
+  id: 'password-generator',
+  name: 'Password Generator',
+  description: 'Create strong, secure passwords with custom length, symbols, and your own word.',
+  path: '/tools/password-generator',
+  icon: '🔐',
+  component: lazy(() => import('../pages/tools/PasswordGenerator')),
+},
     ],
   },
   {
@@ -382,7 +398,28 @@ export const groups = [
         component: lazy(() => import("../pages/tools/DecisionWheel")),
       },
     ],
+    
   },
+  {
+  id: 'study',
+  name: 'Study Tools',
+  description: 'Tools for students and teachers — result maker, calculators, and more.',
+  icon: '🎓',
+  color: '#8b5cf6',
+  category: 'Education',
+  tags: ['student', 'school', 'education', 'result', 'marks'],
+  tools: [
+    {
+      id: 'result-maker',
+      name: 'Result Maker',
+      description: 'Create student report cards with auto-calculated grades and PDF download.',
+      path: '/tools/result-maker',
+      icon: '📊',
+      component: lazy(() => import('../pages/tools/ResultMaker')),
+    },
+    // Future: gpa-calculator, percentage-calculator, etc.
+  ],
+},
 ];
 
 // ============================================================

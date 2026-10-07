@@ -1,0 +1,1141 @@
+/* ============================================================
+   RESULT MAKER — CSS
+   Prefix: rm- (editor) + rc- (report card)
+   ============================================================ */
+
+.rm-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* ============================================================
+   ACTION BAR
+   ============================================================ */
+.rm-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+
+.rm-action-bar-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rm-action-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.rm-action-sub {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.rm-action-bar-right {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rm-btn {
+  border: none;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.rm-btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.rm-btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(78, 205, 196, 0.25);
+}
+
+.rm-btn-secondary {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.rm-btn-secondary:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.rm-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.rm-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rm-preview-wrap {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rm-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rm-preview-title {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.rm-preview {
+  background: #0a0b0d;
+  border-radius: 12px;
+  padding: 12px;
+  overflow: auto;
+  max-height: calc(100vh - 160px);
+  border: 1px solid var(--border);
+}
+
+/* ============================================================
+   EDITOR SECTIONS
+   ============================================================ */
+.rm-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rm-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.rm-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+/* ============================================================
+   FIELDS
+   ============================================================ */
+.rm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.rm-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.rm-label {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.rm-input {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+
+.rm-input:focus {
+  border-color: var(--accent);
+}
+
+.rm-input::placeholder {
+  color: var(--text-dim);
+}
+
+/* Logo upload */
+.rm-file-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--bg-elev);
+  border: 2px dashed var(--border-strong);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.rm-file-upload:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(78, 205, 196, 0.04);
+}
+
+.rm-logo-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  position: relative;
+}
+
+.rm-logo-preview img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 6px;
+  padding: 3px;
+}
+
+.rm-logo-remove {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: auto;
+  transition: all 0.15s;
+}
+
+.rm-logo-remove:hover {
+  background: var(--bg-hover);
+  color: #ef4444;
+}
+
+/* Grading tabs */
+.rm-grading-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  background: var(--bg-elev);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.rm-grading-tab {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 8px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.rm-grading-tab:hover {
+  color: var(--text);
+}
+
+.rm-grading-tab.active {
+  background: var(--bg-card);
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================
+   SUBJECTS TABLE
+   ============================================================ */
+.rm-add-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.rm-add-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.rm-subjects-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rm-subjects-header {
+  display: grid;
+  grid-template-columns: 24px 1fr 60px 70px 128px;
+  gap: 6px;
+  padding: 4px 6px;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.rm-subject-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 60px 70px 128px;
+  gap: 6px;
+  align-items: center;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 6px;
+  transition: border-color 0.15s;
+}
+
+.rm-subject-row:hover {
+  border-color: var(--border-strong);
+}
+
+.rm-subject-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-weight: 700;
+  text-align: center;
+}
+
+.rm-subject-input {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  padding: 6px 8px;
+  outline: none;
+  min-width: 0;
+  width: 100%;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.rm-subject-input:focus {
+  background: var(--bg-card);
+}
+
+.rm-subject-num-input {
+  text-align: center;
+  font-weight: 700;
+}
+
+.rm-subject-num-input::-webkit-outer-spin-button,
+.rm-subject-num-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.rm-subject-num-input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.rm-subject-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  justify-content: flex-end;
+}
+
+.rm-subject-grade {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--accent);
+  background: rgba(78, 205, 196, 0.1);
+  border: 1px solid rgba(78, 205, 196, 0.25);
+  border-radius: 4px;
+  padding: 2px 6px;
+  min-width: 34px;
+  text-align: center;
+  margin-right: 2px;
+}
+
+.rm-subject-btn {
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.rm-subject-btn:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+.rm-subject-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.rm-subject-remove:hover:not(:disabled) {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* Totals bar */
+.rm-totals-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.rm-total-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 8px;
+}
+
+.rm-total-label {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.rm-total-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.rm-grade {
+  color: var(--accent);
+}
+
+/* ============================================================
+   REPORT CARD (rc-)
+   ============================================================ */
+.rc-card {
+  background: #ffffff;
+  color: #1a1a1a;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 26px 28px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 500px;
+}
+
+/* Header */
+.rc-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 3px double #1a1a1a;
+}
+
+.rc-logo {
+  flex-shrink: 0;
+}
+
+.rc-logo img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.rc-school {
+  flex: 1;
+  text-align: center;
+}
+
+.rc-school-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.rc-school-address {
+  font-size: 0.72rem;
+  color: #555;
+  margin: 0 0 3px;
+  letter-spacing: 0.02em;
+}
+
+.rc-session {
+  font-size: 0.68rem;
+  color: #777;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Title bar */
+.rc-title-bar {
+  text-align: center;
+  padding: 8px 0;
+  margin: 12px 0;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.rc-title-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Student info */
+.rc-student-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.rc-info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rc-info-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  border-bottom: 1px dotted #999;
+  padding-bottom: 2px;
+}
+
+.rc-info-label {
+  font-size: 0.68rem;
+  color: #666;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rc-info-value {
+  font-size: 0.78rem;
+  color: #1a1a1a;
+  font-weight: 700;
+  flex: 1;
+}
+
+/* Table */
+.rc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+  font-size: 0.75rem;
+}
+
+.rc-table thead {
+  background: #f0f0f0;
+  border-top: 2px solid #1a1a1a;
+  border-bottom: 2px solid #1a1a1a;
+}
+
+.rc-table th {
+  padding: 7px 6px;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-align: left;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rc-table td {
+  padding: 6px;
+  border-bottom: 1px solid #ddd;
+  color: #1a1a1a;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.rc-td-center {
+  text-align: center;
+}
+
+.rc-td-right {
+  text-align: right;
+}
+
+.rc-td-subject {
+  font-weight: 600;
+}
+
+.rc-td-marks {
+  font-weight: 700;
+}
+
+.rc-td-grade {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.rc-td-strong {
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.rc-tfoot-total {
+  border-top: 2px solid #1a1a1a;
+  border-bottom: 3px double #1a1a1a;
+  background: #f9f9f9;
+}
+
+.rc-tfoot-total td {
+  padding: 8px 6px;
+  font-weight: 800;
+}
+
+/* Summary */
+.rc-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px 0;
+  margin-bottom: 12px;
+  border-top: 2px solid #1a1a1a;
+  border-bottom: 2px solid #1a1a1a;
+}
+
+.rc-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  text-align: center;
+}
+
+.rc-summary-label {
+  font-size: 0.6rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.rc-summary-value {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.rc-summary-grade {
+  color: #0e7c66;
+}
+
+/* Remarks */
+.rc-remarks {
+  display: flex;
+  gap: 6px;
+  padding: 8px 10px;
+  background: #f7f7f7;
+  border-left: 3px solid #1a1a1a;
+  margin-bottom: 20px;
+  font-size: 0.72rem;
+}
+
+.rc-remarks-label {
+  font-weight: 700;
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+.rc-remarks-value {
+  color: #333;
+  font-style: italic;
+}
+
+/* Footer */
+.rc-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid #ddd;
+}
+
+.rc-signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 100px;
+}
+
+.rc-signature-line {
+  width: 100px;
+  height: 1px;
+  background: #1a1a1a;
+}
+
+.rc-signature-label {
+  font-size: 0.65rem;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.rc-date {
+  font-size: 0.7rem;
+  color: #666;
+  font-weight: 600;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .rm-layout {
+    grid-template-columns: 1fr;
+  }
+  .rm-preview-wrap {
+    position: static;
+  }
+  .rm-preview {
+    max-height: none;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .rm-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .rm-action-bar-right {
+    justify-content: stretch;
+  }
+  .rm-btn {
+    flex: 1;
+    justify-content: center;
+  }
+  .rm-field-row {
+    grid-template-columns: 1fr;
+  }
+  .rm-subjects-header,
+  .rm-subject-row {
+    grid-template-columns: 20px 1fr 50px 55px 100px;
+    font-size: 0.6rem;
+  }
+  .rm-grading-tabs {
+    grid-template-columns: 1fr;
+  }
+  .rc-card {
+    min-width: 400px;
+    padding: 18px 16px;
+    font-size: 0.85em;
+  }
+  .rc-school-name {
+    font-size: 1rem;
+  }
+  .rc-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+/* ============================================================
+   PRINT STYLES — only report card, single page, PRESERVED LAYOUT
+   ============================================================ */
+@media print {
+  /* Page setup */
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  /* Reset html/body */
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  /* === STEP 1: Hide EVERYTHING at first === */
+  body * {
+    display: none !important;
+  }
+
+  /* === STEP 2: Restore the chain to report card === */
+  #root,
+  #root > *,
+  .app-layout,
+  .app-main,
+  .tool-shell,
+  .tool-shell-container,
+  .tool-content,
+  .rm-root,
+  .rm-layout,
+  .rm-preview-wrap,
+  .rm-preview,
+  .rc-card {
+    display: block !important;
+    position: static !important;
+    visibility: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    max-width: none !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    width: 100% !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+  }
+
+  /* === STEP 3: Show report card children === */
+  .rc-card * {
+    display: revert !important;
+    visibility: visible !important;
+  }
+
+  /* === STEP 4: Report card styling === */
+  .rc-card {
+  background: #fff !important;
+  color: #000 !important;
+  padding: 8mm !important;
+  page-break-inside: avoid !important;
+  /* Make it a flex column so footer pushes to bottom */
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 260mm !important;  /* A4 height minus margins */
+}
+
+  /* ============================================================
+     STEP 5: PRESERVE ORIGINAL LAYOUT IN PRINT
+     ============================================================ */
+
+  /* ---- Header: logo + school name side by side ---- */
+  .rc-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    padding-bottom: 12px !important;
+    border-bottom: 3px double #1a1a1a !important;
+  }
+
+  .rc-logo {
+    display: block !important;
+    flex-shrink: 0 !important;
+  }
+
+  .rc-school {
+    flex: 1 !important;
+    text-align: center !important;
+  }
+
+  /* ---- Title bar (EXAMINATION) ---- */
+  .rc-title-bar {
+    display: block !important;
+    text-align: center !important;
+    padding: 8px 0 !important;
+    margin: 12px 0 !important;
+    background: #1a1a1a !important;
+    color: #fff !important;
+  }
+
+  .rc-title-text {
+    display: inline !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.2em !important;
+    color: #fff !important;
+  }
+
+  /* ---- Student info: 2 columns ---- */
+  .rc-student-info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .rc-info-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  .rc-info-item {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 6px !important;
+    border-bottom: 1px dotted #999 !important;
+    padding-bottom: 2px !important;
+  }
+
+  /* ---- Marks table ---- */
+  .rc-table {
+    display: table !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 14px !important;
+  }
+
+  .rc-table thead {
+    display: table-header-group !important;
+    background: #f0f0f0 !important;
+    border-top: 2px solid #1a1a1a !important;
+    border-bottom: 2px solid #1a1a1a !important;
+  }
+
+  .rc-table tbody {
+    display: table-row-group !important;
+  }
+
+  .rc-table tfoot {
+    display: table-footer-group !important;
+  }
+
+  .rc-table tr {
+    display: table-row !important;
+  }
+
+  .rc-table th {
+    display: table-cell !important;
+    padding: 7px 6px !important;
+    font-weight: 700 !important;
+    font-size: 0.65rem !important;
+    text-transform: uppercase !important;
+  }
+
+  .rc-table td {
+    display: table-cell !important;
+    padding: 6px !important;
+    border-bottom: 1px solid #ddd !important;
+    font-size: 0.75rem !important;
+  }
+
+  .rc-td-center { text-align: center !important; }
+  .rc-td-right { text-align: right !important; }
+
+  .rc-tfoot-total {
+    border-top: 2px solid #1a1a1a !important;
+    border-bottom: 3px double #1a1a1a !important;
+    background: #f9f9f9 !important;
+  }
+
+  /* ---- Summary: 4 columns (Total / % / Grade / Division) ---- */
+  .rc-summary {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+    padding: 10px 0 !important;
+    margin-bottom: 12px !important;
+    border-top: 2px solid #1a1a1a !important;
+    border-bottom: 2px solid #1a1a1a !important;
+  }
+
+  .rc-summary-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 2px !important;
+  }
+
+  .rc-summary-label {
+    display: block !important;
+    font-size: 0.6rem !important;
+    color: #666 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    font-weight: 600 !important;
+  }
+
+  .rc-summary-value {
+    display: block !important;
+    font-size: 0.85rem !important;
+    font-weight: 800 !important;
+    color: #1a1a1a !important;
+  }
+
+  .rc-summary-grade {
+    color: #0e7c66 !important;
+  }
+
+  /* ---- Remarks: label + value inline ---- */
+  .rc-remarks {
+    display: flex !important;
+    gap: 6px !important;
+    align-items: baseline !important;
+    padding: 8px 10px !important;
+    background: #f7f7f7 !important;
+    border-left: 3px solid #1a1a1a !important;
+    margin-bottom: 20px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .rc-remarks-label {
+    display: inline !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+  }
+
+  .rc-remarks-value {
+    display: inline !important;
+    font-style: italic !important;
+    color: #333 !important;
+  }
+
+  /* ---- Footer: Class Teacher | Date | Principal ---- */
+  .rc-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-end !important;
+    gap: 16px !important;
+    padding-top: 12px !important;
+    margin-top: 12px !important;
+    margin-top: auto !important;
+    border-top: 1px solid #ddd !important;
+  }
+
+  .rc-signature {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+    min-width: 100px !important;
+  }
+
+  .rc-signature-line {
+    display: block !important;
+    width: 100px !important;
+    height: 1px !important;
+    background: #1a1a1a !important;
+  }
+
+  .rc-signature-label {
+    display: block !important;
+    font-size: 0.65rem !important;
+    color: #666 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  .rc-date {
+    display: block !important;
+    font-size: 0.7rem !important;
+    color: #666 !important;
+    font-weight: 600 !important;
+  }
+
+  /* ---- Prevent page breaks inside key blocks ---- */
+  .rc-header,
+  .rc-student-info,
+  .rc-table tr,
+  .rc-summary,
+  .rc-remarks,
+  .rc-footer {
+    page-break-inside: avoid !important;
+  }
+}

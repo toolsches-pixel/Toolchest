@@ -350,14 +350,7 @@ export const groups = [
         icon: "⏱",
         component: lazy(() => import("../pages/tools/Timer")),
       },
-      {
-  id: 'password-generator',
-  name: 'Password Generator',
-  description: 'Create strong, secure passwords with custom length, symbols, and your own word.',
-  path: '/tools/password-generator',
-  icon: '🔐',
-  component: lazy(() => import('../pages/tools/PasswordGenerator')),
-},
+      
     ],
   },
   {

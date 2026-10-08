@@ -235,13 +235,14 @@ export const groups = [
     tags: ["developer", "code", "convert", "encode", "generate"],
     tools: [
       {
-  id: 'password-generator',
-  name: 'Password Generator',
-  description: 'Create strong, secure passwords with custom length, symbols, and your own word.',
-  path: '/tools/password-generator',
-  icon: '🔐',
-  component: lazy(() => import('../pages/tools/PasswordGenerator')),
-},
+        id: "password-generator",
+        name: "Password Generator",
+        description:
+          "Create strong, secure passwords with custom length, symbols, and your own word.",
+        path: "/tools/password-generator",
+        icon: "🔐",
+        component: lazy(() => import("../pages/tools/PasswordGenerator")),
+      },
       {
         id: "number-base-converter",
         name: "Number Base Converter",
@@ -350,7 +351,6 @@ export const groups = [
         icon: "⏱",
         component: lazy(() => import("../pages/tools/Timer")),
       },
-      
     ],
   },
   {
@@ -391,36 +391,39 @@ export const groups = [
         component: lazy(() => import("../pages/tools/DecisionWheel")),
       },
       {
-  id: 'tic-tac-toe',
-  name: 'Tic Tac Toe',
-  description: 'Classic Tic Tac Toe vs computer or friend. Arrow keys or tap.',
-  path: '/tools/tic-tac-toe',
-  icon: '⭕',
-  component: lazy(() => import('../pages/tools/TicTacToe')),
-},
+        id: "tic-tac-toe",
+        name: "Tic Tac Toe",
+        description:
+          "Classic Tic Tac Toe vs computer or friend. Arrow keys or tap.",
+        path: "/tools/tic-tac-toe",
+        icon: "⭕",
+        component: lazy(() => import("../pages/tools/TicTacToe")),
+      },
+     
     ],
-    
   },
   {
-  id: 'study',
-  name: 'Study Tools',
-  description: 'Tools for students and teachers — result maker, calculators, and more.',
-  icon: '🎓',
-  color: '#8b5cf6',
-  category: 'Education',
-  tags: ['student', 'school', 'education', 'result', 'marks'],
-  tools: [
-    {
-      id: 'result-maker',
-      name: 'Result Maker',
-      description: 'Create student report cards with auto-calculated grades and PDF download.',
-      path: '/tools/result-maker',
-      icon: '📊',
-      component: lazy(() => import('../pages/tools/ResultMaker')),
-    },
-    // Future: gpa-calculator, percentage-calculator, etc.
-  ],
-},
+    id: "study",
+    name: "Study Tools",
+    description:
+      "Tools for students and teachers — result maker, calculators, and more.",
+    icon: "🎓",
+    color: "#8b5cf6",
+    category: "Education",
+    tags: ["student", "school", "education", "result", "marks"],
+    tools: [
+      {
+        id: "result-maker",
+        name: "Result Maker",
+        description:
+          "Create student report cards with auto-calculated grades and PDF download.",
+        path: "/tools/result-maker",
+        icon: "📊",
+        component: lazy(() => import("../pages/tools/ResultMaker")),
+      },
+      // Future: gpa-calculator, percentage-calculator, etc.
+    ],
+  },
 ];
 
 // ============================================================

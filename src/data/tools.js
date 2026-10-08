@@ -390,6 +390,14 @@ export const groups = [
         icon: "🎡",
         component: lazy(() => import("../pages/tools/DecisionWheel")),
       },
+      {
+  id: 'tic-tac-toe',
+  name: 'Tic Tac Toe',
+  description: 'Classic Tic Tac Toe vs computer or friend. Arrow keys or tap.',
+  path: '/tools/tic-tac-toe',
+  icon: '⭕',
+  component: lazy(() => import('../pages/tools/TicTacToe')),
+},
     ],
     
   },

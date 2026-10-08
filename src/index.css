@@ -4556,17 +4556,3 @@ button {
   }
 }
 
-/* FORCE NO SCROLL IN NAVBAR */
-.navbar,
-.navbar-links,
-.navbar-links-desktop,
-.navbar-more {
-  overflow: visible !important;
-}
-
-.navbar-links,
-.navbar-links-desktop {
-  height: auto !important;
-  min-height: 0 !important;
-  max-height: none !important;
-}

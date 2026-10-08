@@ -868,63 +868,70 @@ export default function SnakeGame() {
           )}
         </div>
 
-        {/* Mobile controls — pause button REMOVED from between arrows */}
-        {/* Mobile controls — 2 side D-pad layout */}
-        {/* Mobile controls — 2 side D-pad */}
+        
+               {/* Mobile controls — cross-shaped D-pad */}
         <div className="sn-mobile-controls">
-          {/* LEFT SIDE: Left on top, Down below */}
-          <div className="sn-mobile-side sn-mobile-left">
+          {/* Top row: empty, up, empty */}
+          <div className="sn-mobile-row">
+            <span className="sn-mobile-spacer" />
             <button
               className="sn-mobile-btn"
               onTouchStart={(e) => {
                 e.preventDefault();
-                handleMobileDir("left");
+                handleMobileDir('up');
               }}
-              onMouseDown={() => handleMobileDir("left")}
-              aria-label="Left"
-            >
-              ←
-            </button>
-            <button
-              className="sn-mobile-btn"
-              onTouchStart={(e) => {
-                e.preventDefault();
-                handleMobileDir("down");
-              }}
-              onMouseDown={() => handleMobileDir("down")}
-              aria-label="Down"
-            >
-              ↓
-            </button>
-          </div>
-
-          {/* RIGHT SIDE: Up on top, Right below */}
-          <div className="sn-mobile-side sn-mobile-right">
-            <button
-              className="sn-mobile-btn"
-              onTouchStart={(e) => {
-                e.preventDefault();
-                handleMobileDir("up");
-              }}
-              onMouseDown={() => handleMobileDir("up")}
+              onMouseDown={() => handleMobileDir('up')}
               aria-label="Up"
             >
               ↑
             </button>
+            <span className="sn-mobile-spacer" />
+          </div>
+
+          {/* Middle row: left, center-gap, right */}
+          <div className="sn-mobile-row">
             <button
               className="sn-mobile-btn"
               onTouchStart={(e) => {
                 e.preventDefault();
-                handleMobileDir("right");
+                handleMobileDir('left');
               }}
-              onMouseDown={() => handleMobileDir("right")}
+              onMouseDown={() => handleMobileDir('left')}
+              aria-label="Left"
+            >
+              ←
+            </button>
+            <span className="sn-mobile-spacer" />
+            <button
+              className="sn-mobile-btn"
+              onTouchStart={(e) => {
+                e.preventDefault();
+                handleMobileDir('right');
+              }}
+              onMouseDown={() => handleMobileDir('right')}
               aria-label="Right"
             >
               →
             </button>
           </div>
-        </div>
 
+          {/* Bottom row: empty, down, empty */}
+          <div className="sn-mobile-row">
+            <span className="sn-mobile-spacer" />
+            <button
+              className="sn-mobile-btn"
+              onTouchStart={(e) => {
+                e.preventDefault();
+                handleMobileDir('down');
+              }}
+              onMouseDown={() => handleMobileDir('down')}
+              aria-label="Down"
+            >
+              ↓
+            </button>
+            <span className="sn-mobile-spacer" />
+          </div>
+        </div>
         {/* Pause / Play button — single instance */}
         <button
           className="sn-mobile-pause-btn"

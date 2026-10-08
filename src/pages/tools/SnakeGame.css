@@ -307,91 +307,96 @@
 }
 
 /* ============================================================
-   MOBILE CONTROLS — 2-side D-pad
+   MOBILE CONTROLS — cross-shaped D-pad
    ============================================================ */
 .sn-mobile-controls {
   display: none;
-  width: 100%;
-  max-width: 480px;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-  margin-top: 12px;
-}
-
-.sn-mobile-side {
-  display: flex;
   flex-direction: column;
-  gap: 12px;
   align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  width: 100%;
+  max-width: 300px;
+  padding: 0 12px;
+  user-select: none;
 }
 
-.sn-mobile-left {
-  /* Down, Left */
+.sn-mobile-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
 
-.sn-mobile-right {
-  /* Up, Right */
+/* Empty spacer to keep the cross shape */
+.sn-mobile-spacer {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  visibility: hidden;
 }
 
 .sn-mobile-btn {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
   background: linear-gradient(
     145deg,
     rgba(30, 41, 59, 0.95),
-    rgba(15, 23, 42, 0.95)
+    rgba(15, 23, 42, 0.98)
   );
   border: 2px solid rgba(78, 205, 196, 0.35);
-  border-radius: 16px;
+  border-radius: 18px;
   color: #4ecdc4;
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.1s;
   display: flex;
   align-items: center;
   justify-content: center;
-  user-select: none;
+  flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   touch-action: manipulation;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: 0;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .sn-mobile-btn:active {
-  background: linear-gradient(135deg, #4ecdc4, #06b6d4);
+  background: linear-gradient(145deg, #4ecdc4, #22d3ee);
   color: #0d1117;
-  transform: scale(0.92);
   border-color: #4ecdc4;
+  transform: scale(0.92);
   box-shadow: 0 0 24px rgba(78, 205, 196, 0.5);
 }
 
-/* Pause button — separate, bigger */
+/* Pause/play button — separate, below D-pad */
 .sn-mobile-pause-btn {
   display: none;
+  margin-top: 16px;
   width: 100%;
-  max-width: 480px;
-  margin-top: 8px;
+  max-width: 260px;
   padding: 16px 24px;
-  background: linear-gradient(135deg, #4ecdc4, #06b6d4);
+  background: linear-gradient(135deg, #4ecdc4, #22d3ee);
   color: #0d1117;
   border: none;
   border-radius: 14px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.15s;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 6px 18px rgba(78, 205, 196, 0.3);
   touch-action: manipulation;
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.3);
 }
 
 .sn-mobile-pause-btn:active {
-  transform: scale(0.97);
-  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+  transform: scale(0.96);
+  box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
 }
 /* ============================================================
    MOBILE PAUSE BUTTON (separate, below D-pad)
@@ -468,7 +473,7 @@
     display: flex;
   }
   .sn-mobile-pause-btn {
-    display: block;
+    display: flex;
   }
   .sn-hints {
     font-size: 0.65rem;

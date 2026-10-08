@@ -33,7 +33,7 @@ cambodia
 cameroon
 canada
 cape verde
-central and african republic
+central african republic
 chad
 chile
 china
@@ -85,11 +85,13 @@ ireland
 israel
 italy
 jamaica
+japan
 jordan
 kazakhstan
 kenya
 kiribati
 republic of korea
+north korea
 kosovo
 kuwait
 kyrgyzstan
@@ -108,7 +110,7 @@ malaysia
 maldives
 mali
 malta
-marshall
+marshall islands
 mauritania
 mauritius
 mexico
@@ -128,11 +130,12 @@ new zealand
 nicaragua
 niger
 nigeria
-macedonia
+north macedonia
 norway
 oman
 pakistan
 palau
+palestine
 panama
 papua new guinea
 paraguay
@@ -146,10 +149,10 @@ russia
 rwanda
 saint kitts and nevis
 saint lucia
-saint vincent
+saint vincent and the grenadines
 samoa
 san marino
-sao tome principe
+sao tome and principe
 saudi arabia
 senegal
 serbia
@@ -169,6 +172,7 @@ suriname
 sweden
 switzerland
 syria
+taiwan
 tajikistan
 tanzania
 thailand
@@ -188,7 +192,7 @@ usa
 uruguay
 uzbekistan
 vanuatu
-vatican
+vatican city
 venezuela
 vietnam
 yemen

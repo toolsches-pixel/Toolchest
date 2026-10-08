@@ -307,30 +307,46 @@
 }
 
 /* ============================================================
-   MOBILE CONTROLS
+   MOBILE CONTROLS — 2-side D-pad
    ============================================================ */
 .sn-mobile-controls {
   display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
+  width: 100%;
+  max-width: 480px;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-top: 12px;
 }
 
-.sn-mobile-row {
+.sn-mobile-side {
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.sn-mobile-left {
+  /* Down, Left */
+}
+
+.sn-mobile-right {
+  /* Up, Right */
 }
 
 .sn-mobile-btn {
-  width: 56px;
-  height: 56px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: var(--text);
-  font-size: 1.4rem;
-  font-weight: 700;
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(
+    145deg,
+    rgba(30, 41, 59, 0.95),
+    rgba(15, 23, 42, 0.95)
+  );
+  border: 2px solid rgba(78, 205, 196, 0.35);
+  border-radius: 16px;
+  color: #4ecdc4;
+  font-size: 2rem;
+  font-weight: 800;
   cursor: pointer;
   transition: all 0.1s;
   display: flex;
@@ -338,14 +354,45 @@
   justify-content: center;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  touch-action: manipulation;
 }
 
 .sn-mobile-btn:active {
-  background: var(--accent);
-  color: var(--bg);
-  transform: scale(0.95);
+  background: linear-gradient(135deg, #4ecdc4, #06b6d4);
+  color: #0d1117;
+  transform: scale(0.92);
+  border-color: #4ecdc4;
+  box-shadow: 0 0 24px rgba(78, 205, 196, 0.5);
 }
 
+/* Pause button — separate, bigger */
+.sn-mobile-pause-btn {
+  display: none;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 8px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #4ecdc4, #06b6d4);
+  color: #0d1117;
+  border: none;
+  border-radius: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 6px 18px rgba(78, 205, 196, 0.3);
+  touch-action: manipulation;
+}
+
+.sn-mobile-pause-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+}
 /* ============================================================
    MOBILE PAUSE BUTTON (separate, below D-pad)
    ============================================================ */
@@ -425,14 +472,5 @@
   }
   .sn-hints {
     font-size: 0.65rem;
-  }
-}
-
-@media (min-width: 641px) {
-  .sn-mobile-controls {
-    display: none !important;
-  }
-  .sn-mobile-pause-btn {
-    display: none !important;
   }
 }

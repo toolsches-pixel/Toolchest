@@ -261,18 +261,27 @@ button {
   position: absolute;
   top: 100%;
   right: 0;
-  margin-top: 10px;
+  margin-top: 0;              /* ← gap hata diya */
+  padding-top: 10px;          /* ← but visual gap padding se */
+  background: transparent;    /* ← outer transparent, inner bg */
+  border: none;
+  min-width: 220px;
+  display: none;
+  flex-direction: column;
+  z-index: 150;
+  animation: navbarDropdownIn 0.15s ease;
+}
+
+/* Inner box — actual dropdown with background */
+.navbar-more-dropdown::before {
+  content: '';
+  position: absolute;
+  inset: 10px 0 0 0;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 6px;
-  min-width: 220px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-  display: none;
-  flex-direction: column;
-  gap: 2px;
-  z-index: 150;
-  animation: navbarDropdownIn 0.15s ease;
+  z-index: -1;
 }
 
 @keyframes navbarDropdownIn {

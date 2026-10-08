@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import ToolShell from '../../components/ui/ToolShell';
-import { getToolById } from '../../data/tools';
-import { useDocumentTitle } from '../../hooks/useDocumentTitle';
-import './SnakeGame.css';
+import { useEffect, useRef, useState, useCallback } from "react";
+import ToolShell from "../../components/ui/ToolShell";
+import { getToolById } from "../../data/tools";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+import "./SnakeGame.css";
 
 // ============================================================
 // CONFIG
 // ============================================================
-const GRID_SIZE = 20;          // 20x20 grid
-const CELL_SIZE = 20;          // 20px per cell
+const GRID_SIZE = 20; // 20x20 grid
+const CELL_SIZE = 20; // 20px per cell
 const CANVAS_SIZE = GRID_SIZE * CELL_SIZE; // 400px
 
 const SPEEDS = {
@@ -29,42 +29,187 @@ const DIRECTIONS = {
 // FOOD COLORS
 // ============================================================
 const FOOD_COLORS = [
-  { name: 'red',     body: '#ef4444', glow: '#ef4444', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'blue',    body: '#3b82f6', glow: '#3b82f6', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'green',   body: '#22c55e', glow: '#22c55e', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'purple',  body: '#a855f7', glow: '#a855f7', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'orange',  body: '#f97316', glow: '#f97316', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'pink',    body: '#ec4899', glow: '#ec4899', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'cyan',    body: '#06b6d4', glow: '#06b6d4', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'lime',    body: '#84cc16', glow: '#84cc16', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'yellow',     body: '#eab308', glow: '#eab308', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'teal',       body: '#14b8a6', glow: '#14b8a6', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'indigo',     body: '#6366f1', glow: '#6366f1', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'rose',       body: '#f43f5e', glow: '#f43f5e', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'emerald',    body: '#10b981', glow: '#10b981', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'violet',     body: '#8b5cf6', glow: '#8b5cf6', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'sky',        body: '#0ea5e9', glow: '#0ea5e9', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'fuchsia',    body: '#d946ef', glow: '#d946ef', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'amber',      body: '#f59e0b', glow: '#f59e0b', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'mint',       body: '#6ee7b7', glow: '#6ee7b7', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'coral',      body: '#fb7185', glow: '#fb7185', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'lavender',   body: '#c4b5fd', glow: '#c4b5fd', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'peach',      body: '#fdba74', glow: '#fdba74', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'turquoise',  body: '#2dd4bf', glow: '#2dd4bf', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'magenta',    body: '#e879f9', glow: '#e879f9', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'crimson',    body: '#dc2626', glow: '#dc2626', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'sapphire',   body: '#2563eb', glow: '#2563eb', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'jade',       body: '#059669', glow: '#059669', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'plum',       body: '#9333ea', glow: '#9333ea', highlight: 'rgba(255,255,255,0.4)' },
-  { name: 'salmon',     body: '#f87171', glow: '#f87171', highlight: 'rgba(255,255,255,0.4)' },
+  {
+    name: "red",
+    body: "#ef4444",
+    glow: "#ef4444",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "blue",
+    body: "#3b82f6",
+    glow: "#3b82f6",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "green",
+    body: "#22c55e",
+    glow: "#22c55e",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "purple",
+    body: "#a855f7",
+    glow: "#a855f7",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "orange",
+    body: "#f97316",
+    glow: "#f97316",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "pink",
+    body: "#ec4899",
+    glow: "#ec4899",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "cyan",
+    body: "#06b6d4",
+    glow: "#06b6d4",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "lime",
+    body: "#84cc16",
+    glow: "#84cc16",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "yellow",
+    body: "#eab308",
+    glow: "#eab308",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "teal",
+    body: "#14b8a6",
+    glow: "#14b8a6",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "indigo",
+    body: "#6366f1",
+    glow: "#6366f1",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "rose",
+    body: "#f43f5e",
+    glow: "#f43f5e",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "emerald",
+    body: "#10b981",
+    glow: "#10b981",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "violet",
+    body: "#8b5cf6",
+    glow: "#8b5cf6",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "sky",
+    body: "#0ea5e9",
+    glow: "#0ea5e9",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "fuchsia",
+    body: "#d946ef",
+    glow: "#d946ef",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "amber",
+    body: "#f59e0b",
+    glow: "#f59e0b",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "mint",
+    body: "#6ee7b7",
+    glow: "#6ee7b7",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "coral",
+    body: "#fb7185",
+    glow: "#fb7185",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "lavender",
+    body: "#c4b5fd",
+    glow: "#c4b5fd",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "peach",
+    body: "#fdba74",
+    glow: "#fdba74",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "turquoise",
+    body: "#2dd4bf",
+    glow: "#2dd4bf",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "magenta",
+    body: "#e879f9",
+    glow: "#e879f9",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "crimson",
+    body: "#dc2626",
+    glow: "#dc2626",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "sapphire",
+    body: "#2563eb",
+    glow: "#2563eb",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "jade",
+    body: "#059669",
+    glow: "#059669",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "plum",
+    body: "#9333ea",
+    glow: "#9333ea",
+    highlight: "rgba(255,255,255,0.4)",
+  },
+  {
+    name: "salmon",
+    body: "#f87171",
+    glow: "#f87171",
+    highlight: "rgba(255,255,255,0.4)",
+  },
 ];
 
-const GOLDEN_COLOR = { name: 'golden', body: '#fde047', glow: '#fbbf24', highlight: 'rgba(255,255,255,0.5)' };
+const GOLDEN_COLOR = {
+  name: "golden",
+  body: "#fde047",
+  glow: "#fbbf24",
+  highlight: "rgba(255,255,255,0.5)",
+};
 
 // ============================================================
 // SOUND EFFECTS
 // ============================================================
-function playBeep(ctx, frequency = 600, duration = 0.08, type = 'sine') {
+function playBeep(ctx, frequency = 600, duration = 0.08, type = "sine") {
   if (!ctx) return;
   try {
     const osc = ctx.createOscillator();
@@ -84,44 +229,44 @@ function playBeep(ctx, frequency = 600, duration = 0.08, type = 'sine') {
 // MAIN
 // ============================================================
 export default function SnakeGame() {
-  const tool = getToolById('snake-game');
+  const tool = getToolById("snake-game");
 
-  useDocumentTitle('Snake Game — Play Classic Snake Online Free | toolchest');
+  useDocumentTitle("Snake Game — Play Classic Snake Online Free | toolchest");
 
   // SEO
   useEffect(() => {
     let meta = document.querySelector('meta[name="description"]');
     const created = !meta;
     if (created) {
-      meta = document.createElement('meta');
-      meta.name = 'description';
+      meta = document.createElement("meta");
+      meta.name = "description";
       document.head.appendChild(meta);
     }
     const prevDesc = meta.content;
     meta.content =
-      'Play the classic Snake game online for free. Use arrow keys or WASD to control the snake. Eat food, grow longer, and beat your high score. No download, no signup.';
+      "Play the classic Snake game online for free. Use arrow keys or WASD to control the snake. Eat food, grow longer, and beat your high score. No download, no signup.";
 
-    const scriptId = 'snake-game-jsonld';
+    const scriptId = "snake-game-jsonld";
     let script = document.getElementById(scriptId);
     if (!script) {
-      script = document.createElement('script');
+      script = document.createElement("script");
       script.id = scriptId;
-      script.type = 'application/ld+json';
+      script.type = "application/ld+json";
       document.head.appendChild(script);
     }
     script.textContent = JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'VideoGame',
-      name: 'Snake Game',
-      genre: 'Arcade',
-      gamePlatform: 'Web Browser',
-      applicationCategory: 'GameApplication',
-      operatingSystem: 'Web Browser',
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      name: "Snake Game",
+      genre: "Arcade",
+      gamePlatform: "Web Browser",
+      applicationCategory: "GameApplication",
+      operatingSystem: "Web Browser",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.9',
-        ratingCount: '2143',
+        "@type": "AggregateRating",
+        ratingValue: "4.9",
+        ratingCount: "2143",
       },
     });
 
@@ -134,22 +279,22 @@ export default function SnakeGame() {
   }, []);
 
   // Game state
-  const [status, setStatus] = useState('idle'); // 'idle' | 'playing' | 'paused' | 'over'
+  const [status, setStatus] = useState("idle"); // 'idle' | 'playing' | 'paused' | 'over'
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [speed, setSpeed] = useState('normal');
+  const [speed, setSpeed] = useState("normal");
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [finalScore, setFinalScore] = useState(0);
 
   // Refs (mutable, no re-render)
   const canvasRef = useRef(null);
   const snakeRef = useRef([]);
-  const directionRef = useRef('right');
-  const pendingDirectionRef = useRef('right');
-  const foodRef = useRef({ x: 0, y: 0, type: 'normal', color: FOOD_COLORS[0] });
+  const directionRef = useRef("right");
+  const pendingDirectionRef = useRef("right");
+  const foodRef = useRef({ x: 0, y: 0, type: "normal", color: FOOD_COLORS[0] });
   const gameLoopRef = useRef(null);
   const scoreRef = useRef(0);
-  const statusRef = useRef('idle');
+  const statusRef = useRef("idle");
   const audioCtxRef = useRef(null);
   const speedRef = useRef(120);
 
@@ -157,14 +302,23 @@ export default function SnakeGame() {
   const snakeColorRef = useRef(FOOD_COLORS[0]);
 
   // Sync
-  useEffect(() => { statusRef.current = status; }, [status]);
-  useEffect(() => { scoreRef.current = score; }, [score]);
-  useEffect(() => { speedRef.current = SPEEDS[speed]; }, [speed]);
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
+  useEffect(() => {
+    scoreRef.current = score;
+  }, [score]);
+  useEffect(() => {
+    speedRef.current = SPEEDS[speed];
+  }, [speed]);
 
   // Load high score
   useEffect(() => {
     try {
-      const saved = parseInt(localStorage.getItem('toolchestSnakeHighScore') || '0', 10);
+      const saved = parseInt(
+        localStorage.getItem("toolchestSnakeHighScore") || "0",
+        10,
+      );
       setHighScore(saved);
     } catch (e) {}
   }, []);
@@ -193,11 +347,11 @@ export default function SnakeGame() {
         const color = isGolden
           ? GOLDEN_COLOR
           : FOOD_COLORS[Math.floor(Math.random() * FOOD_COLORS.length)];
-        return { x, y, type: isGolden ? 'golden' : 'normal', color };
+        return { x, y, type: isGolden ? "golden" : "normal", color };
       }
       attempts++;
     }
-    return { x: 0, y: 0, type: 'normal', color: FOOD_COLORS[0] };
+    return { x: 0, y: 0, type: "normal", color: FOOD_COLORS[0] };
   }, []);
 
   const resetGame = useCallback(() => {
@@ -207,9 +361,9 @@ export default function SnakeGame() {
       { x: mid - 1, y: mid },
       { x: mid - 2, y: mid },
     ];
-    directionRef.current = 'right';
-    pendingDirectionRef.current = 'right';
-    foodRef.current = { x: 10, y: 5, type: 'normal', color: FOOD_COLORS[0] };
+    directionRef.current = "right";
+    pendingDirectionRef.current = "right";
+    foodRef.current = { x: 10, y: 5, type: "normal", color: FOOD_COLORS[0] };
     snakeColorRef.current = FOOD_COLORS[0];
     setScore(0);
     scoreRef.current = 0;
@@ -218,32 +372,35 @@ export default function SnakeGame() {
   const startGame = useCallback(() => {
     ensureAudio();
     resetGame();
-    setStatus('playing');
-    statusRef.current = 'playing';
+    setStatus("playing");
+    statusRef.current = "playing";
     setFinalScore(0);
   }, [resetGame]);
 
   const togglePause = useCallback(() => {
-    if (statusRef.current === 'playing') {
-      setStatus('paused');
-      statusRef.current = 'paused';
-    } else if (statusRef.current === 'paused') {
-      setStatus('playing');
-      statusRef.current = 'playing';
+    if (statusRef.current === "playing") {
+      setStatus("paused");
+      statusRef.current = "paused";
+    } else if (statusRef.current === "paused") {
+      setStatus("playing");
+      statusRef.current = "playing";
     }
   }, []);
 
   const endGame = useCallback(() => {
-    setStatus('over');
-    statusRef.current = 'over';
+    setStatus("over");
+    statusRef.current = "over";
     setFinalScore(scoreRef.current);
     if (scoreRef.current > highScore) {
       setHighScore(scoreRef.current);
       try {
-        localStorage.setItem('toolchestSnakeHighScore', String(scoreRef.current));
+        localStorage.setItem(
+          "toolchestSnakeHighScore",
+          String(scoreRef.current),
+        );
       } catch (e) {}
     }
-    playBeep(audioCtxRef.current, 200, 0.4, 'sawtooth');
+    playBeep(audioCtxRef.current, 200, 0.4, "sawtooth");
   }, [highScore]);
 
   // ============================================================
@@ -252,16 +409,16 @@ export default function SnakeGame() {
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const snake = snakeRef.current;
     const food = foodRef.current;
 
     // Background
-    ctx.fillStyle = '#0d1117';
+    ctx.fillStyle = "#0d1117";
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
     // Grid (subtle)
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.02)";
     ctx.lineWidth = 1;
     for (let i = 0; i <= GRID_SIZE; i++) {
       ctx.beginPath();
@@ -278,7 +435,7 @@ export default function SnakeGame() {
     const pulse = 1 + Math.sin(Date.now() / 200) * 0.1;
     const fc = food.color || FOOD_COLORS[0];
 
-    if (food.type === 'golden') {
+    if (food.type === "golden") {
       // Golden food with glow
       const grad = ctx.createRadialGradient(
         food.x * CELL_SIZE + CELL_SIZE / 2,
@@ -286,12 +443,12 @@ export default function SnakeGame() {
         0,
         food.x * CELL_SIZE + CELL_SIZE / 2,
         food.y * CELL_SIZE + CELL_SIZE / 2,
-        CELL_SIZE
+        CELL_SIZE,
       );
-      grad.addColorStop(0, '#fde047');
-      grad.addColorStop(1, '#f59e0b');
+      grad.addColorStop(0, "#fde047");
+      grad.addColorStop(1, "#f59e0b");
       ctx.fillStyle = grad;
-      ctx.shadowColor = '#fbbf24';
+      ctx.shadowColor = "#fbbf24";
       ctx.shadowBlur = 15;
       ctx.beginPath();
       ctx.arc(
@@ -299,7 +456,7 @@ export default function SnakeGame() {
         food.y * CELL_SIZE + CELL_SIZE / 2,
         (CELL_SIZE / 2 - 1) * pulse,
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fill();
       ctx.shadowBlur = 0;
@@ -314,7 +471,7 @@ export default function SnakeGame() {
         food.y * CELL_SIZE + CELL_SIZE / 2,
         (CELL_SIZE / 2 - 2) * pulse,
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fill();
       ctx.shadowBlur = 0;
@@ -327,7 +484,7 @@ export default function SnakeGame() {
         food.y * CELL_SIZE + CELL_SIZE / 2 - 3,
         2,
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fill();
     }
@@ -383,7 +540,7 @@ export default function SnakeGame() {
 
       // Eyes on head
       if (isHead) {
-        ctx.fillStyle = '#0d1117';
+        ctx.fillStyle = "#0d1117";
         const dir = directionRef.current;
         const eyeSize = 3;
         let ex1, ey1, ex2, ey2;
@@ -392,18 +549,26 @@ export default function SnakeGame() {
         const offset = 4;
         const sideOffset = 4;
 
-        if (dir === 'right') {
-          ex1 = cx + offset; ey1 = cy - sideOffset;
-          ex2 = cx + offset; ey2 = cy + sideOffset;
-        } else if (dir === 'left') {
-          ex1 = cx - offset; ey1 = cy - sideOffset;
-          ex2 = cx - offset; ey2 = cy + sideOffset;
-        } else if (dir === 'up') {
-          ex1 = cx - sideOffset; ey1 = cy - offset;
-          ex2 = cx + sideOffset; ey2 = cy - offset;
+        if (dir === "right") {
+          ex1 = cx + offset;
+          ey1 = cy - sideOffset;
+          ex2 = cx + offset;
+          ey2 = cy + sideOffset;
+        } else if (dir === "left") {
+          ex1 = cx - offset;
+          ey1 = cy - sideOffset;
+          ex2 = cx - offset;
+          ey2 = cy + sideOffset;
+        } else if (dir === "up") {
+          ex1 = cx - sideOffset;
+          ey1 = cy - offset;
+          ex2 = cx + sideOffset;
+          ey2 = cy - offset;
         } else {
-          ex1 = cx - sideOffset; ey1 = cy + offset;
-          ex2 = cx + sideOffset; ey2 = cy + offset;
+          ex1 = cx - sideOffset;
+          ey1 = cy + offset;
+          ex2 = cx + sideOffset;
+          ey2 = cy + offset;
         }
 
         ctx.beginPath();
@@ -418,7 +583,7 @@ export default function SnakeGame() {
   // GAME TICK
   // ============================================================
   const tick = useCallback(() => {
-    if (statusRef.current !== 'playing') return;
+    if (statusRef.current !== "playing") return;
 
     const snake = snakeRef.current;
     const dir = pendingDirectionRef.current;
@@ -450,21 +615,21 @@ export default function SnakeGame() {
     // Food collision
     const food = foodRef.current;
     if (newHead.x === food.x && newHead.y === food.y) {
-      const points = food.type === 'golden' ? 5 : 1;
+      const points = food.type === "golden" ? 5 : 1;
       const newScore = scoreRef.current + points;
       setScore(newScore);
       scoreRef.current = newScore;
 
       // NEW: snake changes color to match the food it ate (skip golden)
-      if (food.type !== 'golden' && food.color) {
+      if (food.type !== "golden" && food.color) {
         snakeColorRef.current = food.color;
       }
 
       playBeep(
         audioCtxRef.current,
-        food.type === 'golden' ? 900 : 700,
+        food.type === "golden" ? 900 : 700,
         0.08,
-        'sine'
+        "sine",
       );
 
       foodRef.current = getRandomFood();
@@ -479,7 +644,7 @@ export default function SnakeGame() {
   // GAME LOOP
   // ============================================================
   useEffect(() => {
-    if (status === 'playing') {
+    if (status === "playing") {
       gameLoopRef.current = setInterval(tick, speedRef.current);
     } else if (gameLoopRef.current) {
       clearInterval(gameLoopRef.current);
@@ -494,10 +659,10 @@ export default function SnakeGame() {
   // DRAW ANIMATION
   // ============================================================
   useEffect(() => {
-    if (status === 'playing' || status === 'idle') {
+    if (status === "playing" || status === "idle") {
       const raf = requestAnimationFrame(function loop() {
         draw();
-        if (statusRef.current === 'playing' || statusRef.current === 'idle') {
+        if (statusRef.current === "playing" || statusRef.current === "idle") {
           requestAnimationFrame(loop);
         }
       });
@@ -517,16 +682,19 @@ export default function SnakeGame() {
 
       // Prevent arrow keys scrolling page
       if (
-        ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(key)
+        ["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(key)
       ) {
         e.preventDefault();
       }
 
       // Space — start/pause
-      if (key === ' ') {
-        if (statusRef.current === 'idle' || statusRef.current === 'over') {
+      if (key === " ") {
+        if (statusRef.current === "idle" || statusRef.current === "over") {
           startGame();
-        } else if (statusRef.current === 'playing' || statusRef.current === 'paused') {
+        } else if (
+          statusRef.current === "playing" ||
+          statusRef.current === "paused"
+        ) {
           togglePause();
         }
         return;
@@ -536,32 +704,32 @@ export default function SnakeGame() {
       const currentDir = directionRef.current;
       let newDir = null;
 
-      if (key === 'arrowup' || key === 'w') newDir = 'up';
-      else if (key === 'arrowdown' || key === 's') newDir = 'down';
-      else if (key === 'arrowleft' || key === 'a') newDir = 'left';
-      else if (key === 'arrowright' || key === 'd') newDir = 'right';
+      if (key === "arrowup" || key === "w") newDir = "up";
+      else if (key === "arrowdown" || key === "s") newDir = "down";
+      else if (key === "arrowleft" || key === "a") newDir = "left";
+      else if (key === "arrowright" || key === "d") newDir = "right";
 
       if (!newDir) return;
 
       // Prevent reversing
       const isOpposite =
-        (currentDir === 'up' && newDir === 'down') ||
-        (currentDir === 'down' && newDir === 'up') ||
-        (currentDir === 'left' && newDir === 'right') ||
-        (currentDir === 'right' && newDir === 'left');
+        (currentDir === "up" && newDir === "down") ||
+        (currentDir === "down" && newDir === "up") ||
+        (currentDir === "left" && newDir === "right") ||
+        (currentDir === "right" && newDir === "left");
 
       if (isOpposite) return;
 
       pendingDirectionRef.current = newDir;
 
       // Auto-start on first key
-      if (statusRef.current === 'idle') {
+      if (statusRef.current === "idle") {
         startGame();
       }
     };
 
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
   }, [startGame, togglePause]);
 
   // ============================================================
@@ -570,14 +738,14 @@ export default function SnakeGame() {
   const handleMobileDir = (dir) => {
     const currentDir = directionRef.current;
     const isOpposite =
-      (currentDir === 'up' && dir === 'down') ||
-      (currentDir === 'down' && dir === 'up') ||
-      (currentDir === 'left' && dir === 'right') ||
-      (currentDir === 'right' && dir === 'left');
+      (currentDir === "up" && dir === "down") ||
+      (currentDir === "down" && dir === "up") ||
+      (currentDir === "left" && dir === "right") ||
+      (currentDir === "right" && dir === "left");
     if (isOpposite) return;
     pendingDirectionRef.current = dir;
-    if (statusRef.current === 'idle') startGame();
-    else if (statusRef.current === 'paused') togglePause();
+    if (statusRef.current === "idle") startGame();
+    else if (statusRef.current === "paused") togglePause();
   };
 
   // Cleanup
@@ -585,7 +753,9 @@ export default function SnakeGame() {
     return () => {
       if (gameLoopRef.current) clearInterval(gameLoopRef.current);
       if (audioCtxRef.current) {
-        try { audioCtxRef.current.close(); } catch (e) {}
+        try {
+          audioCtxRef.current.close();
+        } catch (e) {}
       }
     };
   }, []);
@@ -611,9 +781,9 @@ export default function SnakeGame() {
               {Object.keys(SPEEDS).map((s) => (
                 <button
                   key={s}
-                  className={`sn-speed-btn ${speed === s ? 'active' : ''}`}
+                  className={`sn-speed-btn ${speed === s ? "active" : ""}`}
                   onClick={() => setSpeed(s)}
-                  disabled={status === 'playing'}
+                  disabled={status === "playing"}
                   title={`${s} speed`}
                 >
                   {s}
@@ -622,14 +792,14 @@ export default function SnakeGame() {
             </div>
 
             <button
-              className={`sn-sound-btn ${soundEnabled ? 'active' : ''}`}
+              className={`sn-sound-btn ${soundEnabled ? "active" : ""}`}
               onClick={() => {
                 ensureAudio();
                 setSoundEnabled(!soundEnabled);
               }}
               title="Toggle sound"
             >
-              {soundEnabled ? '🔊' : '🔇'}
+              {soundEnabled ? "🔊" : "🔇"}
             </button>
           </div>
         </div>
@@ -644,13 +814,16 @@ export default function SnakeGame() {
           />
 
           {/* Overlays */}
-          {status === 'idle' && (
+          {status === "idle" && (
             <div className="sn-overlay">
               <div className="sn-overlay-icon">🐍</div>
               <h3 className="sn-overlay-title">Snake</h3>
               <p className="sn-overlay-sub">
-                Use <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> or{' '}
-                <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to move
+                Use <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> or{" "}
+                <kbd>W</kbd>
+                <kbd>A</kbd>
+                <kbd>S</kbd>
+                <kbd>D</kbd> to move
               </p>
               <button className="sn-overlay-btn" onClick={startGame}>
                 ▶ Start game
@@ -661,7 +834,7 @@ export default function SnakeGame() {
             </div>
           )}
 
-          {status === 'paused' && (
+          {status === "paused" && (
             <div className="sn-overlay sn-overlay-paused">
               <div className="sn-overlay-icon">⏸</div>
               <h3 className="sn-overlay-title">Paused</h3>
@@ -674,7 +847,7 @@ export default function SnakeGame() {
             </div>
           )}
 
-          {status === 'over' && (
+          {status === "over" && (
             <div className="sn-overlay sn-overlay-over">
               <div className="sn-overlay-icon">💀</div>
               <h3 className="sn-overlay-title">Game Over</h3>
@@ -696,26 +869,18 @@ export default function SnakeGame() {
         </div>
 
         {/* Mobile controls — pause button REMOVED from between arrows */}
+        {/* Mobile controls — 2 side D-pad layout */}
+        {/* Mobile controls — 2 side D-pad */}
         <div className="sn-mobile-controls">
-          <button
-            className="sn-mobile-btn sn-mobile-up"
-            onTouchStart={(e) => {
-              e.preventDefault();
-              handleMobileDir('up');
-            }}
-            onMouseDown={() => handleMobileDir('up')}
-            aria-label="Up"
-          >
-            ↑
-          </button>
-          <div className="sn-mobile-row">
+          {/* LEFT SIDE: Left on top, Down below */}
+          <div className="sn-mobile-side sn-mobile-left">
             <button
               className="sn-mobile-btn"
               onTouchStart={(e) => {
                 e.preventDefault();
-                handleMobileDir('left');
+                handleMobileDir("left");
               }}
-              onMouseDown={() => handleMobileDir('left')}
+              onMouseDown={() => handleMobileDir("left")}
               aria-label="Left"
             >
               ←
@@ -724,49 +889,66 @@ export default function SnakeGame() {
               className="sn-mobile-btn"
               onTouchStart={(e) => {
                 e.preventDefault();
-                handleMobileDir('right');
+                handleMobileDir("down");
               }}
-              onMouseDown={() => handleMobileDir('right')}
+              onMouseDown={() => handleMobileDir("down")}
+              aria-label="Down"
+            >
+              ↓
+            </button>
+          </div>
+
+          {/* RIGHT SIDE: Up on top, Right below */}
+          <div className="sn-mobile-side sn-mobile-right">
+            <button
+              className="sn-mobile-btn"
+              onTouchStart={(e) => {
+                e.preventDefault();
+                handleMobileDir("up");
+              }}
+              onMouseDown={() => handleMobileDir("up")}
+              aria-label="Up"
+            >
+              ↑
+            </button>
+            <button
+              className="sn-mobile-btn"
+              onTouchStart={(e) => {
+                e.preventDefault();
+                handleMobileDir("right");
+              }}
+              onMouseDown={() => handleMobileDir("right")}
               aria-label="Right"
             >
               →
             </button>
           </div>
-          <button
-            className="sn-mobile-btn sn-mobile-down"
-            onTouchStart={(e) => {
-              e.preventDefault();
-              handleMobileDir('down');
-            }}
-            onMouseDown={() => handleMobileDir('down')}
-            aria-label="Down"
-          >
-            ↓
-          </button>
         </div>
 
-        {/* Pause / Play button — now SEPARATE, below mobile controls */}
+        {/* Pause / Play button — single instance */}
         <button
           className="sn-mobile-pause-btn"
           onTouchStart={(e) => {
             e.preventDefault();
-            if (statusRef.current === 'idle' || statusRef.current === 'over') {
+            if (statusRef.current === "idle" || statusRef.current === "over") {
               startGame();
             } else {
               togglePause();
             }
           }}
           onMouseDown={() => {
-            if (statusRef.current === 'idle' || statusRef.current === 'over') {
+            if (statusRef.current === "idle" || statusRef.current === "over") {
               startGame();
             } else {
               togglePause();
             }
           }}
-          aria-label={status === 'playing' ? 'Pause' : 'Play'}
+          aria-label={status === "playing" ? "Pause" : "Play"}
         >
-          {status === 'playing' ? '⏸ Pause' : '▶ Play'}
+          {status === "playing" ? "⏸ Pause" : "▶ Play"}
         </button>
+
+       
 
         {/* Keyboard hints */}
         <div className="sn-hints">
@@ -774,7 +956,10 @@ export default function SnakeGame() {
             <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> Move
           </div>
           <div className="sn-hint-item">
-            <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Move
+            <kbd>W</kbd>
+            <kbd>A</kbd>
+            <kbd>S</kbd>
+            <kbd>D</kbd> Move
           </div>
           <div className="sn-hint-item">
             <kbd>Space</kbd> Start / Pause
@@ -814,11 +999,11 @@ function SeoContent() {
         <h2>How to Play</h2>
         <ol className="seo-steps">
           <li>
-            <strong>Press Space</strong> or click <strong>Start game</strong>{' '}
-            to begin.
+            <strong>Press Space</strong> or click <strong>Start game</strong> to
+            begin.
           </li>
           <li>
-            <strong>Use arrow keys</strong> (↑ ↓ ← →) or{' '}
+            <strong>Use arrow keys</strong> (↑ ↓ ← →) or{" "}
             <strong>W A S D</strong> to control the snake's direction.
           </li>
           <li>
@@ -829,8 +1014,8 @@ function SeoContent() {
             <strong>Golden food</strong> appears rarely — worth 5 points!
           </li>
           <li>
-            <strong>Avoid walls and yourself</strong> — one wrong move ends
-            the game.
+            <strong>Avoid walls and yourself</strong> — one wrong move ends the
+            game.
           </li>
         </ol>
       </section>
@@ -858,8 +1043,8 @@ function SeoContent() {
             <div className="seo-feature-icon">🏆</div>
             <h3>High Score Saved</h3>
             <p>
-              Your best score is saved locally in your browser — come back
-              later and try to beat it.
+              Your best score is saved locally in your browser — come back later
+              and try to beat it.
             </p>
           </div>
           <div className="seo-feature">
@@ -874,8 +1059,8 @@ function SeoContent() {
             <div className="seo-feature-icon">🎨</div>
             <h3>Color-Changing Snake</h3>
             <p>
-              Your snake changes color to match the food it eats — each ball
-              has a unique color.
+              Your snake changes color to match the food it eats — each ball has
+              a unique color.
             </p>
           </div>
           <div className="seo-feature">
@@ -901,16 +1086,16 @@ function SeoContent() {
         <h2>Tips to Get a High Score</h2>
         <ul className="seo-list">
           <li>
-            <strong>Plan ahead</strong> — don't just chase the food; think
-            about where your snake will be in 3-4 moves.
+            <strong>Plan ahead</strong> — don't just chase the food; think about
+            where your snake will be in 3-4 moves.
           </li>
           <li>
             <strong>Hug the walls</strong> — moving along the edges gives you
             more open space to maneuver.
           </li>
           <li>
-            <strong>Zigzag pattern</strong> — a systematic left-right or
-            up-down pattern covers the board safely.
+            <strong>Zigzag pattern</strong> — a systematic left-right or up-down
+            pattern covers the board safely.
           </li>
           <li>
             <strong>Slow down</strong> — if you're new, use the Slow speed
@@ -932,8 +1117,8 @@ function SeoContent() {
         <details className="seo-faq" open>
           <summary>How do I control the snake?</summary>
           <p>
-            Use the <strong>arrow keys</strong> (↑ ↓ ← →) or{' '}
-            <strong>W A S D</strong>. On mobile, use the on-screen D-pad. Press{' '}
+            Use the <strong>arrow keys</strong> (↑ ↓ ← →) or{" "}
+            <strong>W A S D</strong>. On mobile, use the on-screen D-pad. Press{" "}
             <strong>Space</strong> to start or pause.
           </p>
         </details>
@@ -941,8 +1126,8 @@ function SeoContent() {
         <details className="seo-faq">
           <summary>Is the game free?</summary>
           <p>
-            Yes — completely free with no downloads, no ads, and no signup.
-            Just open the page and start playing.
+            Yes — completely free with no downloads, no ads, and no signup. Just
+            open the page and start playing.
           </p>
         </details>
 
@@ -965,8 +1150,8 @@ function SeoContent() {
         <details className="seo-faq">
           <summary>Why does the snake change color?</summary>
           <p>
-            The snake changes color to match the food it eats. Each colored
-            ball gives the snake a new look — a fun visual way to track your
+            The snake changes color to match the food it eats. Each colored ball
+            gives the snake a new look — a fun visual way to track your
             progress.
           </p>
         </details>
@@ -974,17 +1159,17 @@ function SeoContent() {
         <details className="seo-faq">
           <summary>What is the golden food?</summary>
           <p>
-            Occasionally a golden apple appears instead of a normal colored
-            one. It gives you <strong>5 points</strong> instead of 1 — great
-            for boosting your score quickly.
+            Occasionally a golden apple appears instead of a normal colored one.
+            It gives you <strong>5 points</strong> instead of 1 — great for
+            boosting your score quickly.
           </p>
         </details>
 
         <details className="seo-faq">
           <summary>Can I change the speed?</summary>
           <p>
-            Yes — before starting, choose from <strong>Slow</strong>,{' '}
-            <strong>Normal</strong>, <strong>Fast</strong>, or{' '}
+            Yes — before starting, choose from <strong>Slow</strong>,{" "}
+            <strong>Normal</strong>, <strong>Fast</strong>, or{" "}
             <strong>Insane</strong> speed. Speed can't be changed mid-game.
           </p>
         </details>
@@ -1009,7 +1194,7 @@ function SeoContent() {
       <section className="seo-section">
         <h2>Related Tools</h2>
         <p>
-          Try our other fun tools: <strong>Coin Flip</strong>,{' '}
+          Try our other fun tools: <strong>Coin Flip</strong>,{" "}
           <strong>Name to Stylish Text</strong>, <strong>Color Picker</strong>,
           and <strong>Typing Test</strong> — all free and browser-based.
         </p>

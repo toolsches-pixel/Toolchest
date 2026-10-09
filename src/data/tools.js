@@ -222,6 +222,15 @@ export const groups = [
         icon: "🔄",
         component: lazy(() => import("../pages/tools/ImageConverter")),
       },
+      {
+        id: "background-remover",
+        name: "Background Remover",
+        description:
+          "AI-powered background removal in your browser. No upload, 100% private.",
+        path: "/tools/background-remover",
+        icon: "🪄",
+        component: lazy(() => import("../pages/tools/BackgroundRemover")),
+      },
     ],
   },
   {
@@ -351,6 +360,15 @@ export const groups = [
         icon: "⏱",
         component: lazy(() => import("../pages/tools/Timer")),
       },
+      {
+        id: "ocr-tool",
+        name: "Image to Text (OCR)",
+        description:
+          "Extract text from images. Supports English and Hindi. 100% browser-based.",
+        path: "/tools/ocr-tool",
+        icon: "🔍",
+        component: lazy(() => import("../pages/tools/OcrTool")),
+      },
     ],
   },
   {
@@ -399,7 +417,6 @@ export const groups = [
         icon: "⭕",
         component: lazy(() => import("../pages/tools/TicTacToe")),
       },
-     
     ],
   },
   {

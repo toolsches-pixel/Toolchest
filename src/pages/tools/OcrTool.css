@@ -1,0 +1,432 @@
+/* ============================================================
+   OCR TOOL — CSS
+   Prefix: ocr-
+   ============================================================ */
+
+.ocr-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.ocr-hero {
+  text-align: center;
+}
+
+.ocr-hero-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.ocr-hero-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.55;
+}
+
+/* ============================================================
+   DROPZONE
+   ============================================================ */
+.ocr-dropzone {
+  max-width: 520px;
+  margin: 0 auto;
+  width: 100%;
+  border: 2px dashed var(--border-strong);
+  border-radius: 16px;
+  background: var(--bg-card);
+  padding: 32px 24px 26px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ocr-dropzone:hover,
+.ocr-dropzone.dragging {
+  border-color: var(--accent);
+  background: rgba(78, 205, 196, 0.04);
+  transform: translateY(-2px);
+}
+
+.ocr-dropzone-icon {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.ocr-upload-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 12px 26px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 10px;
+}
+
+.ocr-upload-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(78, 205, 196, 0.25);
+}
+
+.ocr-dropzone-hint {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   WORK AREA (2 column)
+   ============================================================ */
+.ocr-work {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* ---------- Preview (left) ---------- */
+.ocr-preview {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 80px;
+}
+
+.ocr-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.ocr-remove-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ocr-remove-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.ocr-preview-img {
+  background: #0a0b0d;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  max-height: 320px;
+  overflow: hidden;
+}
+
+.ocr-preview-img img {
+  max-width: 100%;
+  max-height: 300px;
+  width: auto;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+}
+
+/* Language select */
+.ocr-lang-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ocr-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.ocr-lang-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.ocr-lang-tab {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 8px 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.ocr-lang-tab:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.ocr-lang-tab.active {
+  border-color: var(--accent);
+  background: rgba(78, 205, 196, 0.08);
+  color: var(--accent);
+}
+
+.ocr-lang-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ocr-lang-tab span:first-child {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* Run button */
+.ocr-run-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+}
+
+.ocr-run-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(78, 205, 196, 0.25);
+}
+
+.ocr-run-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Progress */
+.ocr-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ocr-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ocr-progress-bar {
+  height: 6px;
+  background: var(--bg-elev);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ocr-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #22c55e);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+/* Error */
+.ocr-error {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+}
+
+/* ---------- Result (right) ---------- */
+.ocr-result {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 400px;
+}
+
+.ocr-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ocr-result-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.ocr-copy-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ocr-copy-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(78, 205, 196, 0.06);
+}
+
+.ocr-copy-btn.copied {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #fff;
+}
+
+.ocr-textarea {
+  flex: 1;
+  min-height: 320px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  padding: 14px;
+  outline: none;
+  resize: vertical;
+}
+
+.ocr-textarea:focus {
+  border-color: var(--accent);
+}
+
+.ocr-result-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ocr-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.ocr-empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+}
+
+.ocr-empty-text {
+  font-size: 0.82rem;
+  font-family: 'JetBrains Mono', monospace;
+  max-width: 260px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .ocr-work {
+    grid-template-columns: 1fr;
+  }
+  .ocr-preview {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .ocr-hero-title {
+    font-size: 1.4rem;
+  }
+  .ocr-hero-subtitle {
+    font-size: 0.82rem;
+  }
+  .ocr-dropzone {
+    padding: 26px 16px 22px;
+  }
+  .ocr-lang-tabs {
+    grid-template-columns: 1fr;
+  }
+  .ocr-lang-tab {
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+  }
+  .ocr-textarea {
+    font-size: 0.78rem;
+    min-height: 220px;
+  }
+}

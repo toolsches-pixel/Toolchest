@@ -179,15 +179,7 @@ export const groups = [
     category: "Images",
     tags: ["image", "resize", "compress", "convert", "qr", "misc"],
     tools: [
-      {
-        id: "background-remover",
-        name: "Background Remover",
-        description:
-          "AI-powered background removal in your browser. No upload, 100% private.",
-        path: "/tools/background-remover",
-        icon: "🪄",
-        component: lazy(() => import("../pages/tools/BackgroundRemover")),
-      },
+      
       {
         id: "image-resizer",
         name: "Image Resizer",

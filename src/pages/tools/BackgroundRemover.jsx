@@ -46,7 +46,7 @@ export default function BackgroundRemover() {
         'No upload — 100% private',
         'Transparent PNG output',
         'Replace background with color',
-        'Small & Medium AI models',
+        'Good & Ultra AI models',
         'Mobile friendly',
         'Free forever',
       ],
@@ -261,13 +261,13 @@ export default function BackgroundRemover() {
                     className={`bgr-toggle-btn ${modelSize === 'small' ? 'active' : ''}`}
                     onClick={() => setModelSize('small')}
                   >
-                    ⚡ Small (40MB)
+                    ⚡ Good
                   </button>
                   <button
                     className={`bgr-toggle-btn ${modelSize === 'medium' ? 'active' : ''}`}
                     onClick={() => setModelSize('medium')}
                   >
-                    🎨 Medium (80MB)
+                    🎨 Ultra
                   </button>
                 </div>
               </div>
@@ -394,7 +394,7 @@ function SeoContent() {
             PNG, or WEBP.
           </li>
           <li>
-            <strong>Choose AI model</strong> — Small (fast) or Medium (higher
+            <strong>Choose AI model</strong> — GOOD (fast) or ULTRA (higher
             quality).
           </li>
           <li>
@@ -427,7 +427,7 @@ function SeoContent() {
             <div className="seo-feature-icon">⚡</div>
             <h3>Two AI Models</h3>
             <p>
-              Small (40MB) for speed, Medium (80MB) for maximum edge quality.
+              Good for speed, Ultra for maximum edge quality.
             </p>
           </div>
           <div className="seo-feature">
@@ -516,10 +516,10 @@ function SeoContent() {
         </details>
 
         <details className="seo-faq">
-          <summary>Which is better — Small or Medium model?</summary>
+          <summary>Which is better — Good or Ultra?</summary>
           <p>
-            <strong>Small</strong> is faster and smaller but may have slight
-            artifacts on complex edges. <strong>Medium</strong> gives cleaner
+            <strong>Good</strong> is faster and smaller but may have slight
+            artifacts on complex edges. <strong>Ultra</strong> gives cleaner
             edges for tricky images like hair or fur.
           </p>
         </details>

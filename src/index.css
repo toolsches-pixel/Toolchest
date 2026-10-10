@@ -4565,3 +4565,145 @@ button {
   }
 }
 
+/* ============================================================
+   NAVBAR ACTIONS (theme + search)
+   ============================================================ */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Desktop: search visible, hamburger hidden */
+.navbar-actions-desktop {
+  margin-left: 12px;
+}
+
+.navbar-actions-mobile {
+  display: none; /* hidden on desktop */
+  margin-left: auto;
+}
+
+/* Theme toggle button */
+.navbar-theme-btn {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.navbar-theme-btn:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-card);
+  transform: translateY(-1px);
+}
+
+.navbar-theme-btn:active {
+  transform: scale(0.92);
+}
+
+/* Search button */
+.navbar-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.navbar-search-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text-muted);
+  background: var(--bg-card);
+}
+
+.navbar-search-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.navbar-search-text {
+  font-size: 0.78rem;
+}
+
+.navbar-search-kbd {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: 4px;
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Hide desktop links and desktop actions */
+  .navbar-links-desktop,
+  .navbar-actions-desktop {
+    display: none;
+  }
+
+  /* Show mobile actions (theme + hamburger) */
+  .navbar-actions-mobile {
+    display: flex;
+    margin-left: auto;
+    gap: 6px;
+  }
+
+  .navbar-theme-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.95rem;
+  }
+}
+
+/* ============================================================
+   LIGHT THEME (agar pehle se nahi hai)
+   ============================================================ */
+body.light-theme {
+  --bg: #f5f5f7;
+  --bg-elev: #ffffff;
+  --bg-card: #ffffff;
+  --bg-hover: #f0f0f2;
+  --border: #e0e0e3;
+  --border-strong: #c8c8cc;
+
+  --text: #1a1a1a;
+  --text-muted: #555555;
+  --text-dim: #888888;
+
+  --accent: #0ea5e9;
+  --accent-soft: rgba(14, 165, 233, 0.12);
+  --accent-hover: #0284c7;
+
+  --danger: #dc2626;
+  --success: #16a34a;
+}
+
+body.light-theme {
+  background: var(--bg);
+  color: var(--text);
+}

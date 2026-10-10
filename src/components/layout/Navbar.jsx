@@ -6,9 +6,32 @@ import GlobalSearch from '../ui/GlobalSearch';
 export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // ✅ Theme state with localStorage
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('toolchest-theme') || 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
   const menuRef = useRef(null);
-  const hamburgerRef = useRef(null); 
+  const hamburgerRef = useRef(null);
   const location = useLocation();
+
+  // ✅ Apply theme to body
+  useEffect(() => {
+    document.body.classList.remove('light-theme', 'dark-theme');
+    document.body.classList.add(`${theme}-theme`);
+    try {
+      localStorage.setItem('toolchest-theme', theme);
+    } catch {}
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // Global keyboard shortcut: Ctrl+K / Cmd+K / "/"
   useEffect(() => {
@@ -41,21 +64,22 @@ export default function Navbar() {
   }, [location.pathname]);
 
   // Close menu on outside click
- useEffect(() => {
-  const handler = (e) => {
-    // Close menu only if click is OUTSIDE both the menu AND the hamburger button
-    const clickedOutsideMenu = menuRef.current && !menuRef.current.contains(e.target);
-    const clickedOutsideHamburger = hamburgerRef.current && !hamburgerRef.current.contains(e.target);
+  useEffect(() => {
+    const handler = (e) => {
+      const clickedOutsideMenu =
+        menuRef.current && !menuRef.current.contains(e.target);
+      const clickedOutsideHamburger =
+        hamburgerRef.current && !hamburgerRef.current.contains(e.target);
 
-    if (clickedOutsideMenu && clickedOutsideHamburger) {
-      setMenuOpen(false);
+      if (clickedOutsideMenu && clickedOutsideHamburger) {
+        setMenuOpen(false);
+      }
+    };
+    if (menuOpen) {
+      document.addEventListener('mousedown', handler);
+      return () => document.removeEventListener('mousedown', handler);
     }
-  };
-  if (menuOpen) {
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }
-}, [menuOpen]);
+  }, [menuOpen]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -78,74 +102,107 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <div className="navbar-links navbar-links-desktop">
-  <NavLink to="/" end>home</NavLink>
-
-  {/* Show first 4 groups directly */}
-  {groups.slice(0, 4).map((group) => (
-    <NavLink
-      key={group.id}
-      to={
-        group.tools.length === 1
-          ? group.tools[0].path
-          : `/tools/${group.id}`
-      }
-    >
-      {group.name.split(' ')[0].toLowerCase()}
-    </NavLink>
-  ))}
-
-  {/* Rest in "More" dropdown */}
-  {groups.length > 4 && (
-    <div className="navbar-more">
-      <button className="navbar-more-btn">
-        more <span className="navbar-more-arrow">▾</span>
-      </button>
-      <div className="navbar-more-dropdown">
-        {groups.slice(4).map((group) => (
-          <NavLink
-            key={group.id}
-            to={
-              group.tools.length === 1
-                ? group.tools[0].path
-                : `/tools/${group.id}`
-            }
-            className="navbar-more-item"
-          >
-            <span className="navbar-more-icon">{group.icon}</span>
-            <span className="navbar-more-name">
-              {group.name.split(' ')[0].toLowerCase()}
-            </span>
-            <span className="navbar-more-count">{group.tools.length}</span>
+          <NavLink to="/" end>
+            home
           </NavLink>
-        ))}
-      </div>
-    </div>
-  )}
 
-  <button
-    className="navbar-search-btn"
-    onClick={() => setSearchOpen(true)}
-    title="Search tools (Ctrl+K or /)"
-    aria-label="Search tools"
-  >
-    <span className="navbar-search-icon">🔍</span>
-    <span className="navbar-search-text">search</span>
-    <kbd className="navbar-search-kbd">⌘K</kbd>
-  </button>
-</div>
+          {/* Show first 4 groups directly */}
+          {groups.slice(0, 4).map((group) => (
+            <NavLink
+              key={group.id}
+              to={
+                group.tools.length === 1
+                  ? group.tools[0].path
+                  : `/tools/${group.id}`
+              }
+            >
+              {group.name.split(' ')[0].toLowerCase()}
+            </NavLink>
+          ))}
 
-        {/* Mobile hamburger button */}
-        <button
-  ref={hamburgerRef}
-  className={`navbar-hamburger ${menuOpen ? 'open' : ''}`}
-  onClick={() => setMenuOpen((o) => !o)}
-  aria-label="Toggle menu"
-  aria-expanded={menuOpen}
->
-  <span className="navbar-hamburger-bar" />
-  <span className="navbar-hamburger-bar" />
-  <span className="navbar-hamburger-bar" />
-</button>
+          {/* Rest in "More" dropdown */}
+          {groups.length > 4 && (
+            <div className="navbar-more">
+              <button className="navbar-more-btn">
+                more <span className="navbar-more-arrow">▾</span>
+              </button>
+              <div className="navbar-more-dropdown">
+                {groups.slice(4).map((group) => (
+                  <NavLink
+                    key={group.id}
+                    to={
+                      group.tools.length === 1
+                        ? group.tools[0].path
+                        : `/tools/${group.id}`
+                    }
+                    className="navbar-more-item"
+                  >
+                    <span className="navbar-more-icon">{group.icon}</span>
+                    <span className="navbar-more-name">
+                      {group.name.split(' ')[0].toLowerCase()}
+                    </span>
+                    <span className="navbar-more-count">
+                      {group.tools.length}
+                    </span>
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ✅ Actions wrapper — theme + search (desktop) */}
+        <div className="navbar-actions navbar-actions-desktop">
+          {/* Theme toggle */}
+          <button
+            className="navbar-theme-btn"
+            onClick={toggleTheme}
+            title={
+              theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+            }
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+
+          {/* Search button */}
+          <button
+            className="navbar-search-btn"
+            onClick={() => setSearchOpen(true)}
+            title="Search tools (Ctrl+K or /)"
+            aria-label="Search tools"
+          >
+            <span className="navbar-search-icon">🔍</span>
+            <span className="navbar-search-text">search</span>
+            <kbd className="navbar-search-kbd">⌘K</kbd>
+          </button>
+        </div>
+
+        {/* ✅ Mobile: theme toggle (always visible) + hamburger */}
+        <div className="navbar-actions navbar-actions-mobile">
+          <button
+            className="navbar-theme-btn"
+            onClick={toggleTheme}
+            title={
+              theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+            }
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+
+          <button
+            ref={hamburgerRef}
+            className={`navbar-hamburger ${menuOpen ? 'open' : ''}`}
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+          >
+            <span className="navbar-hamburger-bar" />
+            <span className="navbar-hamburger-bar" />
+            <span className="navbar-hamburger-bar" />
+          </button>
+        </div>
 
         {/* Mobile menu dropdown */}
         <div
@@ -153,9 +210,9 @@ export default function Navbar() {
           ref={menuRef}
         >
           <div className="navbar-mobile-title-row">
-  <span className="navbar-mobile-title-icon">🧰</span>
-  <span className="navbar-mobile-title">Menu</span>
-</div>
+            <span className="navbar-mobile-title-icon">🧰</span>
+            <span className="navbar-mobile-title">Menu</span>
+          </div>
 
           <div className="navbar-mobile-links">
             <NavLink to="/" end className="navbar-mobile-link">

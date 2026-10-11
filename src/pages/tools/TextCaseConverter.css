@@ -1,0 +1,300 @@
+/* ============================================================
+   TEXT CASE CONVERTER — CSS
+   Prefix: tcc-
+   ============================================================ */
+
+.tcc-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.tcc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tcc-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.tcc-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+/* ============================================================
+   CASE BUTTONS GRID
+   ============================================================ */
+.tcc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.tcc-case-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.tcc-case-btn:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+}
+
+.tcc-case-btn.active {
+  border-color: var(--accent);
+  background: rgba(78, 205, 196, 0.08);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.tcc-case-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.tcc-case-btn.active .tcc-case-label {
+  color: var(--accent);
+}
+
+.tcc-case-desc {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  text-transform: lowercase;
+  letter-spacing: 0;
+}
+
+/* ============================================================
+   TEXT ACTIONS
+   ============================================================ */
+.tcc-actions-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tcc-action-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tcc-action-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+.tcc-action-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(78, 205, 196, 0.08);
+}
+
+/* ============================================================
+   EDITOR (2-pane)
+   ============================================================ */
+.tcc-editor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.tcc-pane {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tcc-pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elev);
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tcc-pane-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+}
+
+.tcc-pane-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tcc-pane-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tcc-pane-btn:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+.tcc-pane-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tcc-copy-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tcc-copy-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.tcc-copy-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tcc-copy-btn.copied {
+  background: #22c55e;
+}
+
+/* Textareas */
+.tcc-textarea {
+  width: 100%;
+  min-height: 240px;
+  max-height: 400px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  padding: 14px;
+  outline: none;
+  resize: vertical;
+  word-break: break-word;
+}
+
+.tcc-textarea::placeholder {
+  color: var(--text-dim);
+}
+
+.tcc-textarea-output {
+  color: var(--accent);
+}
+
+/* Stats */
+.tcc-stats {
+  display: flex;
+  gap: 6px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-elev);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .tcc-editor {
+    grid-template-columns: 1fr;
+  }
+  .tcc-textarea {
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 640px) {
+  .tcc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .tcc-case-btn {
+    padding: 10px 10px;
+  }
+  .tcc-case-label {
+    font-size: 0.75rem;
+  }
+  .tcc-case-desc {
+    font-size: 0.58rem;
+  }
+  .tcc-actions-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .tcc-action-btn {
+    font-size: 0.7rem;
+    padding: 8px 10px;
+  }
+  .tcc-pane-header {
+    padding: 8px 10px;
+  }
+  .tcc-textarea {
+    font-size: 0.82rem;
+    padding: 10px;
+  }
+}

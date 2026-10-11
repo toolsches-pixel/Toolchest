@@ -179,7 +179,6 @@ export const groups = [
     category: "Images",
     tags: ["image", "resize", "compress", "convert", "qr", "misc"],
     tools: [
-      
       {
         id: "image-resizer",
         name: "Image Resizer",
@@ -223,7 +222,6 @@ export const groups = [
         icon: "🔄",
         component: lazy(() => import("../pages/tools/ImageConverter")),
       },
-      
     ],
   },
   {
@@ -361,6 +359,15 @@ export const groups = [
         path: "/tools/ocr-tool",
         icon: "🔍",
         component: lazy(() => import("../pages/tools/OcrTool")),
+      },
+      {
+        id: "text-case-converter",
+        name: "Text Case Converter",
+        description:
+          "Convert text to UPPERCASE, lowercase, Title, camelCase, snake_case, kebab-case and more.",
+        path: "/tools/text-case-converter",
+        icon: "🔤",
+        component: lazy(() => import("../pages/tools/TextCaseConverter")),
       },
     ],
   },

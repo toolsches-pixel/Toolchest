@@ -378,6 +378,14 @@ export const groups = [
         icon: "🔐",
         component: lazy(() => import("../pages/tools/SecretMessage")),
       },
+      {
+  id: 'double-encryption',
+  name: 'Double Encryption',
+  description: 'Two-layer AES-256 encryption. Requires 2 passwords — extra security for sensitive messages.',
+  path: '/tools/double-encryption',
+  icon: '🔐',
+  component: lazy(() => import('../pages/tools/DoubleEncryption')),
+},
     ],
   },
   {

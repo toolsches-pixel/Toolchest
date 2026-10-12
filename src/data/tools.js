@@ -369,6 +369,15 @@ export const groups = [
         icon: "🔤",
         component: lazy(() => import("../pages/tools/TextCaseConverter")),
       },
+      {
+        id: "secret-message",
+        name: "Secret Message",
+        description:
+          "Encrypt messages with a password and share the code. Friend decrypts with same password.",
+        path: "/tools/secret-message",
+        icon: "🔐",
+        component: lazy(() => import("../pages/tools/SecretMessage")),
+      },
     ],
   },
   {
@@ -416,6 +425,15 @@ export const groups = [
         path: "/tools/tic-tac-toe",
         icon: "⭕",
         component: lazy(() => import("../pages/tools/TicTacToe")),
+      },
+      {
+        id: "rock-paper-scissors",
+        name: "Rock Paper Scissors",
+        description:
+          "Classic Rock Paper Scissors vs computer. Keyboard support, best-of-N rounds.",
+        path: "/tools/rock-paper-scissors",
+        icon: "✂️",
+        component: lazy(() => import("../pages/tools/RockPaperScissors")),
       },
     ],
   },

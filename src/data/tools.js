@@ -386,6 +386,7 @@ export const groups = [
   icon: '🔐',
   component: lazy(() => import('../pages/tools/DoubleEncryption')),
 },
+
     ],
   },
   {
@@ -464,6 +465,14 @@ export const groups = [
         icon: "📊",
         component: lazy(() => import("../pages/tools/ResultMaker")),
       },
+      {
+  id: 'writing-pad',
+  name: 'Writing Pad',
+  description: 'Full writing pad — rich text editor + drawing canvas. Auto-save, export TXT/HTML/PNG.',
+  path: '/tools/writing-pad',
+  icon: '📝',
+  component: lazy(() => import('../pages/tools/WritingPad')),
+},
       // Future: gpa-calculator, percentage-calculator, etc.
     ],
   },

@@ -11,10 +11,11 @@
   },
   "dependencies": {
     "@cantoo/pdf-lib": "^2.11.1",
+    "@imgly/background-removal": "^1.7.0",
     "docx": "^9.8.1",
     "jspdf": "^4.2.1",
     "jszip": "^3.10.2",
-    "onnxruntime-web": "^1.14.0",
+    "onnxruntime-web": "^1.21.0",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^6.4.299",
     "qrcode": "^1.5.4",

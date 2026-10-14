@@ -1,7 +1,6 @@
 import { lazy } from "react";
 
 export const groups = [
-  
   // ============================================================
   // 1. TYPING
   // ============================================================
@@ -223,6 +222,15 @@ export const groups = [
         icon: "🔄",
         component: lazy(() => import("../pages/tools/ImageConverter")),
       },
+      {
+        id: "background-remover",
+        name: "Background Remover",
+        description:
+          "AI-powered background removal in your browser. No upload, 100% private.",
+        path: "/tools/background-remover",
+        icon: "🪄",
+        component: lazy(() => import("../pages/tools/BackgroundRemover")),
+      },
     ],
   },
   {
@@ -380,14 +388,14 @@ export const groups = [
         component: lazy(() => import("../pages/tools/SecretMessage")),
       },
       {
-  id: 'double-encryption',
-  name: 'Double Encryption',
-  description: 'Two-layer AES-256 encryption. Requires 2 passwords — extra security for sensitive messages.',
-  path: '/tools/double-encryption',
-  icon: '🔐',
-  component: lazy(() => import('../pages/tools/DoubleEncryption')),
-},
-
+        id: "double-encryption",
+        name: "Double Encryption",
+        description:
+          "Two-layer AES-256 encryption. Requires 2 passwords — extra security for sensitive messages.",
+        path: "/tools/double-encryption",
+        icon: "🔐",
+        component: lazy(() => import("../pages/tools/DoubleEncryption")),
+      },
     ],
   },
   {
@@ -467,13 +475,14 @@ export const groups = [
         component: lazy(() => import("../pages/tools/ResultMaker")),
       },
       {
-  id: 'writing-pad',
-  name: 'Writing Pad',
-  description: 'Full writing pad — rich text editor + drawing canvas. Auto-save, export TXT/HTML/PNG.',
-  path: '/tools/writing-pad',
-  icon: '📝',
-  component: lazy(() => import('../pages/tools/WritingPad')),
-},
+        id: "writing-pad",
+        name: "Writing Pad",
+        description:
+          "Full writing pad — rich text editor + drawing canvas. Auto-save, export TXT/HTML/PNG.",
+        path: "/tools/writing-pad",
+        icon: "📝",
+        component: lazy(() => import("../pages/tools/WritingPad")),
+      },
       // Future: gpa-calculator, percentage-calculator, etc.
     ],
   },

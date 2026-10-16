@@ -10,15 +10,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const count = (await redis.get(`qr:${id}:count`)) || 0;
-    const url = await redis.get(`qr:${id}:url`);
-    const label = await redis.get(`qr:${id}:label`);
+    const [count, url, label, isProtected] = await Promise.all([
+      redis.get(`qr:${id}:count`),
+      redis.get(`qr:${id}:url`),
+      redis.get(`qr:${id}:label`),
+      redis.get(`qr:${id}:protected`),
+    ]);
 
     res.status(200).json({
       id,
-      count: Number(count),
-      url,
-      label,
+      count: Number(count) || 0,
+      url: url || '',
+      label: label || '',
+      protected: isProtected === '1',
     });
   } catch (err) {
     console.error('Stats error:', err);

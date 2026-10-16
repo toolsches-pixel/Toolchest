@@ -120,3 +120,179 @@
   .qrt-item { flex-direction: column; align-items: stretch; }
   .qrt-item-actions { justify-content: flex-end; }
 }
+/* ============================================================
+   FILTERS
+   ============================================================ */
+.qrt-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.qrt-filter-toggle {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.qrt-filter-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.qrt-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  padding: 12px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  align-items: end;
+}
+
+.qrt-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.qrt-filter-label {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.qrt-filter-input {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  padding: 8px 10px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.qrt-filter-input:focus {
+  border-color: var(--accent);
+}
+
+.qrt-filter-clear {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.qrt-filter-clear:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.qrt-empty {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.qrt-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  border: 1px solid;
+}
+
+.qrt-badge-protected {
+  background: rgba(34, 197, 94, 0.08);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.qrt-badge-warning {
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.qrt-badge-info {
+  background: rgba(59, 130, 246, 0.08);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================================
+   PROTECTED BUTTON
+   ============================================================ */
+.qrt-icon-btn-protected {
+  border-color: rgba(34, 197, 94, 0.5) !important;
+  color: #22c55e !important;
+  background: rgba(34, 197, 94, 0.06) !important;
+}
+
+/* ============================================================
+   INFO FOOTER
+   ============================================================ */
+.qrt-info-footer {
+  padding: 12px 14px;
+  background: rgba(234, 179, 8, 0.06);
+  border: 1px solid rgba(234, 179, 8, 0.25);
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+.qrt-info-footer-title {
+  font-size: 0.72rem;
+  color: #eab308;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.qrt-info-footer-text {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.qrt-info-footer-text strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.qrt-info-footer-text a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: underline;
+}

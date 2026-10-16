@@ -184,6 +184,29 @@ export default function QrTracker() {
     a.click();
     document.body.removeChild(a);
   };
+  const handleDownloadFromList = async (qr) => {
+    try {
+      // Regenerate the QR from saved data
+      const qrContent = `${window.location.origin}/api/scan?id=${qr.id}`;
+
+      const dataUrl = await QRCode.toDataURL(qrContent, {
+        width: 400,
+        margin: 2,
+        errorCorrectionLevel: "H",
+      });
+
+      // Download
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `qr-${qr.id}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (e) {
+      console.error("Download failed:", e);
+      alert("Failed to download QR: " + e.message);
+    }
+  };
 
   const handleCopyLink = async () => {
     if (!qrId) return;
@@ -475,6 +498,13 @@ export default function QrTracker() {
                         <div className="qrt-stat-label">scans</div>
                       </div>
                       <div className="qrt-item-actions">
+                        <button
+                          className="qrt-icon-btn qrt-icon-btn-download"
+                          onClick={() => handleDownloadFromList(qr)}
+                          title="Download QR"
+                        >
+                          ⬇
+                        </button>
                         <button
                           className="qrt-icon-btn"
                           onClick={() => handleRefreshStats(qr.id)}

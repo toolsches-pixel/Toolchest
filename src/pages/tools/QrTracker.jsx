@@ -41,6 +41,9 @@ export default function QrTracker() {
   const [trackingEnabled, setTrackingEnabled] = useState(true);
   const [copiedId, setCopiedId] = useState("");
 
+  // ✅ Per-QR expand state
+  const [expandedQrs, setExpandedQrs] = useState({});
+
   // ✅ Filter drawer state
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [tempFilters, setTempFilters] = useState({
@@ -50,13 +53,12 @@ export default function QrTracker() {
     toDate: "",
   });
 
-  // Applied filters
   const [filterId, setFilterId] = useState("");
   const [filterUrl, setFilterUrl] = useState("");
   const [filterDateFrom, setFilterDateFrom] = useState("");
   const [filterDateTo, setFilterDateTo] = useState("");
 
-  // ✅ Collapsible sections state (per section)
+  // Collapsible filter sections
   const [collapsed, setCollapsed] = useState({
     id: false,
     url: false,
@@ -98,10 +100,7 @@ export default function QrTracker() {
       if (filterId && !qr.id.toLowerCase().includes(filterId.toLowerCase())) {
         return false;
       }
-      if (
-        filterUrl &&
-        !qr.url.toLowerCase().includes(filterUrl.toLowerCase())
-      ) {
+      if (filterUrl && !qr.url.toLowerCase().includes(filterUrl.toLowerCase())) {
         return false;
       }
       if (filterDateFrom) {
@@ -116,7 +115,29 @@ export default function QrTracker() {
     });
   }, [savedQrs, filterId, filterUrl, filterDateFrom, filterDateTo]);
 
-  // ✅ Filter drawer controls
+  // ✅ Toggle single QR expand
+  const toggleQrExpand = (id) => {
+    setExpandedQrs((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  // ✅ Toggle all
+  const toggleAllExpand = () => {
+    const allExpanded =
+      filteredQrs.length > 0 && filteredQrs.every((q) => expandedQrs[q.id]);
+    const next = {};
+    filteredQrs.forEach((q) => {
+      next[q.id] = !allExpanded;
+    });
+    setExpandedQrs(next);
+  };
+
+  const allExpanded =
+    filteredQrs.length > 0 && filteredQrs.every((q) => expandedQrs[q.id]);
+
+  // Filter drawer controls
   const openFilterDrawer = () => {
     setTempFilters({
       id: filterId,
@@ -158,7 +179,7 @@ export default function QrTracker() {
   const hasActiveFilters =
     filterId || filterUrl || filterDateFrom || filterDateTo;
 
-  // ✅ URL validation (blocks bad sites)
+  // URL validation
   const BLOCKED_KEYWORDS = [
     "porn", "xxx", "adult", "sex", "escort",
     "casino", "betting", "gambling", "lottery", "poker",
@@ -211,7 +232,6 @@ export default function QrTracker() {
 
     if (!/^https?:\/\//i.test(finalUrl)) finalUrl = "https://" + finalUrl;
 
-    // ✅ Validate
     const validation = validateUrl(finalUrl);
     if (!validation.ok) {
       setError("❌ " + validation.reason);
@@ -494,6 +514,15 @@ export default function QrTracker() {
                 )}
               </div>
               <div className="qrt-header-actions">
+                {filteredQrs.length > 1 && (
+                  <button
+                    className="qrt-expand-all-btn"
+                    onClick={toggleAllExpand}
+                    title={allExpanded ? "Collapse all" : "Expand all"}
+                  >
+                    {allExpanded ? "▲ Collapse all" : "▼ Expand all"}
+                  </button>
+                )}
                 {hasActiveFilters && (
                   <button
                     className="qrt-filter-clear-inline"
@@ -530,78 +559,103 @@ export default function QrTracker() {
                   const isProtected = qrStat.protected || false;
                   const daysLeft = getDaysLeft(qr.createdAt, isProtected);
                   const isExpiring = daysLeft !== null && daysLeft < 7;
+                  const isExpanded = !!expandedQrs[qr.id];
 
                   return (
-                    <div key={qr.id} className="qrt-item">
-                      <div className="qrt-item-main">
-                        <div className="qrt-item-label">{qr.label}</div>
-                        <div className="qrt-item-url">{qr.url}</div>
-                        <div className="qrt-item-meta">
-                          ID: <code>{qr.id}</code>
-                          <button
-                            className={`qrt-copy-id-btn ${
-                              copiedId === qr.id ? "copied" : ""
-                            }`}
-                            onClick={() => handleCopyId(qr.id)}
-                            title="Copy ID"
-                          >
-                            {copiedId === qr.id ? "✓" : "📋"}
-                          </button>
-                          {" · "}
-                          {new Date(qr.createdAt).toLocaleDateString()}
-                        </div>
-                        {isProtected ? (
-                          <div className="qrt-badge qrt-badge-protected">
-                            🔒 Protected — never auto-deleted
+                    <div
+                      key={qr.id}
+                      className={`qrt-item ${isExpanded ? "expanded" : "collapsed"}`}
+                    >
+                      {/* Header — always visible */}
+                      <button
+                        className="qrt-item-header"
+                        onClick={() => toggleQrExpand(qr.id)}
+                        aria-expanded={isExpanded}
+                        type="button"
+                      >
+                        <span className="qrt-item-toggle-icon">
+                          {isExpanded ? "▼" : "▶"}
+                        </span>
+                        <span className="qrt-item-header-label">{qr.label}</span>
+                        <span className="qrt-item-header-scans">
+                          <span className="qrt-item-header-count">
+                            {qrStat.count ?? "—"}
+                          </span>
+                          <span className="qrt-item-header-unit">scans</span>
+                        </span>
+                      </button>
+
+                      {/* Body — hidden unless expanded */}
+                      {isExpanded && (
+                        <div className="qrt-item-body">
+                          <div className="qrt-item-url">{qr.url}</div>
+                          <div className="qrt-item-meta">
+                            ID: <code>{qr.id}</code>
+                            <button
+                              className={`qrt-copy-id-btn ${
+                                copiedId === qr.id ? "copied" : ""
+                              }`}
+                              onClick={() => handleCopyId(qr.id)}
+                              title="Copy ID"
+                              type="button"
+                            >
+                              {copiedId === qr.id ? "✓" : "📋"}
+                            </button>
+                            {" · "}
+                            {new Date(qr.createdAt).toLocaleDateString()}
                           </div>
-                        ) : daysLeft !== null ? (
-                          <div
-                            className={`qrt-badge ${
-                              isExpiring
-                                ? "qrt-badge-warning"
-                                : "qrt-badge-info"
-                            }`}
-                          >
-                            ⏳ Auto-delete in {daysLeft} day
-                            {daysLeft === 1 ? "" : "s"}
+
+                          {isProtected ? (
+                            <div className="qrt-badge qrt-badge-protected">
+                              🔒 Protected — never auto-deleted
+                            </div>
+                          ) : daysLeft !== null ? (
+                            <div
+                              className={`qrt-badge ${
+                                isExpiring
+                                  ? "qrt-badge-warning"
+                                  : "qrt-badge-info"
+                              }`}
+                            >
+                              ⏳ Auto-delete in {daysLeft} day
+                              {daysLeft === 1 ? "" : "s"}
+                            </div>
+                          ) : null}
+
+                          <div className="qrt-item-actions">
+                            <button
+                              className="qrt-icon-btn qrt-icon-btn-download"
+                              onClick={() => handleDownloadFromList(qr)}
+                              title="Download QR"
+                              type="button"
+                            >
+                              ⬇
+                            </button>
+                            <button
+                              className="qrt-icon-btn"
+                              onClick={() => handleRefreshStats(qr.id)}
+                              title="Refresh count"
+                              type="button"
+                            >
+                              🔄
+                            </button>
+                            <button
+                              className={`qrt-icon-btn ${
+                                isProtected ? "qrt-icon-btn-protected" : ""
+                              }`}
+                              onClick={() => handleToggleProtect(qr)}
+                              title={
+                                isProtected
+                                  ? "Unprotect"
+                                  : "Protect from auto-delete"
+                              }
+                              type="button"
+                            >
+                              {isProtected ? "🔒" : "🔓"}
+                            </button>
                           </div>
-                        ) : null}
-                      </div>
-                      <div className="qrt-item-stats">
-                        <div className="qrt-stat-value">
-                          {qrStat.count ?? "—"}
                         </div>
-                        <div className="qrt-stat-label">scans</div>
-                      </div>
-                      <div className="qrt-item-actions">
-                        <button
-                          className="qrt-icon-btn qrt-icon-btn-download"
-                          onClick={() => handleDownloadFromList(qr)}
-                          title="Download QR"
-                        >
-                          ⬇
-                        </button>
-                        <button
-                          className="qrt-icon-btn"
-                          onClick={() => handleRefreshStats(qr.id)}
-                          title="Refresh count"
-                        >
-                          🔄
-                        </button>
-                        <button
-                          className={`qrt-icon-btn ${
-                            isProtected ? "qrt-icon-btn-protected" : ""
-                          }`}
-                          onClick={() => handleToggleProtect(qr)}
-                          title={
-                            isProtected
-                              ? "Unprotect"
-                              : "Protect from auto-delete"
-                          }
-                        >
-                          {isProtected ? "🔒" : "🔓"}
-                        </button>
-                      </div>
+                      )}
                     </div>
                   );
                 })}
@@ -630,7 +684,6 @@ export default function QrTracker() {
         />
 
         <div className={`qrt-drawer ${filtersOpen ? "open" : ""}`}>
-          {/* Drawer header */}
           <div className="qrt-drawer-header">
             <div className="qrt-drawer-title">
               <span>⚙️</span> Filters
@@ -639,18 +692,19 @@ export default function QrTracker() {
               className="qrt-drawer-close"
               onClick={closeFilterDrawer}
               title="Close"
+              type="button"
             >
               ✕
             </button>
           </div>
 
-          {/* Drawer body */}
           <div className="qrt-drawer-body">
-            {/* Section: ID */}
+            {/* ID section */}
             <div className="qrt-drawer-section">
               <button
                 className="qrt-drawer-section-header"
                 onClick={() => toggleCollapse("id")}
+                type="button"
               >
                 <span className="qrt-drawer-section-title">ID</span>
                 <span className="qrt-drawer-section-icon">
@@ -676,11 +730,12 @@ export default function QrTracker() {
               )}
             </div>
 
-            {/* Section: URL */}
+            {/* URL section */}
             <div className="qrt-drawer-section">
               <button
                 className="qrt-drawer-section-header"
                 onClick={() => toggleCollapse("url")}
+                type="button"
               >
                 <span className="qrt-drawer-section-title">URL</span>
                 <span className="qrt-drawer-section-icon">
@@ -706,11 +761,12 @@ export default function QrTracker() {
               )}
             </div>
 
-            {/* Section: Date */}
+            {/* Date section */}
             <div className="qrt-drawer-section">
               <button
                 className="qrt-drawer-section-header"
                 onClick={() => toggleCollapse("date")}
+                type="button"
               >
                 <span className="qrt-drawer-section-title">Date range</span>
                 <span className="qrt-drawer-section-icon">
@@ -760,6 +816,7 @@ export default function QrTracker() {
               <div className="qrt-drawer-quick-btns">
                 <button
                   className="qrt-drawer-quick-btn"
+                  type="button"
                   onClick={() => {
                     const today = new Date();
                     const week = new Date(today.getTime() - 7 * 86400000);
@@ -774,6 +831,7 @@ export default function QrTracker() {
                 </button>
                 <button
                   className="qrt-drawer-quick-btn"
+                  type="button"
                   onClick={() => {
                     const today = new Date();
                     const month = new Date(today.getTime() - 30 * 86400000);
@@ -788,6 +846,7 @@ export default function QrTracker() {
                 </button>
                 <button
                   className="qrt-drawer-quick-btn"
+                  type="button"
                   onClick={() => {
                     setTempFilters({
                       ...tempFilters,
@@ -801,7 +860,6 @@ export default function QrTracker() {
               </div>
             </div>
 
-            {/* Info */}
             <div className="qrt-drawer-info">
               <span className="qrt-drawer-info-icon">💡</span>
               <span className="qrt-drawer-info-text">
@@ -811,15 +869,19 @@ export default function QrTracker() {
             </div>
           </div>
 
-          {/* Drawer footer */}
           <div className="qrt-drawer-footer">
             <button
               className="qrt-drawer-btn secondary"
               onClick={clearTempFilters}
+              type="button"
             >
               ✕ Clear
             </button>
-            <button className="qrt-drawer-btn primary" onClick={applyFilters}>
+            <button
+              className="qrt-drawer-btn primary"
+              onClick={applyFilters}
+              type="button"
+            >
               ✓ Apply
             </button>
           </div>

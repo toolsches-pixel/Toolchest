@@ -576,8 +576,10 @@ export default function QrTracker() {
                         <span className="qrt-item-toggle-icon">
                           {isExpanded ? "▼" : "▶"}
                         </span>
-                        <span className="qrt-item-header-label">{qr.label}</span>
-                        <span className="qrt-item-header-scans">
+<span className="qrt-item-header-label" title={qr.url}>
+  {qr.id}
+  <span className="qrt-item-header-url-hint"> · {shortenUrl(qr.url)}</span>
+</span>                        <span className="qrt-item-header-scans">
                           <span className="qrt-item-header-count">
                             {qrStat.count ?? "—"}
                           </span>

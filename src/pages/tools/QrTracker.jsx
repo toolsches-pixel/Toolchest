@@ -29,6 +29,7 @@ export default function QrTracker() {
     };
   }, []);
 
+  // Basic state
   const [url, setUrl] = useState("");
   const [label, setLabel] = useState("");
   const [qrDataUrl, setQrDataUrl] = useState("");
@@ -38,16 +39,29 @@ export default function QrTracker() {
   const [savedQrs, setSavedQrs] = useState([]);
   const [stats, setStats] = useState({});
   const [trackingEnabled, setTrackingEnabled] = useState(true);
-
-  // ✅ Copy feedback state
   const [copiedId, setCopiedId] = useState("");
 
-  // Filter states
+  // ✅ Filter drawer state
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [tempFilters, setTempFilters] = useState({
+    id: "",
+    url: "",
+    fromDate: "",
+    toDate: "",
+  });
+
+  // Applied filters
   const [filterId, setFilterId] = useState("");
   const [filterUrl, setFilterUrl] = useState("");
   const [filterDateFrom, setFilterDateFrom] = useState("");
   const [filterDateTo, setFilterDateTo] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
+
+  // ✅ Collapsible sections state (per section)
+  const [collapsed, setCollapsed] = useState({
+    id: false,
+    url: false,
+    date: false,
+  });
 
   useEffect(() => {
     try {
@@ -102,11 +116,93 @@ export default function QrTracker() {
     });
   }, [savedQrs, filterId, filterUrl, filterDateFrom, filterDateTo]);
 
+  // ✅ Filter drawer controls
+  const openFilterDrawer = () => {
+    setTempFilters({
+      id: filterId,
+      url: filterUrl,
+      fromDate: filterDateFrom,
+      toDate: filterDateTo,
+    });
+    setFiltersOpen(true);
+  };
+
+  const closeFilterDrawer = () => {
+    setFiltersOpen(false);
+  };
+
+  const applyFilters = () => {
+    setFilterId(tempFilters.id);
+    setFilterUrl(tempFilters.url);
+    setFilterDateFrom(tempFilters.fromDate);
+    setFilterDateTo(tempFilters.toDate);
+    setFiltersOpen(false);
+  };
+
   const clearFilters = () => {
+    setTempFilters({ id: "", url: "", fromDate: "", toDate: "" });
     setFilterId("");
     setFilterUrl("");
     setFilterDateFrom("");
     setFilterDateTo("");
+  };
+
+  const clearTempFilters = () => {
+    setTempFilters({ id: "", url: "", fromDate: "", toDate: "" });
+  };
+
+  const toggleCollapse = (section) => {
+    setCollapsed((prev) => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  const hasActiveFilters =
+    filterId || filterUrl || filterDateFrom || filterDateTo;
+
+  // ✅ URL validation (blocks bad sites)
+  const BLOCKED_KEYWORDS = [
+    "porn", "xxx", "adult", "sex", "escort",
+    "casino", "betting", "gambling", "lottery", "poker",
+    "scam", "phishing", "malware", "virus", "hack",
+    "drugs", "cocaine", "heroin", "weed", "cannabis",
+    "weapon", "gun", "bomb", "explosive",
+    "hate", "racist", "nazi",
+    "torrent", "pirate", "warez",
+  ];
+
+  const BLOCKED_TLDS = [".xyz", ".tk", ".ml", ".ga", ".cf", ".gq"];
+
+  const validateUrl = (urlStr) => {
+    try {
+      const urlObj = new URL(urlStr);
+      const hostname = urlObj.hostname.toLowerCase();
+      const fullUrl = urlStr.toLowerCase();
+
+      for (const keyword of BLOCKED_KEYWORDS) {
+        if (fullUrl.includes(keyword)) {
+          return {
+            ok: false,
+            reason: `URL contains blocked keyword: "${keyword}"`,
+          };
+        }
+      }
+
+      for (const tld of BLOCKED_TLDS) {
+        if (hostname.endsWith(tld)) {
+          return {
+            ok: false,
+            reason: `TLD "${tld}" is not allowed (spam prevention)`,
+          };
+        }
+      }
+
+      if (!["http:", "https:"].includes(urlObj.protocol)) {
+        return { ok: false, reason: "Only http/https URLs are allowed" };
+      }
+
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, reason: "Invalid URL format" };
+    }
   };
 
   const handleGenerate = async () => {
@@ -114,10 +210,12 @@ export default function QrTracker() {
     if (!finalUrl) return setError("Please enter a URL");
 
     if (!/^https?:\/\//i.test(finalUrl)) finalUrl = "https://" + finalUrl;
-    try {
-      new URL(finalUrl);
-    } catch (e) {
-      return setError("Invalid URL");
+
+    // ✅ Validate
+    const validation = validateUrl(finalUrl);
+    if (!validation.ok) {
+      setError("❌ " + validation.reason);
+      return;
     }
 
     setError("");
@@ -184,29 +282,6 @@ export default function QrTracker() {
     a.click();
     document.body.removeChild(a);
   };
-  const handleDownloadFromList = async (qr) => {
-    try {
-      // Regenerate the QR from saved data
-      const qrContent = `${window.location.origin}/api/scan?id=${qr.id}`;
-
-      const dataUrl = await QRCode.toDataURL(qrContent, {
-        width: 400,
-        margin: 2,
-        errorCorrectionLevel: "H",
-      });
-
-      // Download
-      const a = document.createElement("a");
-      a.href = dataUrl;
-      a.download = `qr-${qr.id}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } catch (e) {
-      console.error("Download failed:", e);
-      alert("Failed to download QR: " + e.message);
-    }
-  };
 
   const handleCopyLink = async () => {
     if (!qrId) return;
@@ -217,7 +292,6 @@ export default function QrTracker() {
     } catch (e) {}
   };
 
-  // ✅ Updated: uses copiedId state for visual feedback
   const handleCopyId = async (id) => {
     try {
       await navigator.clipboard.writeText(id);
@@ -225,6 +299,26 @@ export default function QrTracker() {
       setTimeout(() => setCopiedId(""), 1500);
     } catch (e) {
       console.error("Copy failed:", e);
+    }
+  };
+
+  const handleDownloadFromList = async (qr) => {
+    try {
+      const qrContent = `${window.location.origin}/api/scan?id=${qr.id}`;
+      const dataUrl = await QRCode.toDataURL(qrContent, {
+        width: 400,
+        margin: 2,
+        errorCorrectionLevel: "H",
+      });
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `qr-${qr.id}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (e) {
+      console.error("Download failed:", e);
+      alert("Failed to download QR: " + e.message);
     }
   };
 
@@ -300,6 +394,7 @@ export default function QrTracker() {
           </p>
         </div>
 
+        {/* Generator */}
         <div className="qrt-section">
           <div className="qrt-field">
             <label className="qrt-label">Website URL</label>
@@ -345,6 +440,7 @@ export default function QrTracker() {
           {error && <div className="qrt-error">⚠️ {error}</div>}
         </div>
 
+        {/* QR Result */}
         {qrDataUrl && (
           <div className="qrt-result">
             <div className="qrt-result-header">
@@ -379,8 +475,10 @@ export default function QrTracker() {
           </div>
         )}
 
+        {/* Dashboard */}
         {savedQrs.length > 0 && (
           <div className="qrt-dashboard">
+            {/* Header */}
             <div className="qrt-dashboard-header">
               <div>
                 <span className="qrt-dashboard-title">
@@ -389,63 +487,42 @@ export default function QrTracker() {
                     ` of ${savedQrs.length}`}
                   )
                 </span>
+                {hasActiveFilters && (
+                  <span className="qrt-dashboard-filter-badge">
+                    ● filtered
+                  </span>
+                )}
               </div>
-              <button
-                className="qrt-filter-toggle"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                {showFilters ? "▲ Hide filters" : "▼ Filters"}
-              </button>
-            </div>
-
-            {showFilters && (
-              <div className="qrt-filters">
-                <div className="qrt-filter-field">
-                  <label className="qrt-filter-label">ID</label>
-                  <input
-                    type="text"
-                    value={filterId}
-                    onChange={(e) => setFilterId(e.target.value)}
-                    className="qrt-filter-input"
-                    placeholder="Search by ID…"
-                  />
-                </div>
-                <div className="qrt-filter-field">
-                  <label className="qrt-filter-label">URL</label>
-                  <input
-                    type="text"
-                    value={filterUrl}
-                    onChange={(e) => setFilterUrl(e.target.value)}
-                    className="qrt-filter-input"
-                    placeholder="Search by URL…"
-                  />
-                </div>
-                <div className="qrt-filter-field">
-                  <label className="qrt-filter-label">From date</label>
-                  <input
-                    type="date"
-                    value={filterDateFrom}
-                    onChange={(e) => setFilterDateFrom(e.target.value)}
-                    className="qrt-filter-input"
-                  />
-                </div>
-                <div className="qrt-filter-field">
-                  <label className="qrt-filter-label">To date</label>
-                  <input
-                    type="date"
-                    value={filterDateTo}
-                    onChange={(e) => setFilterDateTo(e.target.value)}
-                    className="qrt-filter-input"
-                  />
-                </div>
-                <button className="qrt-filter-clear" onClick={clearFilters}>
-                  ✕ Clear
+              <div className="qrt-header-actions">
+                {hasActiveFilters && (
+                  <button
+                    className="qrt-filter-clear-inline"
+                    onClick={clearFilters}
+                    title="Clear all filters"
+                  >
+                    ✕ Clear
+                  </button>
+                )}
+                <button
+                  className={`qrt-filter-btn ${hasActiveFilters ? "active" : ""}`}
+                  onClick={openFilterDrawer}
+                >
+                  <span>⚙️</span>
+                  <span>Filters</span>
+                  {hasActiveFilters && <span className="qrt-filter-dot" />}
                 </button>
               </div>
-            )}
+            </div>
 
+            {/* List */}
             {filteredQrs.length === 0 ? (
-              <div className="qrt-empty">No QRs match your filters.</div>
+              <div className="qrt-empty">
+                <div className="qrt-empty-icon">🔍</div>
+                <div className="qrt-empty-title">No QRs match your filters</div>
+                <button className="qrt-empty-btn" onClick={clearFilters}>
+                  Clear filters
+                </button>
+              </div>
             ) : (
               <div className="qrt-list">
                 {filteredQrs.map((qr) => {
@@ -461,7 +538,6 @@ export default function QrTracker() {
                         <div className="qrt-item-url">{qr.url}</div>
                         <div className="qrt-item-meta">
                           ID: <code>{qr.id}</code>
-                          {/* ✅ Copy button with feedback */}
                           <button
                             className={`qrt-copy-id-btn ${
                               copiedId === qr.id ? "copied" : ""
@@ -544,6 +620,210 @@ export default function QrTracker() {
             </div>
           </div>
         )}
+
+        {/* ============================================ */}
+        {/* FILTER DRAWER */}
+        {/* ============================================ */}
+        <div
+          className={`qrt-drawer-overlay ${filtersOpen ? "open" : ""}`}
+          onClick={closeFilterDrawer}
+        />
+
+        <div className={`qrt-drawer ${filtersOpen ? "open" : ""}`}>
+          {/* Drawer header */}
+          <div className="qrt-drawer-header">
+            <div className="qrt-drawer-title">
+              <span>⚙️</span> Filters
+            </div>
+            <button
+              className="qrt-drawer-close"
+              onClick={closeFilterDrawer}
+              title="Close"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Drawer body */}
+          <div className="qrt-drawer-body">
+            {/* Section: ID */}
+            <div className="qrt-drawer-section">
+              <button
+                className="qrt-drawer-section-header"
+                onClick={() => toggleCollapse("id")}
+              >
+                <span className="qrt-drawer-section-title">ID</span>
+                <span className="qrt-drawer-section-icon">
+                  {collapsed.id ? "▶" : "▼"}
+                </span>
+              </button>
+              {!collapsed.id && (
+                <div className="qrt-drawer-section-body">
+                  <input
+                    type="text"
+                    value={tempFilters.id}
+                    onChange={(e) =>
+                      setTempFilters({ ...tempFilters, id: e.target.value })
+                    }
+                    className="qrt-drawer-input"
+                    placeholder="Search by ID…"
+                    spellCheck="false"
+                  />
+                  <div className="qrt-drawer-hint">
+                    Partial match — type "abc" to find any ID containing "abc"
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Section: URL */}
+            <div className="qrt-drawer-section">
+              <button
+                className="qrt-drawer-section-header"
+                onClick={() => toggleCollapse("url")}
+              >
+                <span className="qrt-drawer-section-title">URL</span>
+                <span className="qrt-drawer-section-icon">
+                  {collapsed.url ? "▶" : "▼"}
+                </span>
+              </button>
+              {!collapsed.url && (
+                <div className="qrt-drawer-section-body">
+                  <input
+                    type="text"
+                    value={tempFilters.url}
+                    onChange={(e) =>
+                      setTempFilters({ ...tempFilters, url: e.target.value })
+                    }
+                    className="qrt-drawer-input"
+                    placeholder="Search by URL…"
+                    spellCheck="false"
+                  />
+                  <div className="qrt-drawer-hint">
+                    Partial match — type "google" to find any URL with "google"
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Section: Date */}
+            <div className="qrt-drawer-section">
+              <button
+                className="qrt-drawer-section-header"
+                onClick={() => toggleCollapse("date")}
+              >
+                <span className="qrt-drawer-section-title">Date range</span>
+                <span className="qrt-drawer-section-icon">
+                  {collapsed.date ? "▶" : "▼"}
+                </span>
+              </button>
+              {!collapsed.date && (
+                <div className="qrt-drawer-section-body">
+                  <div className="qrt-drawer-field">
+                    <label className="qrt-drawer-sublabel">From</label>
+                    <input
+                      type="date"
+                      value={tempFilters.fromDate}
+                      onChange={(e) =>
+                        setTempFilters({
+                          ...tempFilters,
+                          fromDate: e.target.value,
+                        })
+                      }
+                      className="qrt-drawer-input"
+                    />
+                  </div>
+                  <div className="qrt-drawer-field">
+                    <label className="qrt-drawer-sublabel">To</label>
+                    <input
+                      type="date"
+                      value={tempFilters.toDate}
+                      onChange={(e) =>
+                        setTempFilters({
+                          ...tempFilters,
+                          toDate: e.target.value,
+                        })
+                      }
+                      className="qrt-drawer-input"
+                    />
+                  </div>
+                  <div className="qrt-drawer-hint">
+                    Leave empty for no date restriction
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Quick presets */}
+            <div className="qrt-drawer-quick">
+              <div className="qrt-drawer-quick-title">Quick presets</div>
+              <div className="qrt-drawer-quick-btns">
+                <button
+                  className="qrt-drawer-quick-btn"
+                  onClick={() => {
+                    const today = new Date();
+                    const week = new Date(today.getTime() - 7 * 86400000);
+                    setTempFilters({
+                      ...tempFilters,
+                      fromDate: week.toISOString().split("T")[0],
+                      toDate: today.toISOString().split("T")[0],
+                    });
+                  }}
+                >
+                  Last 7 days
+                </button>
+                <button
+                  className="qrt-drawer-quick-btn"
+                  onClick={() => {
+                    const today = new Date();
+                    const month = new Date(today.getTime() - 30 * 86400000);
+                    setTempFilters({
+                      ...tempFilters,
+                      fromDate: month.toISOString().split("T")[0],
+                      toDate: today.toISOString().split("T")[0],
+                    });
+                  }}
+                >
+                  Last 30 days
+                </button>
+                <button
+                  className="qrt-drawer-quick-btn"
+                  onClick={() => {
+                    setTempFilters({
+                      ...tempFilters,
+                      fromDate: "",
+                      toDate: "",
+                    });
+                  }}
+                >
+                  All time
+                </button>
+              </div>
+            </div>
+
+            {/* Info */}
+            <div className="qrt-drawer-info">
+              <span className="qrt-drawer-info-icon">💡</span>
+              <span className="qrt-drawer-info-text">
+                Filters combine with AND logic — a QR must match all active
+                filters.
+              </span>
+            </div>
+          </div>
+
+          {/* Drawer footer */}
+          <div className="qrt-drawer-footer">
+            <button
+              className="qrt-drawer-btn secondary"
+              onClick={clearTempFilters}
+            >
+              ✕ Clear
+            </button>
+            <button className="qrt-drawer-btn primary" onClick={applyFilters}>
+              ✓ Apply
+            </button>
+          </div>
+        </div>
       </div>
     </ToolShell>
   );

@@ -1,54 +1,59 @@
-import { useEffect, useState, useMemo } from 'react';
-import QRCode from 'qrcode';
-import ToolShell from '../../components/ui/ToolShell';
-import { getToolById } from '../../data/tools';
-import { useDocumentTitle } from '../../hooks/useDocumentTitle';
-import './QrTracker.css';
+import { useEffect, useState, useMemo } from "react";
+import QRCode from "qrcode";
+import ToolShell from "../../components/ui/ToolShell";
+import { getToolById } from "../../data/tools";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+import "./QrTracker.css";
 
 const TWO_MONTHS_MS = 60 * 24 * 60 * 60 * 1000;
 
 export default function QrTracker() {
-  const tool = getToolById('qr-tracker');
+  const tool = getToolById("qr-tracker");
 
-  useDocumentTitle('QR Code Tracker — Track QR Scans | toolchest');
+  useDocumentTitle("QR Code Tracker — Track QR Scans | toolchest");
 
   useEffect(() => {
     let meta = document.querySelector('meta[name="description"]');
     const created = !meta;
     if (created) {
-      meta = document.createElement('meta');
-      meta.name = 'description';
+      meta = document.createElement("meta");
+      meta.name = "description";
       document.head.appendChild(meta);
     }
     const prevDesc = meta.content;
     meta.content =
-      'Free QR code tracker. Generate trackable QR codes and see how many people scanned them. Real-time counts.';
+      "Free QR code tracker. Generate trackable QR codes and see how many people scanned them. Real-time counts.";
     return () => {
       if (created) document.head.removeChild(meta);
       else meta.content = prevDesc;
     };
   }, []);
 
-  const [url, setUrl] = useState('');
-  const [label, setLabel] = useState('');
-  const [qrDataUrl, setQrDataUrl] = useState('');
-  const [qrId, setQrId] = useState('');
+  const [url, setUrl] = useState("");
+  const [label, setLabel] = useState("");
+  const [qrDataUrl, setQrDataUrl] = useState("");
+  const [qrId, setQrId] = useState("");
   const [generating, setGenerating] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [savedQrs, setSavedQrs] = useState([]);
   const [stats, setStats] = useState({});
   const [trackingEnabled, setTrackingEnabled] = useState(true);
 
+  // ✅ Copy feedback state
+  const [copiedId, setCopiedId] = useState("");
+
   // Filter states
-  const [filterId, setFilterId] = useState('');
-  const [filterUrl, setFilterUrl] = useState('');
-  const [filterDateFrom, setFilterDateFrom] = useState('');
-  const [filterDateTo, setFilterDateTo] = useState('');
+  const [filterId, setFilterId] = useState("");
+  const [filterUrl, setFilterUrl] = useState("");
+  const [filterDateFrom, setFilterDateFrom] = useState("");
+  const [filterDateTo, setFilterDateTo] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem('toolchest-qr-tracker') || '[]');
+      const saved = JSON.parse(
+        localStorage.getItem("toolchest-qr-tracker") || "[]",
+      );
       setSavedQrs(saved);
     } catch (e) {}
   }, []);
@@ -79,7 +84,10 @@ export default function QrTracker() {
       if (filterId && !qr.id.toLowerCase().includes(filterId.toLowerCase())) {
         return false;
       }
-      if (filterUrl && !qr.url.toLowerCase().includes(filterUrl.toLowerCase())) {
+      if (
+        filterUrl &&
+        !qr.url.toLowerCase().includes(filterUrl.toLowerCase())
+      ) {
         return false;
       }
       if (filterDateFrom) {
@@ -87,7 +95,7 @@ export default function QrTracker() {
         if (qr.createdAt < from) return false;
       }
       if (filterDateTo) {
-        const to = new Date(filterDateTo).getTime() + 86400000; // end of day
+        const to = new Date(filterDateTo).getTime() + 86400000;
         if (qr.createdAt > to) return false;
       }
       return true;
@@ -95,24 +103,24 @@ export default function QrTracker() {
   }, [savedQrs, filterId, filterUrl, filterDateFrom, filterDateTo]);
 
   const clearFilters = () => {
-    setFilterId('');
-    setFilterUrl('');
-    setFilterDateFrom('');
-    setFilterDateTo('');
+    setFilterId("");
+    setFilterUrl("");
+    setFilterDateFrom("");
+    setFilterDateTo("");
   };
 
   const handleGenerate = async () => {
     let finalUrl = url.trim();
-    if (!finalUrl) return setError('Please enter a URL');
+    if (!finalUrl) return setError("Please enter a URL");
 
-    if (!/^https?:\/\//i.test(finalUrl)) finalUrl = 'https://' + finalUrl;
+    if (!/^https?:\/\//i.test(finalUrl)) finalUrl = "https://" + finalUrl;
     try {
       new URL(finalUrl);
     } catch (e) {
-      return setError('Invalid URL');
+      return setError("Invalid URL");
     }
 
-    setError('');
+    setError("");
     setGenerating(true);
 
     try {
@@ -120,9 +128,9 @@ export default function QrTracker() {
       let qrContent;
 
       if (trackingEnabled) {
-        const res = await fetch('/api/save', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("/api/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             id,
             url: finalUrl,
@@ -130,7 +138,7 @@ export default function QrTracker() {
             protected: false,
           }),
         });
-        if (!res.ok) throw new Error('Failed to save QR');
+        if (!res.ok) throw new Error("Failed to save QR");
         qrContent = `${window.location.origin}/api/scan?id=${id}`;
       } else {
         qrContent = finalUrl;
@@ -139,7 +147,7 @@ export default function QrTracker() {
       const dataUrl = await QRCode.toDataURL(qrContent, {
         width: 400,
         margin: 2,
-        errorCorrectionLevel: 'H',
+        errorCorrectionLevel: "H",
       });
 
       setQrDataUrl(dataUrl);
@@ -155,13 +163,13 @@ export default function QrTracker() {
         const updated = [newQr, ...savedQrs].slice(0, 50);
         setSavedQrs(updated);
         try {
-          localStorage.setItem('toolchest-qr-tracker', JSON.stringify(updated));
+          localStorage.setItem("toolchest-qr-tracker", JSON.stringify(updated));
         } catch (e) {}
         setStats((s) => ({ ...s, [id]: { count: 0, protected: false } }));
       }
     } catch (err) {
       console.error(err);
-      setError('Failed to generate QR: ' + (err?.message || 'unknown'));
+      setError("Failed to generate QR: " + (err?.message || "unknown"));
     } finally {
       setGenerating(false);
     }
@@ -169,7 +177,7 @@ export default function QrTracker() {
 
   const handleDownload = () => {
     if (!qrDataUrl) return;
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = qrDataUrl;
     a.download = `qr-${qrId || Date.now()}.png`;
     document.body.appendChild(a);
@@ -182,8 +190,19 @@ export default function QrTracker() {
     const link = `${window.location.origin}/api/scan?id=${qrId}`;
     try {
       await navigator.clipboard.writeText(link);
-      alert('Tracking link copied!');
+      alert("Tracking link copied!");
     } catch (e) {}
+  };
+
+  // ✅ Updated: uses copiedId state for visual feedback
+  const handleCopyId = async (id) => {
+    try {
+      await navigator.clipboard.writeText(id);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(""), 1500);
+    } catch (e) {
+      console.error("Copy failed:", e);
+    }
   };
 
   const handleRefreshStats = async (id) => {
@@ -203,11 +222,10 @@ export default function QrTracker() {
     const current = stats[qr.id]?.protected || false;
     const next = !current;
 
-    // Update in Redis
     try {
-      const res = await fetch('/api/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: qr.id,
           url: qr.url,
@@ -216,7 +234,7 @@ export default function QrTracker() {
         }),
       });
 
-      if (!res.ok) throw new Error('Failed to update');
+      if (!res.ok) throw new Error("Failed to update");
 
       setStats((s) => ({
         ...s,
@@ -225,23 +243,22 @@ export default function QrTracker() {
 
       if (next) {
         alert(
-          '✅ Protected!\n\nIs QR ko 2 mahine ke baad delete nahi kiya jayega.\n\n⚠️ Zyada waqt ke liye rakhna hai toh contact karo: contact@toolchest.in'
+          "✅ Protected!\n\nIs QR ko 2 mahine ke baad delete nahi kiya jayega.\n\n⚠️ Zyada waqt ke liye rakhna hai toh contact karo: contact@toolchest.in",
         );
       }
     } catch (e) {
-      alert('Failed to update: ' + e.message);
+      alert("Failed to update: " + e.message);
     }
   };
 
   const reset = () => {
-    setUrl('');
-    setLabel('');
-    setQrDataUrl('');
-    setQrId('');
-    setError('');
+    setUrl("");
+    setLabel("");
+    setQrDataUrl("");
+    setQrId("");
+    setError("");
   };
 
-  // Days left helper
   const getDaysLeft = (createdAt, isProtected) => {
     if (isProtected) return null;
     const ageMs = Date.now() - createdAt;
@@ -299,7 +316,7 @@ export default function QrTracker() {
             onClick={handleGenerate}
             disabled={generating}
           >
-            {generating ? '⟳ Generating…' : '📱 Generate QR Code'}
+            {generating ? "⟳ Generating…" : "📱 Generate QR Code"}
           </button>
 
           {error && <div className="qrt-error">⚠️ {error}</div>}
@@ -309,7 +326,7 @@ export default function QrTracker() {
           <div className="qrt-result">
             <div className="qrt-result-header">
               <span className="qrt-result-label">
-                {trackingEnabled ? '✅ Trackable QR' : '✅ QR Code'}
+                {trackingEnabled ? "✅ Trackable QR" : "✅ QR Code"}
               </span>
             </div>
 
@@ -318,7 +335,10 @@ export default function QrTracker() {
             </div>
 
             <div className="qrt-result-actions">
-              <button className="qrt-btn qrt-btn-primary" onClick={handleDownload}>
+              <button
+                className="qrt-btn qrt-btn-primary"
+                onClick={handleDownload}
+              >
                 ⬇ Download PNG
               </button>
               {trackingEnabled && (
@@ -351,7 +371,7 @@ export default function QrTracker() {
                 className="qrt-filter-toggle"
                 onClick={() => setShowFilters(!showFilters)}
               >
-                {showFilters ? '▲ Hide filters' : '▼ Filters'}
+                {showFilters ? "▲ Hide filters" : "▼ Filters"}
               </button>
             </div>
 
@@ -417,7 +437,18 @@ export default function QrTracker() {
                         <div className="qrt-item-label">{qr.label}</div>
                         <div className="qrt-item-url">{qr.url}</div>
                         <div className="qrt-item-meta">
-                          ID: <code>{qr.id}</code> ·{' '}
+                          ID: <code>{qr.id}</code>
+                          {/* ✅ Copy button with feedback */}
+                          <button
+                            className={`qrt-copy-id-btn ${
+                              copiedId === qr.id ? "copied" : ""
+                            }`}
+                            onClick={() => handleCopyId(qr.id)}
+                            title="Copy ID"
+                          >
+                            {copiedId === qr.id ? "✓" : "📋"}
+                          </button>
+                          {" · "}
                           {new Date(qr.createdAt).toLocaleDateString()}
                         </div>
                         {isProtected ? (
@@ -427,17 +458,19 @@ export default function QrTracker() {
                         ) : daysLeft !== null ? (
                           <div
                             className={`qrt-badge ${
-                              isExpiring ? 'qrt-badge-warning' : 'qrt-badge-info'
+                              isExpiring
+                                ? "qrt-badge-warning"
+                                : "qrt-badge-info"
                             }`}
                           >
                             ⏳ Auto-delete in {daysLeft} day
-                            {daysLeft === 1 ? '' : 's'}
+                            {daysLeft === 1 ? "" : "s"}
                           </div>
                         ) : null}
                       </div>
                       <div className="qrt-item-stats">
                         <div className="qrt-stat-value">
-                          {qrStat.count ?? '—'}
+                          {qrStat.count ?? "—"}
                         </div>
                         <div className="qrt-stat-label">scans</div>
                       </div>
@@ -451,14 +484,16 @@ export default function QrTracker() {
                         </button>
                         <button
                           className={`qrt-icon-btn ${
-                            isProtected ? 'qrt-icon-btn-protected' : ''
+                            isProtected ? "qrt-icon-btn-protected" : ""
                           }`}
                           onClick={() => handleToggleProtect(qr)}
                           title={
-                            isProtected ? 'Unprotect' : 'Protect from auto-delete'
+                            isProtected
+                              ? "Unprotect"
+                              : "Protect from auto-delete"
                           }
                         >
-                          {isProtected ? '🔒' : '🔓'}
+                          {isProtected ? "🔒" : "🔓"}
                         </button>
                       </div>
                     </div>
@@ -468,18 +503,13 @@ export default function QrTracker() {
             )}
 
             <div className="qrt-info-footer">
-              <div className="qrt-info-footer-title">
-                ℹ️ Auto-delete policy
-              </div>
+              <div className="qrt-info-footer-title">ℹ️ Auto-delete policy</div>
               <div className="qrt-info-footer-text">
-                Unprotected QRs are <strong>automatically deleted after 2
-                months</strong>. To keep them longer, click the{' '}
-                <strong>🔓</strong> icon to protect them. For extended storage,
-                contact{' '}
-                <a href="mailto:contact@toolchest.in">
-                  contact@toolchest.in
-                </a>
-                .
+                Unprotected QRs are{" "}
+                <strong>automatically deleted after 2 months</strong>. To keep
+                them longer, click the <strong>🔓</strong> icon to protect them.
+                For extended storage, contact{" "}
+                <a href="mailto:contact@toolchest.in">contact@toolchest.in</a>.
               </div>
             </div>
           </div>

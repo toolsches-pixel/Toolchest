@@ -1,0 +1,367 @@
+/* ============================================================
+   DISCOUNT CALCULATOR
+   Sale price, savings, stacked discounts and GST.
+   Prefix: dc-
+   ============================================================ */
+
+.dc {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+.dc button {
+  font-family: inherit;
+}
+
+/* ---------- Cards ---------- */
+.dc-card {
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Layout ---------- */
+.dc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .dc-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- Inputs section ---------- */
+.dc-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.dc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dc-field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dc-field-head label,
+.dc-label {
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.dc-field-hint {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.75;
+}
+
+.dc-hint {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+}
+
+/* ---------- Input box ---------- */
+.dc-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.dc-input:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.dc-input input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.dc-input input::placeholder {
+  color: var(--text-dim);
+  font-weight: 400;
+  font-size: 0.95rem;
+}
+
+.dc-input-prefix,
+.dc-input-suffix {
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+/* Currency select */
+.dc-currency {
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- Chips ---------- */
+.dc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dc-chip {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 550;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.dc-chip:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.dc-chip.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ---------- Reset ---------- */
+.dc-reset {
+  align-self: flex-start;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: color var(--t-fast), background var(--t-fast);
+}
+
+.dc-reset:hover {
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+/* ---------- Results section ---------- */
+.dc-results {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  background:
+    radial-gradient(520px 200px at 0% 0%, var(--accent-soft), transparent 70%),
+    var(--bg-card);
+}
+
+/* Hero */
+.dc-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dc-hero-label {
+  color: var(--text-dim);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.dc-hero-value {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  word-break: break-word;
+  background: linear-gradient(120deg, var(--text), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dc-hero-sub {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+.dc-hero-sub strong {
+  color: var(--accent);
+  font-weight: 650;
+}
+
+/* Stats */
+.dc-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.dc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+}
+
+.dc-stat span {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dc-stat strong {
+  font-size: var(--fs-md);
+  font-weight: 650;
+  word-break: break-word;
+}
+
+.dc-stat-accent {
+  color: var(--accent);
+}
+
+/* Breakdown */
+.dc-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+}
+
+.dc-breakdown-title {
+  color: var(--text-dim);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.dc-breakdown-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.dc-breakdown-row strong {
+  color: var(--text);
+  font-weight: 650;
+}
+
+.dc-breakdown-total {
+  padding-top: 10px;
+  margin-top: 6px;
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-md);
+}
+
+.dc-breakdown-total strong {
+  color: var(--accent);
+  font-size: var(--fs-lg);
+}
+
+/* Copy button */
+.dc-copy {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.dc-copy:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.dc-copy:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 560px) {
+  .dc-card {
+    padding: 18px;
+    border-radius: 18px;
+  }
+  .dc-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

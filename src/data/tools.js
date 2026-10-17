@@ -316,24 +316,8 @@ export const groups = [
         icon: "🔐",
         component: lazy(() => import("../pages/tools/HashGenerator")),
       },
-      {
-        id: "age-calculator",
-        name: "Age Calculator",
-        description:
-          "Calculate exact age in years, months, days — plus zodiac, next birthday countdown & life stats.",
-        path: "/tools/age-calculator",
-        icon: "🎂",
-        component: lazy(() => import("../pages/tools/AgeCalculator")),
-      },
-      {
-        id: "bmi-calculator",
-        name: "BMI Calculator",
-        description:
-          "Calculate your BMI, healthy weight range, BMR, TDEE and body fat estimate.",
-        path: "/tools/bmi-calculator",
-        icon: "⚖️",
-        component: lazy(() => import("../pages/tools/BmiCalculator")),
-      },
+      
+     
       {
         id: "unit-converter",
         name: "Unit Converter",
@@ -397,6 +381,15 @@ export const groups = [
         icon: "🔐",
         component: lazy(() => import("../pages/tools/DoubleEncryption")),
       },
+      
+ {
+  id: 'long-method-calculator',
+  name: 'Long Method Calculator',
+  description: 'Add, subtract, multiply, divide, LCM, HCF — with step-by-step solution.',
+  path: '/tools/long-method-calculator',
+  icon: '🧮',
+  component: lazy(() => import('../pages/tools/LongMethodCalculator')),
+},
       
     ],
   },
@@ -488,6 +481,50 @@ export const groups = [
       // Future: gpa-calculator, percentage-calculator, etc.
     ],
   },
+  {
+  id: 'calculators',
+  name: 'Calculators',
+  description: 'Everyday calculators for money, health, time, and units.',
+  icon: '🧮',
+  color: '#8b5cf6',
+  category: 'Calculators',
+  tags: ['calculator', 'finance', 'health', 'time', 'utility'],
+  tools: [
+    {
+      id: 'interest-calculator',
+      name: 'Interest Calculator',
+      description: 'Simple & compound interest with charts and year-by-year breakdown.',
+      path: '/tools/interest-calculator',
+      icon: '💰',
+      component: lazy(() => import('../pages/tools/InterestCalculator')),
+    },
+    {
+      id: 'bmi-calculator',
+      name: 'BMI Calculator',
+      description: 'Calculate BMI, healthy weight range, BMR, TDEE and body fat estimate.',
+      path: '/tools/bmi-calculator',
+      icon: '⚖️',
+      component: lazy(() => import('../pages/tools/BmiCalculator')),
+    },
+    {
+      id: 'age-calculator',
+      name: 'Age Calculator',
+      description: 'Calculate exact age in years, months, days, hours.',
+      path: '/tools/age-calculator',
+      icon: '🎂',
+      component: lazy(() => import('../pages/tools/AgeCalculator')),
+    },
+   
+    {
+      id: 'discount-calculator',
+      name: 'Discount Calculator',
+      description: 'Calculate sale price, savings, and effective discount. Supports stacked discounts and GST.',
+      path: '/tools/discount-calculator',
+      icon: '🏷️',
+      component: lazy(() => import('../pages/tools/DiscountCalculator')),
+    },
+  ],
+},
 ];
 
 // ============================================================

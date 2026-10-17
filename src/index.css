@@ -4707,3 +4707,75 @@ body.light-theme {
   background: var(--bg);
   color: var(--text);
 }
+
+/* ============================================================
+   MOBILE ZOOM FIX — add at end of index.css
+   ============================================================ */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  touch-action: manipulation;
+  overflow-x: hidden;
+  max-width: 100vw;
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS input auto-zoom fix — iOS zooms if font-size < 16px */
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Prevent media overflow */
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevent long words / URLs from breaking layout */
+* {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Prevent horizontal scroll on tables */
+table {
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+}
+/* TEMPORARY DEBUG — remove after testing */
+@media (max-width: 768px) {
+  html,
+  body {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Force all main containers to fit */
+  main,
+  .app-main,
+  .tool-shell,
+  .tool-shell-container,
+  .lmc,
+  .lmc-grid,
+  .lmc-card {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+}

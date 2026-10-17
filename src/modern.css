@@ -1033,3 +1033,114 @@ pre {
     transition-duration: 0.01ms !important;
   }
 }
+/* ============================================================
+   LIGHT THEME — EYE-COMFORT PATCH
+   Paste this at the very END of modern.css (after everything).
+   It overrides the light colours only. Dark theme is untouched.
+
+   Idea: three clearly different surface levels, none of them
+   pure white, so cards stand out without glare.
+     page   #e8ecf1  (soft blue-grey, darkest)
+     card   #f8f9fb  (warm off-white, lightest)
+     inset  #eef1f5  (inputs / tiles inside cards)
+   ============================================================ */
+
+[data-theme='light'],
+body.light-theme {
+  --bg: #e8ecf1;
+  --bg-card: #f8f9fb;
+  --bg-elev: #eef1f5;
+  --bg-hover: #e2e7ee;
+
+  --border: #d3dae3;
+  --border-strong: #b9c3d0;
+
+  --text: #1d2530;
+  --text-muted: #4f586a;
+  --text-dim: #707a8d;
+
+  --accent: #0d8a82;
+  --accent-hover: #0a736c;
+  --accent-soft: rgba(13, 138, 130, 0.1);
+  --accent-ink: #ffffff;
+
+  --shadow-sm: 0 1px 2px rgba(30, 45, 70, 0.06), 0 4px 14px -8px rgba(30, 45, 70, 0.14);
+  --shadow-md: 0 2px 4px rgba(30, 45, 70, 0.06), 0 14px 32px -14px rgba(30, 45, 70, 0.22);
+  --shadow-lg: 0 24px 60px -16px rgba(30, 45, 70, 0.3);
+
+  --glow: rgba(13, 138, 130, 0.07);
+}
+
+/* Soft page background instead of flat colour */
+body.light-theme {
+  background:
+    radial-gradient(900px 420px at 50% -120px, var(--glow), transparent 70%),
+    linear-gradient(180deg, #edf0f5 0%, #e6eaf0 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Cards lift off the page with a soft shadow */
+body.light-theme .tool-card,
+body.light-theme .subtool-card,
+body.light-theme .pdf-file-info,
+body.light-theme .pdf-target,
+body.light-theme .pdf-result,
+body.light-theme .pdf-score-card,
+body.light-theme .wm-preview-wrap,
+body.light-theme .seo-feature,
+body.light-theme .seo-faq,
+body.light-theme .p2t-stat,
+body.light-theme .gs-modal {
+  box-shadow: var(--shadow-sm);
+}
+
+body.light-theme .tool-card:hover,
+body.light-theme .subtool-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Dropzone: calm card, not a white box */
+body.light-theme .pdf-dropzone {
+  background:
+    radial-gradient(560px 200px at 50% 0%, var(--accent-soft), transparent 70%),
+    var(--bg-card);
+  border-color: var(--border-strong);
+}
+
+/* Navbar and footer sit slightly above the page */
+body.light-theme .navbar {
+  background: color-mix(in srgb, #f3f5f9 82%, transparent);
+  border-bottom-color: var(--border);
+}
+
+body.light-theme .footer {
+  background: transparent;
+}
+
+/* Preview areas were hardcoded near-black. Soften them. */
+body.light-theme .wm-preview-canvas,
+body.light-theme .pe-canvas-scroll,
+body.light-theme .jpg-preview-img-wrap,
+body.light-theme .i2p-thumb {
+  background: #dce2ea;
+}
+
+/* Inputs: inset look so they read as fields on a card */
+body.light-theme .pdf-target-number,
+body.light-theme .pdf-target-unit,
+body.light-theme .pe-text-input {
+  background: var(--bg-elev);
+  border-color: var(--border-strong);
+}
+
+/* Search modal backdrop a bit lighter */
+body.light-theme .gs-overlay {
+  background: rgba(30, 40, 58, 0.35);
+}
+
+/* Slider track visible on light surfaces */
+body.light-theme .wm-slider {
+  background: var(--border-strong);
+}
+body.light-theme { background: #ced9e5 !important; }

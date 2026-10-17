@@ -1,0 +1,1035 @@
+/* ============================================================
+   MODERN THEME LAYER  —  toolchest
+   ------------------------------------------------------------
+   HOW TO USE
+   1. Save as src/modern.css
+   2. Import it AFTER your existing stylesheet (e.g. in main.jsx):
+        import './index.css';
+        import './modern.css';
+   Nothing in your components changes. Every class name is the
+   same; this file only restyles them (same specificity, loaded
+   last, so it wins).
+
+   WHAT CHANGES
+   - Mono "terminal" font  ->  clean sans (Inter) + mono for kbd/code
+   - Yellow / red accent   ->  one teal accent (matches your tools)
+   - Flat boxes            ->  soft cards, bigger radius, subtle depth
+   - Navbar is now theme-aware (it was hardcoded dark, which broke
+     light mode) with glass blur and pill links
+   - Home hero, tool cards, tool header, dropzone, buttons, FAQ,
+     search modal all refreshed
+
+   OPTIONAL CLEAN-UP (recommended): in your tool CSS files, find and
+   replace  #4ecdc4  ->  var(--accent)  and  rgba(78, 205, 196, X)
+   -> var(--accent-soft). Then every tool follows the theme accent.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+/* ============================================================
+   1. TOKENS
+   ============================================================ */
+:root,
+[data-theme='dark'],
+body.dark-theme {
+  --bg: #0a0b0e;
+  --bg-elev: #12151a;
+  --bg-card: #14171d;
+  --bg-hover: #1b1f27;
+  --border: #232832;
+  --border-strong: #323946;
+
+  --text: #eceef2;
+  --text-muted: #9aa3b2;
+  --text-dim: #6b7585;
+
+  --accent: #4ecdc4;
+  --accent-2: #5b8def;
+  --accent-soft: rgba(78, 205, 196, 0.12);
+  --accent-hover: #6fe0d8;
+  --accent-ink: #052321;
+
+  --danger: #f87171;
+  --success: #4ade80;
+
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.75rem;
+  --fs-2xl: 2.4rem;
+  --fs-3xl: 3.75rem;
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 24px 60px -16px rgba(0, 0, 0, 0.65);
+
+  --glow: rgba(78, 205, 196, 0.1);
+  --t-fast: 0.15s ease;
+  --t-base: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-theme='light'],
+body.light-theme {
+  --bg: #f6f7f9;
+  --bg-elev: #ffffff;
+  --bg-card: #ffffff;
+  --bg-hover: #eef0f4;
+  --border: #e3e6eb;
+  --border-strong: #cdd2da;
+
+  --text: #11151b;
+  --text-muted: #566070;
+  --text-dim: #8a94a3;
+
+  --accent: #0f9d94;
+  --accent-2: #3b6fe0;
+  --accent-soft: rgba(15, 157, 148, 0.1);
+  --accent-hover: #0b8179;
+  --accent-ink: #ffffff;
+
+  --danger: #dc2626;
+  --success: #16a34a;
+
+  --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.06);
+  --shadow-md: 0 8px 24px -8px rgba(20, 30, 50, 0.14);
+  --shadow-lg: 0 24px 60px -16px rgba(20, 30, 50, 0.22);
+
+  --glow: rgba(15, 157, 148, 0.08);
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font);
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  background:
+    radial-gradient(900px 420px at 50% -120px, var(--glow), transparent 70%),
+    var(--bg);
+  background-repeat: no-repeat;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+kbd,
+code,
+pre {
+  font-family: var(--font-mono);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+/* ============================================================
+   3. NAVBAR  (theme-aware glass bar)
+   ============================================================ */
+.navbar {
+  min-height: 68px;
+  padding: 0 28px;
+  gap: 24px;
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  -webkit-backdrop-filter: saturate(160%) blur(16px);
+  backdrop-filter: saturate(160%) blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar-logo {
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.navbar-logo:hover {
+  filter: none;
+  color: var(--accent);
+}
+
+.navbar-links {
+  justify-content: flex-start;
+  gap: 2px;
+}
+
+.navbar-links a,
+.navbar-more-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color var(--t-fast), background var(--t-fast);
+}
+
+.navbar-links a:hover,
+.navbar-more-btn:hover,
+.navbar-more:hover .navbar-more-btn {
+  color: var(--text);
+  background: var(--bg-elev);
+}
+
+.navbar-links a.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.navbar-links a.active::after {
+  display: none;
+}
+
+/* More dropdown */
+.navbar-more-dropdown {
+  min-width: 240px;
+}
+
+.navbar-more-dropdown::before {
+  inset: 10px 0 0 0;
+  border-radius: 16px;
+  background: var(--bg-card);
+  border-color: var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+.navbar-more-dropdown > * {
+  position: relative;
+  margin: 0 8px;
+}
+
+.navbar-more-dropdown > *:first-child {
+  margin-top: 18px;
+}
+
+.navbar-more-dropdown > *:last-child {
+  margin-bottom: 8px;
+}
+
+.navbar-more-item {
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 9px 10px;
+  border-radius: 10px;
+}
+
+.navbar-more-item:hover {
+  background: var(--bg-hover);
+  border-color: transparent;
+}
+
+.navbar-more-item.active,
+.navbar-mobile-link.active {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--accent);
+}
+
+.navbar-more-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--bg-elev);
+}
+
+.navbar-more-count,
+.navbar-mobile-link-count {
+  font-size: 0.7rem;
+  background: var(--bg-elev);
+  border-color: transparent;
+}
+
+/* Search + theme + hamburger */
+.navbar-search-btn {
+  height: 38px;
+  min-width: 190px;
+  padding: 0 8px 0 12px;
+  gap: 10px;
+  border-radius: 12px;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  background: var(--bg-elev);
+  margin-left: 0;
+}
+
+.navbar-search-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.navbar-search-text {
+  flex: 1;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.navbar-search-kbd {
+  font-family: var(--font-mono);
+  border-radius: 6px;
+  padding: 2px 7px;
+}
+
+.navbar-theme-btn,
+.navbar-hamburger {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+}
+
+.navbar-theme-btn:hover,
+.navbar-hamburger:hover {
+  border-color: var(--accent);
+  background: var(--bg-elev);
+  transform: none;
+}
+
+.navbar-mobile-menu {
+  background: var(--bg-card);
+  box-shadow: var(--shadow-lg);
+}
+
+.navbar-mobile-link {
+  font-family: var(--font);
+  font-size: 0.95rem;
+  border-radius: 12px;
+}
+
+.navbar-mobile-link:hover {
+  background: var(--bg-hover);
+  border-color: transparent;
+}
+
+.navbar-mobile-title,
+.navbar-mobile-search {
+  font-family: var(--font);
+}
+
+.navbar-mobile-search {
+  border-radius: 12px;
+}
+
+.navbar-mobile-search:hover {
+  background: var(--accent-soft);
+}
+
+/* ============================================================
+   4. FOOTER
+   ============================================================ */
+.footer {
+  padding: 28px 24px;
+  font-size: var(--fs-sm);
+  background: color-mix(in srgb, var(--bg-elev) 50%, transparent);
+}
+
+.footer a {
+  font-weight: 500;
+}
+
+/* ============================================================
+   5. HOME
+   ============================================================ */
+.home {
+  padding-top: 72px;
+}
+
+.home-header h1 {
+  font-size: clamp(2.4rem, 6vw, var(--fs-3xl));
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.home-header h1 .accent {
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.home-header p {
+  font-size: var(--fs-lg);
+  max-width: 600px;
+}
+
+.search-bar input,
+.home-search-trigger {
+  border-radius: 16px;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-bar input {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.search-bar input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+  background: var(--bg-card);
+}
+
+.home-search-trigger {
+  padding: 14px 20px;
+}
+
+.home-search-trigger:hover {
+  border-color: var(--accent);
+  background: var(--bg-card);
+}
+
+.home-search-trigger kbd {
+  font-family: var(--font-mono);
+}
+
+/* Category pills (also used inside tools) */
+.category-pill {
+  font-family: var(--font);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  padding: 8px 16px;
+  background: var(--bg-card);
+}
+
+.category-pill:hover {
+  background: var(--bg-hover);
+}
+
+.category-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+/* Tool cards */
+.tools-grid {
+  gap: 20px;
+}
+
+.tool-card {
+  --_c: var(--card-accent, var(--accent));
+  padding: 22px;
+  border-radius: 20px;
+  background: var(--bg-card);
+  gap: 14px;
+}
+
+.tool-card::before {
+  inset: 0;
+  height: auto;
+  background: radial-gradient(420px 170px at 50% 0%, color-mix(in srgb, var(--_c) 16%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+.tool-card:hover {
+  background: var(--bg-card);
+  border-color: color-mix(in srgb, var(--_c) 55%, var(--border));
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.tool-card-icon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5rem;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--_c) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--_c) 28%, transparent);
+  filter: none;
+}
+
+.tool-card-category {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 4px 10px;
+}
+
+.tool-card-name {
+  font-size: var(--fs-lg);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.tool-card-desc {
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.tool-card-tag {
+  font-size: 0.7rem;
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+
+.tool-card-arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-elev);
+  font-size: 1rem;
+}
+
+.tool-card:hover .tool-card-arrow {
+  background: var(--_c);
+  color: var(--accent-ink);
+  transform: translateX(2px);
+}
+
+/* Sub-tool cards (group page) */
+.subtool-card {
+  --_c: var(--card-accent, var(--accent));
+  border-radius: 18px;
+  padding: 16px 20px;
+}
+
+.subtool-card::before {
+  display: none;
+}
+
+.subtool-card:hover {
+  background: var(--bg-card);
+  border-color: color-mix(in srgb, var(--_c) 55%, var(--border));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.subtool-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--_c) 14%, transparent);
+  filter: none;
+}
+
+.subtool-name {
+  font-weight: 650;
+}
+
+.empty-state .empty-icon {
+  opacity: 0.8;
+}
+
+/* ============================================================
+   6. TOOL SHELL
+   ============================================================ */
+.tool-shell-container {
+  padding-top: 28px;
+}
+
+.breadcrumbs {
+  font-size: var(--fs-sm);
+}
+
+.breadcrumbs a:hover {
+  color: var(--accent);
+}
+
+.tool-header {
+  border-bottom: 0;
+  padding-bottom: 8px;
+  margin-bottom: 28px;
+}
+
+.tool-header-icon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  font-size: 1.9rem;
+  border-radius: 18px;
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.tool-header-title {
+  font-size: clamp(1.7rem, 4vw, var(--fs-2xl));
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.tool-header-desc {
+  font-size: var(--fs-md);
+}
+
+.tool-header-category {
+  font-weight: 600;
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* 404 + loading + error */
+.not-found h1 {
+  font-size: clamp(5rem, 16vw, 8rem);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.not-found .btn-home {
+  border-radius: 12px;
+  padding: 12px 28px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: var(--accent);
+}
+
+.not-found .btn-home:hover {
+  background: var(--accent-hover);
+  color: var(--accent-ink);
+}
+
+.spinner {
+  border-color: var(--border-strong);
+  border-top-color: var(--accent);
+}
+
+.error-boundary pre {
+  border-radius: var(--r-md);
+}
+
+/* ============================================================
+   7. SHARED TOOL WIDGETS  (pdf-*, option cards, inputs)
+   ============================================================ */
+
+/* Dropzone */
+.pdf-dropzone {
+  padding: 56px 24px;
+  border-radius: 20px;
+  border: 1.5px dashed var(--border-strong);
+  background:
+    radial-gradient(560px 200px at 50% 0%, var(--accent-soft), transparent 70%),
+    var(--bg-card);
+}
+
+.pdf-dropzone:hover,
+.pdf-dropzone.dragging {
+  border-color: var(--accent);
+  background:
+    radial-gradient(560px 220px at 50% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 70%),
+    var(--bg-card);
+  transform: translateY(-2px);
+}
+
+.pdf-dropzone-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  font-size: 2rem;
+  border-radius: 20px;
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.pdf-dropzone h3 {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+/* Panels */
+.pdf-file-info,
+.pdf-target,
+.pdf-result,
+.pdf-score-card,
+.wm-preview-wrap {
+  border-radius: 18px;
+  background: var(--bg-card);
+}
+
+.pdf-target {
+  padding: 22px;
+}
+
+.pdf-target-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.pdf-file-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  font-size: 1.5rem;
+  border-radius: 12px;
+  background: var(--accent-soft);
+}
+
+.pdf-file-remove {
+  border-radius: 10px;
+}
+
+/* Inputs */
+.pdf-target-number,
+.pdf-target-unit,
+.pe-text-input,
+.gs-input {
+  font-family: var(--font);
+  border-radius: 12px;
+  background: var(--bg-elev);
+}
+
+.pdf-target-number:focus,
+.pdf-target-unit:focus,
+.pe-text-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+/* Primary button */
+.pdf-compress-btn {
+  min-height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 55%, var(--accent-2)));
+  color: var(--accent-ink);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  box-shadow: 0 10px 28px -10px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.pdf-compress-btn:hover:not(:disabled) {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+}
+
+/* Secondary buttons */
+.pdf-download {
+  min-height: 46px;
+  border-radius: 12px;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+  font-family: var(--font);
+}
+
+.pdf-download:hover {
+  background: var(--accent-hover);
+  color: var(--accent-ink);
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.btn-secondary {
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+/* Status */
+.pdf-error {
+  border-radius: 12px;
+  color: var(--danger);
+}
+
+.pdf-stat {
+  border-radius: 14px;
+}
+
+.pdf-stat-label {
+  font-weight: 600;
+}
+
+.pdf-stat-value.accent {
+  color: var(--accent);
+}
+
+.pdf-stat-value.green {
+  color: var(--success);
+}
+
+/* Option cards — one consistent look for every tool */
+.jpg-quality-btn,
+.rotate-angle-btn,
+.orientation-card,
+.layout-card,
+.split-mode-card,
+.png-quality-card,
+.png-bg-btn,
+.p2w-preset-card,
+.pn-format-btn,
+.wm-type-tab,
+.wm-tiled-btn,
+.ir-mode-card,
+.ir-preset-card {
+  font-family: var(--font);
+  border-radius: 14px;
+  background: var(--bg-elev);
+}
+
+.jpg-quality-btn:hover,
+.rotate-angle-btn:hover,
+.orientation-card:hover,
+.layout-card:hover,
+.split-mode-card:hover,
+.png-quality-card:hover,
+.png-bg-btn:hover,
+.p2w-preset-card:hover,
+.pn-format-btn:hover,
+.wm-type-tab:hover,
+.wm-tiled-btn:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+}
+
+.jpg-quality-btn.active,
+.rotate-angle-btn.active,
+.orientation-card.active,
+.layout-card.active,
+.split-mode-card.active,
+.png-quality-card.active,
+.png-bg-btn.active,
+.p2w-preset-card.active,
+.pn-format-btn.active,
+.wm-type-tab.active,
+.wm-tiled-btn.active,
+.wm-position-btn.active,
+.pn-position-btn.active,
+.pe-tool-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.jpg-quality-btn.active .jpg-quality-name,
+.rotate-angle-btn.active .rotate-angle-label,
+.rotate-angle-btn.active .rotate-angle-arrow,
+.orientation-card.active .orientation-name,
+.layout-card.active .layout-name,
+.split-mode-card.active .split-mode-name,
+.png-quality-card.active .png-quality-name,
+.p2w-preset-card.active .p2w-preset-name {
+  color: var(--accent);
+}
+
+.orientation-card.active .op-a,
+.layout-card.active .lp-page {
+  border-color: var(--accent);
+}
+
+/* Sliders */
+.wm-slider {
+  height: 6px;
+  background: var(--border);
+}
+
+.wm-slider::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border: 3px solid var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.wm-slider::-moz-range-thumb {
+  background: #fff;
+  border: 3px solid var(--accent);
+}
+
+/* Progress / score bars */
+.pdf-score-fill,
+.png-score-mini-fill {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+.pdf-score-card-value {
+  color: var(--accent);
+}
+
+/* Tabs in PDF to Text */
+.p2t-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.p2t-stat-value,
+.p2t-page-num {
+  color: var(--accent);
+}
+
+/* ============================================================
+   8. SEO CONTENT  (articles + FAQ)
+   ============================================================ */
+.seo-content {
+  margin-top: 72px;
+}
+
+.seo-section h2 {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.seo-section code {
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+.seo-steps li::before {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--accent);
+}
+
+.seo-feature {
+  border-radius: 18px;
+  padding: 22px;
+}
+
+.seo-feature:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow: var(--shadow-md);
+}
+
+.seo-feature-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  font-size: 1.4rem;
+  border-radius: 14px;
+  background: var(--accent-soft);
+}
+
+.seo-faq {
+  border-radius: 16px;
+}
+
+.seo-faq[open] {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+
+.seo-faq summary:hover,
+.seo-faq summary::after {
+  color: var(--accent);
+}
+
+/* ============================================================
+   9. GLOBAL SEARCH MODAL
+   ============================================================ */
+.gs-overlay {
+  background: rgba(4, 6, 9, 0.62);
+}
+
+.gs-modal {
+  border-radius: 20px;
+  border-color: var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+.gs-input-wrap {
+  padding: 18px 22px;
+}
+
+.gs-input {
+  background: transparent;
+  font-size: 1.05rem;
+}
+
+.gs-esc,
+.gs-footer-hint kbd {
+  font-family: var(--font-mono);
+  border-radius: 6px;
+}
+
+.gs-item {
+  border-radius: 14px;
+}
+
+.gs-item.highlighted {
+  background: var(--bg-hover);
+  border-color: transparent;
+}
+
+.gs-item-icon {
+  border-radius: 10px;
+  filter: none;
+}
+
+/* ============================================================
+   10. RESPONSIVE + MOTION
+   ============================================================ */
+@media (max-width: 899px) {
+  .navbar {
+    padding: 0 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home {
+    padding-top: 40px;
+  }
+  .navbar-search-btn {
+    min-width: 0;
+    width: 38px;
+    justify-content: center;
+    padding: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

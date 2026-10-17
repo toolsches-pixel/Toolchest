@@ -26,9 +26,9 @@ const FORMATS = [
 ];
 
 const MODES = [
-  { id: 'exact', label: 'Exact size', desc: 'Set exact width & height' },
-  { id: 'percent', label: 'Percentage', desc: 'Scale by %' },
-  { id: 'filesize', label: 'Compress in KB', desc: '   KB / MB' },
+  { id: 'exact', label: 'Exact', desc: 'Set exact width & height' },
+  { id: 'percent', label: 'Scale %', desc: 'Scale by percentage' },
+  { id: 'filesize', label: 'File size', desc: 'Compress to KB / MB' },
   { id: 'preset', label: 'Preset', desc: 'Social media sizes' },
 ];
 
@@ -98,7 +98,9 @@ export default function ImageResizer() {
   const [originalImage, setOriginalImage] = useState(null);
   const [originalSize, setOriginalSize] = useState({ w: 0, h: 0 });
   const [originalBytes, setOriginalBytes] = useState(0);
-  const [originalUrl, setOriginalUrl] = useState(''); 
+  const [originalUrl, setOriginalUrl] = useState('');
+  const [dragging, setDragging] = useState(false);
+
   // Mode
   const [mode, setMode] = useState('exact');
 
@@ -120,6 +122,9 @@ export default function ImageResizer() {
   // Format
   const [format, setFormat] = useState('jpeg');
   const [quality, setQuality] = useState(90);
+
+  // Compare slider position (% of width where the original ends)
+  const [compare, setCompare] = useState(50);
 
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState('');
@@ -168,8 +173,7 @@ export default function ImageResizer() {
     }
   };
 
-  const handleFileChange = async (e) => {
-    const f = e.target.files?.[0];
+  const loadImage = (f) => {
     if (!f) return;
     if (!f.type.startsWith('image/')) {
       setError('Please select an image file (JPG, PNG, WEBP).');
@@ -191,7 +195,6 @@ export default function ImageResizer() {
       setOriginalSize({ w: img.width, h: img.height });
       setWidth(img.width);
       setHeight(img.height);
-     // URL.revokeObjectURL(url);
     };
     img.onerror = () => {
       setError('Could not load image.');
@@ -200,10 +203,12 @@ export default function ImageResizer() {
     img.src = url;
   };
 
+  const handleFileChange = (e) => loadImage(e.target.files?.[0]);
+
   const handleReset = () => {
     if (result?.url) URL.revokeObjectURL(result.url);
     if (previewUrl) URL.revokeObjectURL(previewUrl);
-      if (originalUrl) URL.revokeObjectURL(originalUrl); 
+    if (originalUrl) URL.revokeObjectURL(originalUrl);
     setFile(null);
     setOriginalImage(null);
     setOriginalSize({ w: 0, h: 0 });
@@ -213,12 +218,13 @@ export default function ImageResizer() {
     setPreviewBytes(0);
     setError('');
     setProgress('');
-    setOriginalUrl('');       
+    setOriginalUrl('');
+    setCompare(50);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   /** Render resized image to canvas, return canvas */
-  const renderToCanvas = async (w, h, fmt, q) => {
+  const renderToCanvas = async (w, h, fmt) => {
     const canvas = document.createElement('canvas');
     canvas.width = Math.round(w);
     canvas.height = Math.round(h);
@@ -252,12 +258,7 @@ export default function ImageResizer() {
 
     previewDebounce.current = setTimeout(async () => {
       try {
-        const canvas = await renderToCanvas(
-          target.w,
-          target.h,
-          format,
-          quality
-        );
+        const canvas = await renderToCanvas(target.w, target.h, format);
         const blob = await canvasToBlob(canvas, format, quality);
         if (!blob) return;
 
@@ -301,12 +302,7 @@ export default function ImageResizer() {
     setResult(null);
 
     try {
-      const canvas = await renderToCanvas(
-        target.w,
-        target.h,
-        format,
-        quality
-      );
+      const canvas = await renderToCanvas(target.w, target.h, format);
 
       let blob;
 
@@ -442,7 +438,7 @@ export default function ImageResizer() {
     return () => {
       if (result?.url) URL.revokeObjectURL(result.url);
       if (previewUrl) URL.revokeObjectURL(previewUrl);
-       if (originalUrl) URL.revokeObjectURL(originalUrl);
+      if (originalUrl) URL.revokeObjectURL(originalUrl);
       if (previewDebounce.current) clearTimeout(previewDebounce.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -452,368 +448,401 @@ export default function ImageResizer() {
   const targetBytes =
     mode === 'filesize' ? targetValue * SIZE_UNITS[targetUnit] : 0;
 
+  // Savings of the live preview vs the original (positive = smaller)
+  const savings =
+    previewBytes > 0 && originalBytes > 0
+      ? Math.round((1 - previewBytes / originalBytes) * 100)
+      : null;
+
+  const ratio = originalSize.w && originalSize.h ? originalSize.w / originalSize.h : 1.5;
+
   return (
     <ToolShell tool={tool}>
-      <div className="pdf-tool">
-        {/* Upload */}
+      <div className="ir">
+        {/* ---------- Upload ---------- */}
         {!file ? (
           <div
-            className="pdf-dropzone"
+            className={`ir-drop ${dragging ? 'is-over' : ''}`}
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInputRef.current?.click();
+              }
+            }}
+            role="button"
+            tabIndex={0}
             onDragOver={(e) => {
               e.preventDefault();
-              e.currentTarget.classList.add('dragging');
+              setDragging(true);
             }}
-            onDragLeave={(e) => {
-              e.currentTarget.classList.remove('dragging');
-            }}
+            onDragLeave={() => setDragging(false)}
             onDrop={(e) => {
               e.preventDefault();
-              e.currentTarget.classList.remove('dragging');
-              const f = e.dataTransfer.files?.[0];
-              if (f) handleFileChange({ target: { files: [f] } });
+              setDragging(false);
+              loadImage(e.dataTransfer.files?.[0]);
             }}
           >
-            <div className="pdf-dropzone-icon">🖼️</div>
+            <div className="ir-drop-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 16V4" />
+                <path d="m7 9 5-5 5 5" />
+                <path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" />
+              </svg>
+            </div>
             <h3>Drop your image here</h3>
-            <p>or click to browse · JPG, PNG, WEBP</p>
+            <p>or click to browse</p>
+            <div className="ir-drop-tags">
+              <span>JPG</span>
+              <span>PNG</span>
+              <span>WEBP</span>
+            </div>
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              style={{ display: 'none' }}
+              hidden
             />
           </div>
         ) : (
-          <div className="pdf-file-info">
-            <div className="pdf-file-left">
-              <span className="pdf-file-icon">🖼️</span>
-              <div>
-                <div className="pdf-file-name">{file.name}</div>
-                <div className="pdf-file-size">
-                  {originalSize.w} × {originalSize.h} px ·{' '}
-                  {formatBytes(originalBytes)}
-                </div>
+          <div className="ir-file">
+            <div className="ir-file-thumb">
+              {originalUrl && <img src={originalUrl} alt="" />}
+            </div>
+            <div className="ir-file-meta">
+              <div className="ir-file-name">{file.name}</div>
+              <div className="ir-file-sub">
+                {originalSize.w} × {originalSize.h} px · {formatBytes(originalBytes)}
               </div>
             </div>
-            <button className="pdf-file-remove" onClick={handleReset} title="Remove">
-              ✕
+            <button className="ir-file-remove" onClick={handleReset} aria-label="Remove image" title="Remove image">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M6 6l12 12M18 6 6 18" />
+              </svg>
             </button>
           </div>
         )}
 
         {file && (
-          <>
-            {/* Live preview */}
-            <div className="ir-preview-section">
-              <div className="ir-preview-label">Live preview</div>
-              <div className="ir-preview-grid">
-                <div className="ir-preview-card">
-                  <div className="ir-preview-header">
-                    Original · {originalSize.w} × {originalSize.h}
-                  </div>
-                  <div className="ir-preview-img-wrap">
-                    {originalImage && (
-                      <img
-                        src={originalUrl}
-                        alt="Original"
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
-                      />
-                    )}
-                  </div>
-                  <div className="ir-preview-footer">
-                    {formatBytes(originalBytes)}
-                  </div>
-                </div>
-
-                <div className="ir-preview-arrow">→</div>
-
-                <div className="ir-preview-card">
-                  <div className="ir-preview-header">
-                    Result · {target.w} × {target.h}
-                  </div>
-                  <div className="ir-preview-img-wrap">
-                    {previewUrl ? (
-                      <img
-                        src={previewUrl}
-                        alt="Preview"
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
-                      />
-                    ) : (
-                      <div className="ir-preview-placeholder">Loading…</div>
-                    )}
-                  </div>
-                  <div className="ir-preview-footer">
-                    {previewBytes > 0 ? formatBytes(previewBytes) : '—'}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Mode picker */}
-            <div className="pdf-target">
-              <label className="pdf-target-label">Resize mode</label>
-              <div className="ir-mode-grid">
-                {MODES.map((m) => (
-                  <button
-                    key={m.id}
-                    className={`ir-mode-card ${
-                      mode === m.id ? 'active' : ''
-                    }`}
-                    onClick={() => setMode(m.id)}
-                  >
-                    <span className="ir-mode-name">{m.label}</span>
-                    <span className="ir-mode-desc">{m.desc}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Mode-specific inputs */}
-            {mode === 'exact' && (
-              <div className="pdf-target">
-                <label className="pdf-target-label">Dimensions</label>
-                <div className="ir-dim-row">
-                  <div className="ir-dim-field">
-                    <span className="ir-dim-label">W</span>
-                    <input
-                      type="number"
-                      min="1"
-                      value={width}
-                      onChange={(e) =>
-                        onWidthChange(parseInt(e.target.value) || 0)
-                      }
-                      className="pdf-target-number"
-                    />
-                    <span className="ir-dim-unit">px</span>
-                  </div>
-                  <button
-                    className={`ir-lock-btn ${lockAspect ? 'active' : ''}`}
-                    onClick={() => setLockAspect(!lockAspect)}
-                    title={
-                      lockAspect ? 'Unlock aspect ratio' : 'Lock aspect ratio'
-                    }
-                  >
-                    {lockAspect ? '🔒' : '🔓'}
-                  </button>
-                  <div className="ir-dim-field">
-                    <span className="ir-dim-label">H</span>
-                    <input
-                      type="number"
-                      min="1"
-                      value={height}
-                      onChange={(e) =>
-                        onHeightChange(parseInt(e.target.value) || 0)
-                      }
-                      className="pdf-target-number"
-                    />
-                    <span className="ir-dim-unit">px</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {mode === 'percent' && (
-              <div className="pdf-target">
-                <label className="pdf-target-label">
-                  Scale · <strong>{percent}%</strong>
-                </label>
-                <input
-                  type="range"
-                  min="5"
-                  max="200"
-                  value={percent}
-                  onChange={(e) => setPercent(parseInt(e.target.value))}
-                  className="wm-slider"
-                />
-                <p className="pdf-target-hint">
-                  New size: {Math.round(originalSize.w * (percent / 100))} ×{' '}
-                  {Math.round(originalSize.h * (percent / 100))} px
-                </p>
-              </div>
-            )}
-
-            {mode === 'filesize' && (
-              <div className="pdf-target">
-                <label className="pdf-target-label">Target file size</label>
-                <div className="ir-dim-row">
-                  <div className="ir-dim-field" style={{ flex: 2 }}>
-                    <input
-                      type="number"
-                      min="1"
-                      value={targetValue}
-                      onChange={(e) =>
-                        setTargetValue(Math.max(1, parseInt(e.target.value) || 1))
-                      }
-                      className="pdf-target-number"
-                    />
-                  </div>
-                  <div className="ir-dim-field" style={{ flex: 1 }}>
-                    <select
-                      value={targetUnit}
-                      onChange={(e) => setTargetUnit(e.target.value)}
-                      className="pdf-target-number"
-                      style={{ width: '100%' }}
-                    >
-                      <option value="KB">KB</option>
-                      <option value="MB">MB</option>
-                    </select>
-                  </div>
-                </div>
-                <p className="pdf-target-hint">
-                  Original: <strong>{formatBytes(originalBytes)}</strong> ·
-                  Target: <strong>{targetValue} {targetUnit}</strong> (
-                  {formatBytes(targetBytes)}) ·{' '}
-                  {targetBytes >= originalBytes
-                    ? '⚠️ Target ≥ original — no compression needed'
-                    : `Will try to compress to ~${formatBytes(targetBytes)}`}
-                </p>
-                {!selectedFormat.hasQuality && (
-                  <p className="pdf-target-warn">
-                    ⚠️ Target size only works with JPG or WEBP. PNG is
-                    lossless — switch format to enable.
-                  </p>
+          <div className="ir-workspace">
+            {/* ---------- Preview column ---------- */}
+            <section className="ir-stage" aria-label="Preview">
+              <div className="ir-stage-bar">
+                <span className="ir-stage-title">Live preview</span>
+                {savings !== null && (
+                  <span className={`ir-badge ${savings > 0 ? 'is-good' : 'is-warn'}`}>
+                    {savings > 0 ? `${savings}% smaller` : savings < 0 ? `${Math.abs(savings)}% larger` : 'Same size'}
+                  </span>
                 )}
               </div>
-            )}
 
-            {mode === 'preset' && (
-              <div className="pdf-target">
-                <label className="pdf-target-label">Choose preset</label>
-                <div className="ir-preset-grid">
-                  {PRESETS.map((p) => (
+              <div className="ir-canvas">
+                <div
+                  className="ir-compare"
+                  style={{ width: `min(100%, ${Math.round(520 * ratio)}px)`, aspectRatio: `${ratio}` }}
+                >
+                  <img className="ir-compare-img" src={originalUrl} alt="Original" draggable="false" />
+                  {previewUrl ? (
+                    <img
+                      className="ir-compare-img ir-compare-result"
+                      src={previewUrl}
+                      alt="Resized preview"
+                      draggable="false"
+                      style={{ clipPath: `inset(0 0 0 ${compare}%)` }}
+                    />
+                  ) : (
+                    <div className="ir-skeleton" style={{ left: `${compare}%` }} />
+                  )}
+                  <span className="ir-tag ir-tag-left">Original</span>
+                  <span className="ir-tag ir-tag-right">Result</span>
+                  <div className="ir-handle" style={{ left: `${compare}%` }} aria-hidden="true">
+                    <span className="ir-grip">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m9 7-5 5 5 5" />
+                        <path d="m15 7 5 5-5 5" />
+                      </svg>
+                    </span>
+                  </div>
+                  <input
+                    className="ir-compare-range"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={compare}
+                    onChange={(e) => setCompare(parseInt(e.target.value))}
+                    aria-label="Drag to compare original and result"
+                  />
+                </div>
+              </div>
+
+              <div className="ir-compare-stats">
+                <div className="ir-stat">
+                  <span className="ir-stat-label">Original</span>
+                  <span className="ir-stat-value">{originalSize.w} × {originalSize.h}</span>
+                  <span className="ir-stat-sub">{formatBytes(originalBytes)}</span>
+                </div>
+                <svg className="ir-stat-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+                <div className="ir-stat is-accent">
+                  <span className="ir-stat-label">Result</span>
+                  <span className="ir-stat-value">{target.w} × {target.h}</span>
+                  <span className="ir-stat-sub">{previewBytes > 0 ? formatBytes(previewBytes) : 'Calculating…'}</span>
+                </div>
+              </div>
+            </section>
+
+            {/* ---------- Controls column ---------- */}
+            <aside className="ir-panel">
+              <div className="ir-group">
+                <div className="ir-label">Resize by</div>
+                <div className="ir-tabs" role="tablist">
+                  {MODES.map((m) => (
                     <button
-                      key={p.id}
-                      className={`ir-preset-card ${
-                        presetId === p.id ? 'active' : ''
-                      }`}
-                      onClick={() => setPresetId(p.id)}
+                      key={m.id}
+                      role="tab"
+                      aria-selected={mode === m.id}
+                      title={m.desc}
+                      className={`ir-tab ${mode === m.id ? 'active' : ''}`}
+                      onClick={() => setMode(m.id)}
                     >
-                      <span className="ir-preset-label">{p.label}</span>
-                      <span className="ir-preset-dims">
-                        {p.w} × {p.h}
-                      </span>
+                      {m.label}
                     </button>
                   ))}
                 </div>
               </div>
-            )}
 
-            {/* Format */}
-            <div className="pdf-target">
-              <div className="wm-row-2col">
-                <div>
-                  <label className="pdf-target-label">Output format</label>
-                  <div className="jpg-scale-options">
-                    {FORMATS.map((f) => (
+              {/* Mode-specific inputs */}
+              {mode === 'exact' && (
+                <div className="ir-group">
+                  <div className="ir-label">Dimensions</div>
+                  <div className="ir-dim-row">
+                    <label className="ir-field">
+                      <span className="ir-field-tag">W</span>
+                      <input
+                        type="number"
+                        min="1"
+                        value={width}
+                        onChange={(e) => onWidthChange(parseInt(e.target.value) || 0)}
+                      />
+                      <span className="ir-field-unit">px</span>
+                    </label>
+                    <button
+                      className={`ir-lock ${lockAspect ? 'active' : ''}`}
+                      onClick={() => setLockAspect(!lockAspect)}
+                      aria-pressed={lockAspect}
+                      title={lockAspect ? 'Unlock aspect ratio' : 'Lock aspect ratio'}
+                    >
+                      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="5" y="11" width="14" height="9" rx="2" />
+                        {lockAspect ? <path d="M8 11V8a4 4 0 0 1 8 0v3" /> : <path d="M8 11V8a4 4 0 0 1 7.5-2" />}
+                      </svg>
+                    </button>
+                    <label className="ir-field">
+                      <span className="ir-field-tag">H</span>
+                      <input
+                        type="number"
+                        min="1"
+                        value={height}
+                        onChange={(e) => onHeightChange(parseInt(e.target.value) || 0)}
+                      />
+                      <span className="ir-field-unit">px</span>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {mode === 'percent' && (
+                <div className="ir-group">
+                  <div className="ir-label-row">
+                    <span className="ir-label">Scale</span>
+                    <span className="ir-value">{percent}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="5"
+                    max="200"
+                    value={percent}
+                    onChange={(e) => setPercent(parseInt(e.target.value))}
+                    className="ir-range"
+                    style={{ '--fill': `${((percent - 5) / 195) * 100}%` }}
+                  />
+                  <p className="ir-hint">
+                    New size: {Math.round(originalSize.w * (percent / 100))} ×{' '}
+                    {Math.round(originalSize.h * (percent / 100))} px
+                  </p>
+                </div>
+              )}
+
+              {mode === 'filesize' && (
+                <div className="ir-group">
+                  <div className="ir-label">Target file size</div>
+                  <div className="ir-dim-row">
+                    <label className="ir-field" style={{ flex: 2 }}>
+                      <input
+                        type="number"
+                        min="1"
+                        value={targetValue}
+                        onChange={(e) =>
+                          setTargetValue(Math.max(1, parseInt(e.target.value) || 1))
+                        }
+                      />
+                    </label>
+                    <div className="ir-seg ir-seg-sm">
+                      {Object.keys(SIZE_UNITS).map((u) => (
+                        <button
+                          key={u}
+                          className={targetUnit === u ? 'active' : ''}
+                          onClick={() => setTargetUnit(u)}
+                        >
+                          {u}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="ir-hint">
+                    Original <strong>{formatBytes(originalBytes)}</strong> → target{' '}
+                    <strong>{formatBytes(targetBytes)}</strong>.{' '}
+                    {targetBytes >= originalBytes
+                      ? 'Target is not smaller than the original, so no compression is needed.'
+                      : 'Quality is lowered automatically to fit.'}
+                  </p>
+                  {!selectedFormat.hasQuality && (
+                    <p className="ir-warn">
+                      Target size works with JPG or WEBP only. PNG is lossless, so switch the
+                      format below.
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {mode === 'preset' && (
+                <div className="ir-group">
+                  <div className="ir-label">Choose preset</div>
+                  <div className="ir-presets">
+                    {PRESETS.map((p) => (
                       <button
-                        key={f.id}
-                        className={`category-pill ${
-                          format === f.id ? 'active' : ''
-                        }`}
-                        onClick={() => setFormat(f.id)}
+                        key={p.id}
+                        className={`ir-preset ${presetId === p.id ? 'active' : ''}`}
+                        onClick={() => setPresetId(p.id)}
                       >
-                        {f.label}
+                        <span className="ir-preset-label">{p.label}</span>
+                        <span className="ir-preset-dims">{p.w} × {p.h}</span>
                       </button>
                     ))}
                   </div>
                 </div>
-                {selectedFormat.hasQuality && mode !== 'filesize' && (
-                  <div>
-                    <label className="pdf-target-label">
-                      Quality · <strong>{quality}%</strong>
-                    </label>
-                    <input
-                      type="range"
-                      min="10"
-                      max="100"
-                      value={quality}
-                      onChange={(e) => setQuality(parseInt(e.target.value))}
-                      className="wm-slider"
-                    />
-                  </div>
-                )}
+              )}
+
+              {/* Format */}
+              <div className="ir-group">
+                <div className="ir-label">Output format</div>
+                <div className="ir-seg">
+                  {FORMATS.map((f) => (
+                    <button
+                      key={f.id}
+                      className={format === f.id ? 'active' : ''}
+                      onClick={() => setFormat(f.id)}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <button
-              className="pdf-compress-btn"
-              onClick={resize}
-              disabled={processing}
-            >
-              {processing
-                ? '⟳ Processing…'
-                : mode === 'filesize'
-                ? `🗜️ Compress to ~${targetValue} ${targetUnit}`
-                : `📐 Resize to ${target.w} × ${target.h}`}
-            </button>
-          </>
-        )}
+              {selectedFormat.hasQuality && mode !== 'filesize' && (
+                <div className="ir-group">
+                  <div className="ir-label-row">
+                    <span className="ir-label">Quality</span>
+                    <span className="ir-value">{quality}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="10"
+                    max="100"
+                    value={quality}
+                    onChange={(e) => setQuality(parseInt(e.target.value))}
+                    className="ir-range"
+                    style={{ '--fill': `${((quality - 10) / 90) * 100}%` }}
+                  />
+                </div>
+              )}
 
-        {/* Progress */}
-        {processing && progress && (
-          <div className="pdf-progress">
-            <span className="spinner" />
-            {progress}
+              <button className="ir-cta" onClick={resize} disabled={processing}>
+                {processing ? (
+                  <>
+                    <span className="ir-spinner" /> Processing…
+                  </>
+                ) : mode === 'filesize' ? (
+                  `Compress to ~${targetValue} ${targetUnit}`
+                ) : (
+                  `Resize to ${target.w} × ${target.h}`
+                )}
+              </button>
+
+              {processing && progress && <div className="ir-progress">{progress}</div>}
+              {error && <div className="ir-error" role="alert">{error}</div>}
+            </aside>
           </div>
         )}
 
-        {/* Error */}
-        {error && <div className="pdf-error">⚠️ {error}</div>}
+        {!file && error && <div className="ir-error" role="alert">{error}</div>}
 
-        {/* Result */}
+        {/* ---------- Result ---------- */}
         {result && (
-          <div className="pdf-result">
-            <div className="pdf-result-header">
-              <h3>✅ Done</h3>
+          <div className="ir-result">
+            <div className="ir-result-head">
+              <span className="ir-check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m5 12 5 5 9-10" />
+                </svg>
+              </span>
+              <h3>Your image is ready</h3>
             </div>
 
-            <div className="pdf-result-grid">
-              <div className="pdf-stat">
-                <div className="pdf-stat-label">New size</div>
-                <div className="pdf-stat-value accent">
-                  {result.width}×{result.height}
-                </div>
+            <div className="ir-result-grid">
+              <div className="ir-result-stat">
+                <span>New size</span>
+                <strong className="accent">{result.width}×{result.height}</strong>
               </div>
-              <div className="pdf-stat">
-                <div className="pdf-stat-label">Format</div>
-                <div className="pdf-stat-value">{result.format}</div>
+              <div className="ir-result-stat">
+                <span>Format</span>
+                <strong>{result.format}</strong>
               </div>
-              <div className="pdf-stat">
-                <div className="pdf-stat-label">File size</div>
-                <div className="pdf-stat-value">
-                  {formatBytes(result.size)}
-                </div>
+              <div className="ir-result-stat">
+                <span>File size</span>
+                <strong>{formatBytes(result.size)}</strong>
               </div>
-              <div className="pdf-stat">
-                <div className="pdf-stat-label">Reduction</div>
-                <div className="pdf-stat-value green">
+              <div className="ir-result-stat">
+                <span>Saved</span>
+                <strong className="good">
                   {originalBytes > result.size
-                    ? Math.round(
-                        ((originalBytes - result.size) / originalBytes) * 100
-                      ) + '%'
+                    ? Math.round(((originalBytes - result.size) / originalBytes) * 100) + '%'
                     : '0%'}
-                </div>
+                </strong>
               </div>
             </div>
 
             {result.targetBytes && (
-              <p
-                className="pdf-score-note"
-                style={{ textAlign: 'center' }}
-              >
+              <p className={`ir-target-note ${result.size <= result.targetBytes ? 'is-good' : 'is-warn'}`}>
                 {result.size <= result.targetBytes
-                  ? `🎯 Target achieved! (${formatBytes(result.size)} ≤ ${formatBytes(result.targetBytes)})`
-                  : `⚠️ Best effort: ${formatBytes(result.size)} (target was ${formatBytes(result.targetBytes)})`}
+                  ? `Target reached: ${formatBytes(result.size)} is under ${formatBytes(result.targetBytes)}.`
+                  : `Best effort: ${formatBytes(result.size)}. The target was ${formatBytes(result.targetBytes)}.`}
               </p>
             )}
 
-            <div className="pdf-result-actions">
-              <button className="pdf-download" onClick={download}>
-                ⬇ Download image
+            <div className="ir-result-actions">
+              <button className="ir-cta ir-cta-inline" onClick={download}>
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 4v12" />
+                  <path d="m7 11 5 5 5-5" />
+                  <path d="M5 20h14" />
+                </svg>
+                Download image
               </button>
-              <button className="btn-secondary" onClick={handleReset}>
+              <button className="ir-ghost" onClick={handleReset}>
                 Try another image
               </button>
             </div>

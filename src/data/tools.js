@@ -231,6 +231,7 @@ export const groups = [
         icon: "🪄",
         component: lazy(() => import("../pages/tools/BackgroundRemover")),
       },
+      
     ],
   },
   {

@@ -1,14 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
-    }
-  ],
-  "crons": [
-    {
-      "path": "/api/cleanup",
-      "schedule": "0 3 * * *"
     }
   ]
 }

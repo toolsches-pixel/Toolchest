@@ -396,14 +396,7 @@ export const groups = [
         icon: "🔐",
         component: lazy(() => import("../pages/tools/DoubleEncryption")),
       },
-      {
-        id: "qr-tracker",
-        name: "QR Code Tracker",
-        description: "Create trackable QR codes — see how many people scanned.",
-        path: "/tools/qr-tracker",
-        icon: "📊",
-        component: lazy(() => import("../pages/tools/QrTracker")),
-      },
+      
     ],
   },
   {
